@@ -1,0 +1,15 @@
+﻿<Application x:Class="Microsoft.Samples.Kinect.DepthBasics.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style x:Key="GridButtonsStyle" TargetType="Grid">
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="Black" Opacity="0.7" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>
