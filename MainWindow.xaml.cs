@@ -227,7 +227,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             {
                 switch (e.Result.Semantics.Value.ToString())
                 {
-                        // #####################################################################################
+                     
                     case "CALIBRATE":
                         _oldBottomOfScreen = _bottomOfScreen;
                         _oldLeftOfScreen = _leftOfScreen;
