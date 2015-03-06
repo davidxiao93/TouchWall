@@ -1,13 +1,13 @@
 ﻿<Window x:Class="Microsoft.Samples.Kinect.DepthBasics.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Depth Basics" 
+        Title="Touch Wall" 
         Height="572" Width="900" 
         Closing="MainWindow_Closing">
     <Window.Resources>
-        <SolidColorBrush x:Key="BlackBrush" Color="#ff000000" />
+        <SolidColorBrush x:Key="BlackBrush" Color="#ff000000"/>
         <Style TargetType="{x:Type Image}">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
     </Window.Resources>
 
@@ -48,30 +48,30 @@
             </Viewbox.RenderTransform>
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill"/>
         </Viewbox>
-        
-        <Label Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="2" Name="WallTopLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Row="2" Grid.Column="4" Content="Up" Click="WallTop_ClickUp" />
-        <Button Grid.Row="2" Grid.Column="7" Content="Down" Click="WallTop_ClickDown" />
 
-        <Label Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Name="WallLeftLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Row="3" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft" />
-        <Button Grid.Row="3" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight" />
+        <Label Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="2" Name="WallTopLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+        <Button Grid.Row="2" Grid.Column="4" Content="Up" Click="WallTop_ClickUp" FontSize="18"/>
+        <Button Grid.Row="2" Grid.Column="7" Content="Down" Click="WallTop_ClickDown" FontSize="18"/>
 
-        <Label Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Name="WallRightLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Row="4" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft" />
-        <Button Grid.Row="4" Grid.Column="7" Content="Right" Click="WallRight_ClickRight" />
+        <Label Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Name="WallLeftLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+        <Button Grid.Row="3" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft" FontSize="18"/>
+        <Button Grid.Row="3" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight" FontSize="18"/>
 
-        <Label Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" Name="WallBottomLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Row="5" Grid.Column="4" Content="Up" Click="WallBottom_ClickUp" />
-        <Button Grid.Row="5" Grid.Column="7" Content="Down" Click="WallBottom_ClickDown" />
+        <Label Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Name="WallRightLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+        <Button Grid.Row="4" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft" FontSize="18"/>
+        <Button Grid.Row="4" Grid.Column="7" Content="Right" Click="WallRight_ClickRight" FontSize="18"/>
 
-        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" />
+        <Label Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" Name="WallBottomLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
+        <Button Grid.Row="5" Grid.Column="4" Content="Up" Click="WallBottom_ClickUp" FontSize="18"/>
+        <Button Grid.Row="5" Grid.Column="7" Content="Down" Click="WallBottom_ClickDown" FontSize="18"/>
 
-        <Label Grid.Row="9" Grid.RowSpan="2" Grid.Column="4" Grid.ColumnSpan="2" Name="InfoLabel" Content="{Binding Text}" HorizontalAlignment="Stretch"/>
-        <Label Grid.Row="9" Grid.RowSpan="2" Grid.Column="6" Grid.ColumnSpan="2" Name="InfoLabel2" Content="{Binding Text}" HorizontalAlignment="Stretch"/>
+        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click" FontSize="18"/>
+
+        <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="InfoLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
+        <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="InfoLabel2" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
 
         <StatusBar Grid.Row="11" Grid.Column="4" Grid.ColumnSpan="4" Margin="0 0 0 0" HorizontalAlignment="Stretch" x:Name="StatusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource BlackBrush}">
-            <StatusBarItem Content="{Binding StatusText}" />
+            <StatusBarItem Content="{Binding StatusText}" FontSize="25"/>
         </StatusBar>
     </Grid>
 </Window>
