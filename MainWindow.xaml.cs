@@ -931,6 +931,11 @@ namespace Microsoft.Samples.Kinect.DepthBasics
             WallBottomLabel.Content = "Bottom Wall M: " + _bottomOfScreen;
         }
 
+        /// <summary>
+        /// Handles the event where the user clicks on CalibrateButton
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
         private void Calibrate_Click(object sender, RoutedEventArgs e)
         {
             _oldBottomOfScreen = _bottomOfScreen;
