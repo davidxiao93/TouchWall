@@ -1,4 +1,4 @@
-﻿<Window x:Class="Microsoft.Samples.Kinect.DepthBasics.MainWindow"
+﻿<Window x:Class="TouchWall.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Touch Wall" 
@@ -50,8 +50,8 @@
         </Viewbox>
 
         <Label Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="2" Name="WallTopLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
-        <Button Grid.Row="2" Grid.Column="4" Content="Up" Click="WallTop_ClickUp" FontSize="18"/>
-        <Button Grid.Row="2" Grid.Column="7" Content="Down" Click="WallTop_ClickDown" FontSize="18"/>
+        <Button Grid.Row="2" Grid.Column="4" Content="Down" Click="WallTop_ClickDown" FontSize="18"/>
+        <Button Grid.Row="2" Grid.Column="7" Content="Up" Click="WallTop_ClickUp" FontSize="18"/>
 
         <Label Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Name="WallLeftLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
         <Button Grid.Row="3" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft" FontSize="18"/>
@@ -62,8 +62,8 @@
         <Button Grid.Row="4" Grid.Column="7" Content="Right" Click="WallRight_ClickRight" FontSize="18"/>
 
         <Label Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="2" Name="WallBottomLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18"/>
-        <Button Grid.Row="5" Grid.Column="4" Content="Up" Click="WallBottom_ClickUp" FontSize="18"/>
-        <Button Grid.Row="5" Grid.Column="7" Content="Down" Click="WallBottom_ClickDown" FontSize="18"/>
+        <Button Grid.Row="5" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown" FontSize="18"/>
+        <Button Grid.Row="5" Grid.Column="7" Content="Up" Click="WallBottom_ClickUp" FontSize="18"/>
 
         <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click" FontSize="18"/>
 

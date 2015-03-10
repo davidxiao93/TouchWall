@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepthBasics-WPF", "DepthBasics-WPF.csproj", "{B814AEE7-0717-4BF4-BACB-150E8AA91633}"
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchWall", "TouchWall.csproj", "{B814AEE7-0717-4BF4-BACB-150E8AA91633}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

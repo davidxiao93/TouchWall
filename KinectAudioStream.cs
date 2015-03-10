@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.Samples.Kinect.DepthBasics {
+namespace TouchWall
+{
     using System;
     using System.IO;
 

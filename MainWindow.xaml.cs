@@ -9,7 +9,7 @@ using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
 
-namespace Microsoft.Samples.Kinect.DepthBasics
+namespace TouchWall
 {
     /// <summary>
     /// Interaction logic for MainWindow
@@ -739,7 +739,7 @@ namespace Microsoft.Samples.Kinect.DepthBasics
 
                 if (spaceY < _mouseDownThreshold && _mouseAllowed == 2)
                 {
-                    // Left mouse button has gone down
+                    // Left mouse button has gone down 
                     mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftdown,
                         ((oldValueX + myX) / (_prevMouseX.Length/sizeof (int) + 1)),
                         ((oldValueY + myY) / (_prevMouseY.Length/sizeof (int) + 1)), 0, 0);
