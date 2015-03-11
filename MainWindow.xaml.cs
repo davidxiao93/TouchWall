@@ -78,60 +78,10 @@ namespace TouchWall
         private const int KinectHeight = 424;
 
         /// <summary>
-        /// Distance between sensor and left edge of screen in metres
+        /// Calibrator, in charge of knowing where edges of screen are
         /// </summary>
-        private float _leftOfScreen = 0.6f;
-
-        /// <summary>
-        /// Distance between sensor and right edge of screen in metres
-        /// </summary>
-        private float _rightOfScreen = 0.7f;
-
-        /// <summary>
-        /// Distance between sensor and top edge of screen in metres
-        /// </summary>
-        private float _topOfScreen = 0.19f;
-
-        /// <summary>
-        /// Distance between sensor and bottom edge of screen in metres
-        /// </summary>
-        private float _bottomOfScreen = -0.11f;
-
-        /// <summary>
-        /// Previous distance between sensor and left edge of screen in metres, used for calibration
-        /// </summary>
-        private float _oldLeftOfScreen = 0.6f;
-
-        /// <summary>
-        /// Previous distance between sensor and right edge of screen in metres, used for calibration
-        /// </summary>
-        private float _oldRightOfScreen = 0.7f;
-
-        /// <summary>
-        /// Previous distance between sensor and top edge of screen in metres, used for calibration
-        /// </summary>
-        private float _oldTopOfScreen = 0.19f;
-
-        /// <summary>
-        /// Previous distance between sensor and bottom edge of screen in metres, used for calibration
-        /// </summary>
-        private float _oldBottomOfScreen = -0.11f;
-
-        /// <summary>
-        /// Distance from screen before moving the mouse in meters
-        /// </summary>
-        private float _mouseMoveThreshold = 0.12f;
-
-        /// <summary>
-        /// Distance from screen before registering a left click down in meters
-        /// </summary>
-        private float _mouseDownThreshold = 0.003f;
-
-        /// <summary>
-        /// Distance from screen before registering a left click up in meters
-        /// </summary>
-        private float _mouseUpThreshold = 0.006f;
-
+        private Calibrator calibrator = new Calibrator();
+        
         /// <summary>
         /// Determines if the mouse can be moved. 0 = no movement, 1 = movemement, 2 = movement and clicking
         /// </summary>
@@ -226,10 +176,10 @@ namespace TouchWall
                 switch (e.Result.Semantics.Value.ToString())
                 {
                     case "CALIBRATE":
-                        _oldBottomOfScreen = _bottomOfScreen;
-                        _oldLeftOfScreen = _leftOfScreen;
-                        _oldRightOfScreen = _rightOfScreen;
-                        _oldTopOfScreen = _topOfScreen;
+                        calibrator.OldBottomOfScreen = calibrator.BottomOfScreen;
+                        calibrator.OldLeftOfScreen = calibrator.LeftOfScreen;
+                        calibrator.OldRightOfScreen = calibrator.RightOfScreen;
+                        calibrator.OldTopOfScreen = calibrator.TopOfScreen;
                         InfoLabel2.Content = "Calibrating...";
                         if (_calibrateStatus == 0)
                         {
@@ -239,10 +189,10 @@ namespace TouchWall
                         _mouseAllowed = 0;
                         break;
                     case "CANCELCALIBRATE":
-                        _bottomOfScreen = _oldBottomOfScreen;
-                        _rightOfScreen = _oldRightOfScreen;
-                        _leftOfScreen = _oldLeftOfScreen;
-                        _topOfScreen = _oldTopOfScreen;
+                        calibrator.BottomOfScreen = calibrator.OldBottomOfScreen;
+                        calibrator.RightOfScreen = calibrator.OldRightOfScreen;
+                        calibrator.LeftOfScreen = calibrator.OldLeftOfScreen;
+                        calibrator.TopOfScreen = calibrator.OldTopOfScreen;
                         _calibrateStatus = 0;
                         _mouseStatus = 1;
                         InfoLabel2.Content = "";
@@ -272,6 +222,7 @@ namespace TouchWall
 
             // Get the kinectSensor object
             _kinectSensor = KinectSensor.GetDefault();
+
 
             // Open the reader for the depth frames
             _depthFrameReader = _kinectSensor.DepthFrameSource.OpenReader();
@@ -342,6 +293,7 @@ namespace TouchWall
             {
                 _prevMouseX[i] = 0;
             }
+
         }
 
         // Cursor Control events
@@ -456,15 +408,15 @@ namespace TouchWall
         /// This function takes in the depth frame, converts it to camera space, and looks for the user finger.
         /// </summary>
         /// <param name="depthFrameData">Pointer to the raw depth buffer</param>
-        /// <param name="depthFrameDataSize">How large the depth fram is. should be KinectHeight*KinectWidth</param>
+        /// <param name="depthFrameDataSize">How large the depth frame is. should be KinectHeight*KinectWidth</param>
         private unsafe void ConvertProcessDepthFrameData(IntPtr depthFrameData, uint depthFrameDataSize)
         {
             ushort* frameData = (ushort*)depthFrameData;
 
-            WallTopLabel.Content = "Top Wall M: " + _topOfScreen;
-            WallLeftLabel.Content = "Left Wall M: " + _leftOfScreen;
-            WallRightLabel.Content = "Right Wall M: " + _rightOfScreen;
-            WallBottomLabel.Content = "Bottom Wall M: " + _bottomOfScreen;
+            WallTopLabel.Content = "Top Wall M: " + calibrator.TopOfScreen;
+            WallLeftLabel.Content = "Left Wall M: " + calibrator.LeftOfScreen;
+            WallRightLabel.Content = "Right Wall M: " + calibrator.RightOfScreen;
+            WallBottomLabel.Content = "Bottom Wall M: " + calibrator.BottomOfScreen;
 
             #region SetupCanvasFrame
             for (int y = 0; y < KinectHeight; y++)
@@ -505,12 +457,12 @@ namespace TouchWall
 
             if (_calibrateStatus == 0) // Not in calibration mode
             {
-                userPoint.Y = _mouseMoveThreshold;
+                userPoint.Y = calibrator.MouseMoveThreshold;
                 for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
                 {
                     if (0 < spacePoints[i].Y && spacePoints[i].Y < userPoint.Y
-                        && _bottomOfScreen < spacePoints[i].X && spacePoints[i].X < _topOfScreen
-                        && _leftOfScreen < spacePoints[i].Z && spacePoints[i].Z < _rightOfScreen)
+                        && calibrator.BottomOfScreen < spacePoints[i].X && spacePoints[i].X < calibrator.TopOfScreen
+                        && calibrator.LeftOfScreen < spacePoints[i].Z && spacePoints[i].Z < calibrator.RightOfScreen)
                     {
                         userPoint.X = spacePoints[i].X;
                         userPoint.Y = spacePoints[i].Y;
@@ -519,7 +471,7 @@ namespace TouchWall
                 }
 
                 // Check if a point is found
-                if (userPoint.X.Equals(0) && userPoint.Y.Equals(_mouseMoveThreshold) && userPoint.Z.Equals(0))
+                if (userPoint.X.Equals(0) && userPoint.Y.Equals(calibrator.MouseMoveThreshold) && userPoint.Z.Equals(0))
                 {
                     _mouseStatus = 0; // No point found
                 }
@@ -552,7 +504,7 @@ namespace TouchWall
             else if (_calibrateStatus == 3 || _calibrateStatus == 4)
             {
                 // Getting right coordinates
-                userPoint.Y = _mouseMoveThreshold;
+                userPoint.Y = calibrator.MouseMoveThreshold;
                 userPoint.Z = 4.0f;
                 _mouseAllowed = 0;
                 float tolerance = 0.1f;
@@ -584,7 +536,7 @@ namespace TouchWall
                     }
                 }
 
-                if (userPoint.X.Equals(0) && userPoint.Y.Equals(_mouseMoveThreshold) && userPoint.Z.Equals(0))
+                if (userPoint.X.Equals(0) && userPoint.Y.Equals(calibrator.MouseMoveThreshold) && userPoint.Z.Equals(0))
                 {
                     // No point has been found
                 }
@@ -594,14 +546,14 @@ namespace TouchWall
                     if (_calibrateStatus == 3)
                     {
                         // Right side of screen
-                        _rightOfScreen = userPoint.Z;
+                        calibrator.RightOfScreen = userPoint.Z;
 
-                        if (userPoint.Y < _mouseDownThreshold && _mouseStatus == 1)
+                        if (userPoint.Y < calibrator.MouseDownThreshold && _mouseStatus == 1)
                         {
                             _mouseStatus = 2;
                         }
 
-                        if (userPoint.Y > _mouseUpThreshold && _mouseStatus == 2)
+                        if (userPoint.Y > calibrator.MouseUpThreshold && _mouseStatus == 2)
                         {
                             _mouseStatus = 1;
                             CalibrateButton.Content = "Touch left edge of screen";
@@ -611,14 +563,14 @@ namespace TouchWall
                     else
                     {
                         // Left side of screen
-                        _leftOfScreen = userPoint.Z;
+                        calibrator.LeftOfScreen = userPoint.Z;
 
-                        if (userPoint.Y < _mouseDownThreshold && _mouseStatus == 1)
+                        if (userPoint.Y < calibrator.MouseDownThreshold && _mouseStatus == 1)
                         {
                             _mouseStatus = 2;
                         }
 
-                        if (userPoint.Y > _mouseUpThreshold && _mouseStatus == 2)
+                        if (userPoint.Y > calibrator.MouseUpThreshold && _mouseStatus == 2)
                         {
                             _mouseStatus = 1;
                             CalibrateButton.Content = "Touch top edge of screen";
@@ -629,13 +581,13 @@ namespace TouchWall
             }
             else if (_calibrateStatus == 5 || _calibrateStatus == 6)
             {
-                userPoint.Y = _mouseMoveThreshold;
+                userPoint.Y = calibrator.MouseMoveThreshold;
                 _mouseAllowed = 0;
                 float tolerance = 0.1f;
 
                 for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
                 {
-                    if (0 < spacePoints[i].Y && spacePoints[i].Y < userPoint.Y && spacePoints[i].Z > _leftOfScreen && spacePoints[i].Z < _rightOfScreen)
+                    if (0 < spacePoints[i].Y && spacePoints[i].Y < userPoint.Y && spacePoints[i].Z > calibrator.LeftOfScreen && spacePoints[i].Z < calibrator.RightOfScreen)
                     {
                         if (spacePoints[i].X.Equals(float.NegativeInfinity) || spacePoints[i].X.Equals(float.PositiveInfinity)
                                 || spacePoints[i].Y.Equals(float.NegativeInfinity) || spacePoints[i].Y.Equals(float.PositiveInfinity)
@@ -661,7 +613,7 @@ namespace TouchWall
                     }
                 }
 
-                if (userPoint.X.Equals(0) && userPoint.Y.Equals(_mouseMoveThreshold) && userPoint.Z.Equals(0))
+                if (userPoint.X.Equals(0) && userPoint.Y.Equals(calibrator.MouseMoveThreshold) && userPoint.Z.Equals(0))
                 {
                     // No point has been found
                 }
@@ -671,14 +623,14 @@ namespace TouchWall
                     if (_calibrateStatus == 5)
                     {
                         // Top edge of screen
-                        _topOfScreen = userPoint.X;
+                        calibrator.TopOfScreen = userPoint.X;
 
-                        if (userPoint.Y < _mouseDownThreshold && _mouseStatus == 1)
+                        if (userPoint.Y < calibrator.MouseDownThreshold && _mouseStatus == 1)
                         {
                             _mouseStatus = 2;
                         }
 
-                        if (userPoint.Y > _mouseUpThreshold && _mouseStatus == 2)
+                        if (userPoint.Y > calibrator.MouseUpThreshold && _mouseStatus == 2)
                         {
                             _mouseStatus = 1;
                             CalibrateButton.Content = "Touch bottom edge of screen";
@@ -688,14 +640,14 @@ namespace TouchWall
                     else
                     {
                         // Bottom edge of screen
-                        _bottomOfScreen = userPoint.X;
+                        calibrator.BottomOfScreen = userPoint.X;
 
-                        if (userPoint.Y < _mouseDownThreshold && _mouseStatus == 1)
+                        if (userPoint.Y < calibrator.MouseDownThreshold && _mouseStatus == 1)
                         {
                             _mouseStatus = 2;
                         }
 
-                        if (userPoint.Y > _mouseUpThreshold && _mouseStatus == 2)
+                        if (userPoint.Y > calibrator.MouseUpThreshold && _mouseStatus == 2)
                         {
                             _mouseStatus = 1;
                             CalibrateButton.Content = "Finished! Click here to recalibrate.";
@@ -716,11 +668,11 @@ namespace TouchWall
         /// <param name="spaceZ">Z coordinate in CAMERA space (X in userspace)</param>
         private void ProcessGesture(float spaceX, float spaceY, float spaceZ)
         {
-            float width = _rightOfScreen - _leftOfScreen;
-            float height = _topOfScreen - _bottomOfScreen;
+            float width = calibrator.RightOfScreen - calibrator.LeftOfScreen;
+            float height = calibrator.TopOfScreen - calibrator.BottomOfScreen;
 
-            int myX = (int)(Convert.ToDouble((spaceZ - _leftOfScreen) * 65535) / width);
-            int myY = (int)(Convert.ToDouble((_topOfScreen - spaceX) * 65535) / height);
+            int myX = (int)(Convert.ToDouble((spaceZ - calibrator.LeftOfScreen) * 65535) / width);
+            int myY = (int)(Convert.ToDouble((calibrator.TopOfScreen - spaceX) * 65535) / height);
 
             if (_mouseStatus == 1)
             {
@@ -737,7 +689,7 @@ namespace TouchWall
                     oldValueY += _prevMouseY[i];
                 }
 
-                if (spaceY < _mouseDownThreshold && _mouseAllowed == 2)
+                if (spaceY < calibrator.MouseDownThreshold && _mouseAllowed == 2)
                 {
                     // Left mouse button has gone down 
                     mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftdown,
@@ -794,7 +746,7 @@ namespace TouchWall
                     oldValueY += _prevMouseY[i];
                 }
 
-                if (spaceY > _mouseUpThreshold)
+                if (spaceY > calibrator.MouseUpThreshold)
                 {
                     mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftup,
                         ((oldValueX + myX) / (_prevMouseX.Length / sizeof(int) + 1)),
@@ -850,8 +802,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallTop_ClickUp(object sender, RoutedEventArgs e)
         {
-            _topOfScreen += 0.01f;
-            WallTopLabel.Content = "Top Wall M: " + _topOfScreen;
+            calibrator.TopOfScreen += 0.01f;
+            WallTopLabel.Content = "Top Wall M: " + calibrator.TopOfScreen;
         }
 
         /// <summary>
@@ -861,8 +813,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallTop_ClickDown(object sender, RoutedEventArgs e)
         {
-            _topOfScreen -= 0.01f;
-            WallTopLabel.Content = "Top Wall M: " + _topOfScreen;
+            calibrator.TopOfScreen -= 0.01f;
+            WallTopLabel.Content = "Top Wall M: " + calibrator.TopOfScreen;
         }
 
         /// <summary>
@@ -872,8 +824,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallLeft_ClickLeft(object sender, RoutedEventArgs e)
         {
-            _leftOfScreen -= 0.01f;
-            WallLeftLabel.Content = "Left Wall M: " + _leftOfScreen;
+            calibrator.LeftOfScreen -= 0.01f;
+            WallLeftLabel.Content = "Left Wall M: " + calibrator.LeftOfScreen;
         }
 
         /// <summary>
@@ -883,8 +835,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallLeft_ClickRight(object sender, RoutedEventArgs e)
         {
-            _leftOfScreen += 0.01f;
-            WallLeftLabel.Content = "Left Wall M: " + _leftOfScreen;
+            calibrator.LeftOfScreen += 0.01f;
+            WallLeftLabel.Content = "Left Wall M: " + calibrator.LeftOfScreen;
         }
 
         /// <summary>
@@ -894,8 +846,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallRight_ClickLeft(object sender, RoutedEventArgs e)
         {
-            _rightOfScreen -= 0.01f;
-            WallRightLabel.Content = "Right Wall M: " + _rightOfScreen;
+            calibrator.RightOfScreen -= 0.01f;
+            WallRightLabel.Content = "Right Wall M: " + calibrator.RightOfScreen;
         }
 
         /// <summary>
@@ -905,8 +857,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallRight_ClickRight(object sender, RoutedEventArgs e)
         {
-            _rightOfScreen += 0.01f;
-            WallRightLabel.Content = "Right Wall M: " + _rightOfScreen;
+            calibrator.RightOfScreen += 0.01f;
+            WallRightLabel.Content = "Right Wall M: " + calibrator.RightOfScreen;
         }
 
         /// <summary>
@@ -916,8 +868,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallBottom_ClickUp(object sender, RoutedEventArgs e)
         {
-            _bottomOfScreen += 0.01f;
-            WallBottomLabel.Content = "Bottom Wall M: " + _bottomOfScreen;
+            calibrator.BottomOfScreen += 0.01f;
+            WallBottomLabel.Content = "Bottom Wall M: " + calibrator.BottomOfScreen;
         }
 
         /// <summary>
@@ -927,8 +879,8 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void WallBottom_ClickDown(object sender, RoutedEventArgs e)
         {
-            _bottomOfScreen -= 0.01f;
-            WallBottomLabel.Content = "Bottom Wall M: " + _bottomOfScreen;
+            calibrator.BottomOfScreen -= 0.01f;
+            WallBottomLabel.Content = "Bottom Wall M: " + calibrator.BottomOfScreen;
         }
 
         /// <summary>
@@ -938,10 +890,10 @@ namespace TouchWall
         /// <param name="e">event arguments</param>
         private void Calibrate_Click(object sender, RoutedEventArgs e)
         {
-            _oldBottomOfScreen = _bottomOfScreen;
-            _oldLeftOfScreen = _leftOfScreen;
-            _oldRightOfScreen = _rightOfScreen;
-            _oldTopOfScreen = _topOfScreen;
+            calibrator.OldBottomOfScreen = calibrator.BottomOfScreen;
+            calibrator.OldLeftOfScreen = calibrator.LeftOfScreen;
+            calibrator.OldRightOfScreen = calibrator.RightOfScreen;
+            calibrator.OldTopOfScreen = calibrator.TopOfScreen;
             InfoLabel2.Content = "Calibrating...";
             if (_calibrateStatus == 0)
             {
