@@ -91,7 +91,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Calibrator.cs" />
+    <Compile Include="KinectConstants.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="FrameDataManager.cs" />
     <Compile Include="KinectAudioStream.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -99,6 +101,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Frame.cs" />
+    <Compile Include="TouchGestureHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

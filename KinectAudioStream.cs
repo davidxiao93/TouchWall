@@ -17,7 +17,7 @@ namespace TouchWall
         /// <summary>
         /// Holds the kinect audio stream, in 32-bit IEEE float format
         /// </summary>
-        private Stream kinect32BitStream;
+        private readonly Stream kinect32BitStream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KinectAudioStream" /> class.
