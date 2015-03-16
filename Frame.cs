@@ -5,130 +5,175 @@ namespace TouchWall
 {
     public class Frame
     {
-        private readonly KinectSensor _kinectSensor;
-        private readonly IntPtr _depthFrameData;
-        private readonly uint _depthFrameDataSize;
-        private readonly FrameDescription _depthFrameDescription;
-        private readonly Screen _screen;
-        private readonly TouchGestureHandler _gestures;
-        public CameraSpacePoint UserPoint = new CameraSpacePoint();
+        /// <summary>
+        /// Any new gestures are stored and handled by Gesture
+        /// </summary>
+        public Gesture[] Gestures = new Gesture[4];
 
         /// <summary>
         /// Intermediate storage for frame data converted to colour
         /// </summary>
         public readonly byte[] DepthPixels;
+        
+        /// <summary>
+        /// Should be KinectHeight * KinectWidth
+        /// </summary>
+        private readonly uint _depthFrameDataSize;
 
-        public Frame(IntPtr depthFrameData, uint depthFrameDataSize, KinectSensor kinectSensor,
-            FrameDescription depthFrameDescription, Screen screen, TouchGestureHandler gestures)
+        /// <summary>
+        /// Pointer to the raw depth buffer
+        /// </summary>
+        private readonly IntPtr _depthFrameData;
+
+        /// <summary>
+        /// Points on 3D map
+        /// </summary>
+        private readonly CameraSpacePoint[] _spacePoints;
+        private CameraSpacePoint _pointFound;
+
+        internal Frame(IntPtr depthFrameData, uint depthFrameDataSize, FrameDescription depthFrameDescription)
         {
-            _kinectSensor = kinectSensor;
-            _screen = screen;
-            _gestures = gestures;
             _depthFrameData = depthFrameData;
             _depthFrameDataSize = depthFrameDataSize;
-            _depthFrameDescription = depthFrameDescription;
-
-            // Allocate space to put the pixels being received and converted
-            DepthPixels = new byte[_depthFrameDescription.Width*_depthFrameDescription.Height];
+            _spacePoints = new CameraSpacePoint[_depthFrameDataSize / sizeof(ushort)];
+            DepthPixels = new byte[depthFrameDescription.Width * depthFrameDescription.Height]; // Allocate space to put received pixels
+            SetupCanvasFrame();
+            UseDepthFrameData();
         }
 
         /// <summary>
-        /// This function takes in the depth frame, converts it to camera space, and looks for the user finger.
-        /// "depthFrameData" = Pointer to the raw depth buffer
-        /// "depthFrameDataSize" = How large the depth frame is. should be KinectHeight*KinectWidth
+        /// Takes in the depth frame, converts it to camera space
         /// </summary>
-        public unsafe void ConvertProcessDepthFrameData()
+        public unsafe void SetupCanvasFrame()
         {
             ushort* frameData = (ushort*) _depthFrameData;
 
-            #region SetupCanvasFrame
-
-            for (int y = 0; y < KinectConstants.KinectHeight; y++)
+            for (int y = 0; y < TouchWallApp.KinectHeight; y++)
             {
-                if (y == KinectConstants.KinectHeight/2)
+                if (y == TouchWallApp.KinectHeight / 2)
                 {
-                    for (int x = 0; x < KinectConstants.KinectWidth; x++)
+                    for (int x = 0; x < TouchWallApp.KinectWidth; x++)
                     {
-                        DepthPixels[y*KinectConstants.KinectWidth + x] = (255);
+                        DepthPixels[y * TouchWallApp.KinectWidth + x] = (255);
                     }
                 }
                 else
                 {
-                    for (int x = 0; x < KinectConstants.KinectWidth; x++)
+                    for (int x = 0; x < TouchWallApp.KinectWidth; x++)
                     {
-                        ushort depth = frameData[y*KinectConstants.KinectWidth + x];
-                        DepthPixels[y*KinectConstants.KinectWidth + x] =
+                        ushort depth = frameData[y * TouchWallApp.KinectWidth + x];
+                        DepthPixels[y * TouchWallApp.KinectWidth + x] =
                             (byte) (depth >= 500 && depth <= 5000 ? (depth*256/5000) : 0);
                     }
                 }
             }
 
-            #endregion
-
-            CoordinateMapper m = _kinectSensor.CoordinateMapper;
+            CoordinateMapper m = TouchWallApp.KinectSensor.CoordinateMapper;
             ushort[] frameUshorts = new ushort[_depthFrameDataSize/sizeof (ushort)];
             for (int i = 0; i < _depthFrameDataSize/sizeof (ushort); i++)
             {
                 frameUshorts[i] = frameData[i];
             }
-            CameraSpacePoint[] spacePoints = new CameraSpacePoint[_depthFrameDataSize/sizeof (ushort)];
-            // X,Y,Z in terms of the camera, not the user
-            m.MapDepthFrameToCameraSpace(frameUshorts, spacePoints);
 
+            m.MapDepthFrameToCameraSpace(frameUshorts, _spacePoints); // X,Y,Z in terms of the CAMERA, not the user
             // Now spacePoints contains a 3d virtualisation of where everything is.
+        }
 
-            UserPoint.X = 0.0f;
-            UserPoint.Y = 0.0f;
-            UserPoint.Z = 0.0f;
-
-            switch (_screen.CalibrateStatus)
+        private void UseDepthFrameData()
+        {
+            switch (TouchWallApp.CalibrateStatus)
             {
                 case 1: // Begin Calibration
-                    _screen.CreateReferenceFrame(spacePoints, _depthFrameDataSize);
+                    Screen.CreateReferenceFrame(_spacePoints, _depthFrameDataSize);
                     break;
-                case 3: // Right Edge
-                    _screen.PrepareHorizontalCalibration(_gestures, ref UserPoint, spacePoints, _depthFrameDataSize);
-                    _screen.CalibrateRightEdge(_gestures, UserPoint);
+                case 2: // Right Edge
+                    Screen.PrepareHorizontalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
+                    Screen.CalibrateRightEdge(_pointFound);
                     break;
-                case 4: // Left Edge
-                    _screen.PrepareHorizontalCalibration(_gestures, ref UserPoint, spacePoints, _depthFrameDataSize);
-                    _screen.CalibrateLeftEdge(_gestures, UserPoint);
+                case 3: // Left Edge
+                    Screen.PrepareHorizontalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
+                    Screen.CalibrateLeftEdge(_pointFound);
                     break;
-                case 5: // Top Edge
-                    _screen.PrepareVerticalCalibration(_gestures, ref UserPoint, spacePoints, _depthFrameDataSize);
-                    _screen.CalibrateTopEdge(_gestures, UserPoint);
+                case 4: // Top Edge
+                    Screen.PrepareVerticalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
+                    Screen.CalibrateTopEdge(_pointFound);
                     break;
-                case 6: // Bottom Edge
-                    _screen.PrepareVerticalCalibration(_gestures, ref UserPoint, spacePoints, _depthFrameDataSize);
-                    _screen.CalibrateBottomEdge(_gestures, UserPoint);
+                case 5: // Bottom Edge
+                    Screen.PrepareVerticalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
+                    Screen.CalibrateBottomEdge(_pointFound);
                     break;
                 default: // Not in calibration mode
-                    UserPoint.Y = _screen.MouseMoveThreshold;
-                    for (int i = 0; i < _depthFrameDataSize/sizeof (ushort); i++)
-                    {
-                        if (0 < spacePoints[i].Y && spacePoints[i].Y < UserPoint.Y &&
-                                _screen.BottomEdge < spacePoints[i].X && spacePoints[i].X < _screen.TopEdge
-                                && _screen.LeftEdge < spacePoints[i].Z && spacePoints[i].Z < _screen.RightEdge)
-                        {
-                            UserPoint.X = spacePoints[i].X;
-                            UserPoint.Y = spacePoints[i].Y;
-                            UserPoint.Z = spacePoints[i].Z;
-                        }
-                    }
-                    if (UserPoint.X.Equals(0) && UserPoint.Y.Equals(_screen.MouseMoveThreshold) &&
-                            UserPoint.Z.Equals(0))
-                    {
-                        _gestures.MouseStatus = 0; // No point has been found
-                    }
-                    else
-                    {
-                        if (_gestures.MouseStatus == 0)
-                        {
-                            _gestures.MouseStatus = 1;
-                        }
-                        _gestures.ProcessGesture(UserPoint.X, UserPoint.Y, UserPoint.Z, _screen);
-                    }
+                    FindGestures();
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Looks for user's hand and creates new gestures
+        /// </summary>
+        private void FindGestures()
+        {
+            _pointFound.X = 0.0f;
+            _pointFound.Y = Screen.MouseMoveThreshold;
+            _pointFound.Z = 0.0f;
+
+            int gesturesFound = 0;
+            for (int i = 0; i < _depthFrameDataSize / sizeof(ushort); i++)
+            {
+                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge && _spacePoints[i].Y > 0 && _spacePoints[i].Y < _pointFound.Y
+                        && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
+                {
+                    _pointFound.X = _spacePoints[i].X;
+                    _pointFound.Y = _spacePoints[i].Y;
+                    _pointFound.Z = _spacePoints[i].Z;
+
+                    if (TouchWallApp.CurrentGestureType == 0)
+                    {
+                        TouchWallApp.CurrentGestureType = 1;
+                    }
+
+                    switch (gesturesFound) // Allowing up to four gestures in MultiTouch mode
+                    {
+                        case 0:
+                            Gestures[0] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                            if (TouchWallApp.MultiTouchMode == 0)
+                            {
+                                return;
+                            }
+                            gesturesFound++;
+                            break;
+                        case 1:
+                            if (Math.Abs(_pointFound.Z - Gestures[0].X) > 0.07f &&
+                                Math.Abs(_pointFound.X - Gestures[0].Y) > 0.05f)
+                            {
+                                Gestures[1] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                                gesturesFound++;
+                            }
+                            break;
+                        case 2:
+                            if (Math.Abs(_pointFound.Z - Gestures[0].X) > 0.07f &&
+                                Math.Abs(_pointFound.X - Gestures[0].Y) > 0.05f
+                                && Math.Abs(_pointFound.Z - Gestures[1].X) > 0.07f &&
+                                Math.Abs(_pointFound.X - Gestures[1].Y) > 0.05f)
+                            {
+                                Gestures[2] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                                gesturesFound++;
+                            }
+                            break;
+                        case 3:
+                            if (Math.Abs(_pointFound.Z - Gestures[0].X) > 0.07f &&
+                                Math.Abs(_pointFound.X - Gestures[0].Y) > 0.05f
+                                && Math.Abs(_pointFound.Z - Gestures[1].X) > 0.07f &&
+                                Math.Abs(_pointFound.X - Gestures[1].Y) > 0.05f
+                                && Math.Abs(_pointFound.Z - Gestures[2].X) > 0.07f &&
+                                Math.Abs(_pointFound.X - Gestures[2].Y) > 0.05f)
+                            {
+                                Gestures[3] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                                gesturesFound++;
+                            }
+                            break;
+                    }
+                }
             }
         }
     }

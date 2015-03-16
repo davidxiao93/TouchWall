@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TouchWall
+﻿namespace TouchWall
 {
     using System;
     using System.IO;
@@ -17,7 +11,7 @@ namespace TouchWall
         /// <summary>
         /// Holds the kinect audio stream, in 32-bit IEEE float format
         /// </summary>
-        private readonly Stream kinect32BitStream;
+        private readonly Stream _kinect32BitStream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KinectAudioStream" /> class.
@@ -25,7 +19,7 @@ namespace TouchWall
         /// <param name="input">Kinect audio stream</param>
         public KinectAudioStream(Stream input)
         {
-            this.kinect32BitStream = input;
+            _kinect32BitStream = input;
         }
 
         /// <summary>
@@ -130,13 +124,13 @@ namespace TouchWall
         public override int Read(byte[] buffer, int offset, int count)
         {
             // Kinect gives 32-bit float samples. Speech asks for 16-bit integer samples.
-            const int SampleSizeRatio = sizeof(float) / sizeof(short); // = 2. 
+            const int sampleSizeRatio = sizeof(float) / sizeof(short); // = 2. 
 
             // Speech reads at high frequency - allow some wait period between reads (in msec)
-            const int SleepDuration = 50;
+            const int sleepDuration = 50;
 
             // Allocate buffer for receiving 32-bit float from Kinect
-            int readcount = count * SampleSizeRatio;
+            int readcount = count * sampleSizeRatio;
             byte[] kinectBuffer = new byte[readcount];
             int bytesremaining = readcount;
 
@@ -144,18 +138,18 @@ namespace TouchWall
             while (bytesremaining > 0)
             {
                 // If we are no longer processing speech commands, exit
-                if (!this.SpeechActive)
+                if (!SpeechActive)
                 {
                     return 0;
                 }
 
-                int result = this.kinect32BitStream.Read(kinectBuffer, readcount - bytesremaining, bytesremaining);
+                int result = _kinect32BitStream.Read(kinectBuffer, readcount - bytesremaining, bytesremaining);
                 bytesremaining -= result;
 
                 // Speech will read faster than realtime - wait for more data to arrive
                 if (bytesremaining > 0)
                 {
-                    System.Threading.Thread.Sleep(SleepDuration);
+                    System.Threading.Thread.Sleep(sleepDuration);
                 }
             }
 
@@ -181,7 +175,7 @@ namespace TouchWall
 
                 // Place the resulting 16-bit sample in the output byte array
                 byte[] local = BitConverter.GetBytes(convertedSample);
-                System.Buffer.BlockCopy(local, 0, buffer, offset + (i * sizeof(short)), sizeof(short));
+                Buffer.BlockCopy(local, 0, buffer, offset + (i * sizeof(short)), sizeof(short));
             }
 
             return count;

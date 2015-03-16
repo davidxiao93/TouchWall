@@ -1,0 +1,22 @@
+﻿<Window x:Class="TouchWall.MultiTouchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Touch Wall - MultiTouch Mode"
+        Height="350" Width="525"
+        WindowStyle="None" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close"
+                        Executed="MultiTouchWindow_Closing"/>
+    </Window.CommandBindings>
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+    </Window.Resources>
+
+    <Canvas Name="Map" Background="LightBlue" SnapsToDevicePixels="True">
+        <Button Name="CloseButton"  Content="Close" Command="ApplicationCommands.Close" FontSize="20" Height="34" Width="58"/>
+    </Canvas>
+</Window>

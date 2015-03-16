@@ -7,10 +7,6 @@ namespace TouchWall
 {
     public class FrameDataManager
     {
-        private readonly KinectSensor _kinectSensor;
-        private readonly Screen _screen;
-        private readonly TouchGestureHandler _gestures;
-
         /// <summary>
         /// Reader for depth frames
         /// </summary>
@@ -31,17 +27,13 @@ namespace TouchWall
         /// </summary>
         private Frame _frame;
         
-        public FrameDataManager(KinectSensor kinectSensor, Screen screen, TouchGestureHandler gestures)
+        public FrameDataManager()
         {
-            _kinectSensor = kinectSensor;
-            _screen = screen;
-            _gestures = gestures;
-
             // Open the reader for the depth frames
-            _depthFrameReader = _kinectSensor.DepthFrameSource.OpenReader();
+            _depthFrameReader = TouchWallApp.KinectSensor.DepthFrameSource.OpenReader();
 
             // Get FrameDescription from DepthFrameSource
-            _depthFrameDescription = _kinectSensor.DepthFrameSource.FrameDescription;
+            _depthFrameDescription = TouchWallApp.KinectSensor.DepthFrameSource.FrameDescription;
 
             // Create the bitmap to display
             _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height, 96.0, 96.0, PixelFormats.Gray8, null);
@@ -87,8 +79,7 @@ namespace TouchWall
                         if (((_depthFrameDescription.Width * _depthFrameDescription.Height) == (depthBuffer.Size /_depthFrameDescription.BytesPerPixel))
                             && (_depthFrameDescription.Width == _depthBitmap.PixelWidth) && (_depthFrameDescription.Height == _depthBitmap.PixelHeight))
                         {
-                            _frame = new Frame(depthBuffer.UnderlyingBuffer, depthBuffer.Size, _kinectSensor, _depthFrameDescription, _screen, _gestures);
-                            _frame.ConvertProcessDepthFrameData();
+                            _frame = new Frame(depthBuffer.UnderlyingBuffer, depthBuffer.Size, _depthFrameDescription);
                             RenderDepthPixels();
                         }
                     }

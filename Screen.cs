@@ -5,44 +5,39 @@ namespace TouchWall
     public class Screen
     {
         /// <summary>
-        /// Determines if the program is in calibration mode
-        /// </summary>
-        public int CalibrateStatus { get; set; }
-
-        /// <summary>
         /// Distance (metres) from screen before moving the mouse
         /// </summary>
-        public float MouseMoveThreshold { get; set; }
+        public static float MouseMoveThreshold { get; set; }
 
         /// <summary>
         /// Distance (metres) from screen before registering a left click down
         /// </summary>
-        public float MouseDownThreshold { get; set; }
+        public static float MouseDownThreshold { get; set; }
 
         /// <summary>
         /// Distance (metres) from screen before registering a left click up
         /// </summary>
-        public float MouseUpThreshold { get; set; }
+        public static float MouseUpThreshold { get; set; }
 
         /// <summary>
         /// Distance (metres) between sensor and left edge of screen
         /// </summary>
-        public float LeftEdge { get; set; }
+        public static float LeftEdge { get; set; }
 
         /// <summary>
         /// Distance (metres) between sensor and right edge of screen
         /// </summary>
-        public float RightEdge { get; set; }
+        public static float RightEdge { get; set; }
 
         /// <summary>
         /// Distance (metres) between sensor and top edge of screen
         /// </summary>
-        public float TopEdge { get; set; }
+        public static float TopEdge { get; set; }
 
         /// <summary>
         /// Distance (metres) between sensor and bottom edge of screen
         /// </summary>
-        public float BottomEdge { get; set; }
+        public static float BottomEdge { get; set; }
 
         /// <summary>
         /// Previous distance between sensor and left edge of screen, used for calibration
@@ -67,11 +62,10 @@ namespace TouchWall
         /// <summary>
         /// Storage of previous calibration values
         /// </summary>
-        private readonly CameraSpacePoint[] _calibratePoints;
+        private static CameraSpacePoint[] _calibratePoints;
 
         public Screen()
         {
-            CalibrateStatus = 0;
             MouseMoveThreshold = 0.12f;
             MouseDownThreshold = 0.003f;
             MouseUpThreshold = 0.006f;
@@ -83,18 +77,20 @@ namespace TouchWall
             _oldRightEdge = 0.7f;
             _oldTopEdge = 0.19f;
             _oldBottomEdge = -0.11f;
-            _calibratePoints = new CameraSpacePoint[KinectConstants.KinectWidth * KinectConstants.KinectHeight];
+            _calibratePoints = new CameraSpacePoint[TouchWallApp.KinectWidth * TouchWallApp.KinectHeight];
         }
 
         public void BeginCalibration()
         {
+            TouchWallApp.CurrentGestureType = 1;
+            TouchWallApp.CursorStatus = 0;
             _oldBottomEdge = BottomEdge;
             _oldLeftEdge = LeftEdge;
             _oldRightEdge = RightEdge;
             _oldTopEdge = TopEdge;
-            if (CalibrateStatus == 0)
+            if (TouchWallApp.CalibrateStatus == 0)
             {
-                CalibrateStatus = 1;
+                TouchWallApp.CalibrateStatus = 1;
             }
         }
 
@@ -104,10 +100,11 @@ namespace TouchWall
             RightEdge = _oldRightEdge;
             LeftEdge = _oldLeftEdge;
             TopEdge = _oldTopEdge;
-            CalibrateStatus = 0;
+            TouchWallApp.CurrentGestureType = 1;
+            TouchWallApp.CalibrateStatus = 0;
         }
 
-        internal void CreateReferenceFrame(CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
+        internal static void CreateReferenceFrame(CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {
             for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
             {
@@ -115,16 +112,15 @@ namespace TouchWall
                 _calibratePoints[i].Y = spacePoints[i].Y;
                 _calibratePoints[i].Z = spacePoints[i].Z;
             }
-            CalibrateStatus = 3;
+            TouchWallApp.CalibrateStatus = 2;
         }
 
-        internal void PrepareHorizontalCalibration(TouchGestureHandler gestures, ref CameraSpacePoint userPoint, CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
+        internal static void PrepareHorizontalCalibration(ref CameraSpacePoint userPoint, CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {
-            // Getting right coordinates
             userPoint.Y = MouseMoveThreshold;
-            userPoint.Z = 4.0f;
-            gestures.MouseAllowed = 0;
-            float tolerance = 0.1f;
+            //userPoint.Z = 4.0f;
+            TouchWallApp.CursorStatus = 0;
+            const float tolerance = 0.1f;
             for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
             {
                 if (0 < spacePoints[i].Y && spacePoints[i].Y < userPoint.Y && spacePoints[i].X > -0.1f && spacePoints[i].X < 0.1f && spacePoints[i].Z > 0.5f && spacePoints[i].Z < 8.0f)
@@ -154,11 +150,11 @@ namespace TouchWall
             }
         }
 
-        internal void PrepareVerticalCalibration(TouchGestureHandler gestures, ref CameraSpacePoint userPoint, CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
+        internal static void PrepareVerticalCalibration(ref CameraSpacePoint userPoint, CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {
             userPoint.Y = MouseMoveThreshold;
-            gestures.MouseAllowed = 0;
-            float tolerance = 0.1f;
+            TouchWallApp.CursorStatus = 0;
+            const float tolerance = 0.1f;
 
             for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
             {
@@ -189,7 +185,7 @@ namespace TouchWall
             }
         }
 
-        public void CalibrateRightEdge(TouchGestureHandler gestures, CameraSpacePoint userPoint)
+        public static void CalibrateRightEdge(CameraSpacePoint userPoint)
         {
             if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
             {
@@ -199,20 +195,20 @@ namespace TouchWall
             {
                 RightEdge = userPoint.Z;
 
-                if (userPoint.Y < MouseDownThreshold && gestures.MouseStatus == 1)
+                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
                 {
-                    gestures.MouseStatus = 2;
+                    TouchWallApp.CurrentGestureType = 2;
                 }
 
-                if (userPoint.Y > MouseUpThreshold && gestures.MouseStatus == 2)
+                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
                 {
-                    gestures.MouseStatus = 1;
-                    CalibrateStatus = 4;
+                    TouchWallApp.CurrentGestureType = 1;
+                    TouchWallApp.CalibrateStatus = 3;
                 }
             }
         }
 
-        public void CalibrateLeftEdge(TouchGestureHandler gestures, CameraSpacePoint userPoint)
+        public static void CalibrateLeftEdge(CameraSpacePoint userPoint)
         {
             if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
             {
@@ -222,20 +218,20 @@ namespace TouchWall
             {
                 LeftEdge = userPoint.Z;
 
-                if (userPoint.Y < MouseDownThreshold && gestures.MouseStatus == 1)
+                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
                 {
-                    gestures.MouseStatus = 2;
+                    TouchWallApp.CurrentGestureType = 2;
                 }
 
-                if (userPoint.Y > MouseUpThreshold && gestures.MouseStatus == 2)
+                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
                 {
-                    gestures.MouseStatus = 1;
-                    CalibrateStatus = 5;
+                    TouchWallApp.CurrentGestureType = 1;
+                    TouchWallApp.CalibrateStatus = 4;
                 }
             }
         }
 
-        public void CalibrateTopEdge(TouchGestureHandler gestures, CameraSpacePoint userPoint)
+        public static void CalibrateTopEdge(CameraSpacePoint userPoint)
         {
             if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
             {
@@ -245,20 +241,20 @@ namespace TouchWall
             {
                 TopEdge = userPoint.X;
 
-                if (userPoint.Y < MouseDownThreshold && gestures.MouseStatus == 1)
+                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
                 {
-                    gestures.MouseStatus = 2;
+                    TouchWallApp.CurrentGestureType = 2;
                 }
 
-                if (userPoint.Y > MouseUpThreshold && gestures.MouseStatus == 2)
+                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
                 {
-                    gestures.MouseStatus = 1;
-                    CalibrateStatus = 6;
+                    TouchWallApp.CurrentGestureType = 1;
+                    TouchWallApp.CalibrateStatus = 5;
                 }
             }
         }
 
-        public void CalibrateBottomEdge(TouchGestureHandler gestures, CameraSpacePoint userPoint)
+        public static void CalibrateBottomEdge(CameraSpacePoint userPoint)
         {
 
             if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
@@ -269,16 +265,16 @@ namespace TouchWall
             {
                 BottomEdge = userPoint.X;
                 
-                if (userPoint.Y < MouseDownThreshold && gestures.MouseStatus == 1)
+                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
                 {
-                    gestures.MouseStatus = 2;
+                    TouchWallApp.CurrentGestureType = 2;
                 }
 
-                if (userPoint.Y > MouseUpThreshold && gestures.MouseStatus == 2)
+                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
                 {
-                    gestures.MouseStatus = 1;
-                    gestures.MouseAllowed = 1;
-                    CalibrateStatus = 0;
+                    TouchWallApp.CurrentGestureType = 1;
+                    TouchWallApp.CursorStatus = 1;
+                    TouchWallApp.CalibrateStatus = 0;
                 }
             }
         }
