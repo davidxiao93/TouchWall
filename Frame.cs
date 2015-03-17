@@ -83,27 +83,15 @@ namespace TouchWall
         {
             switch (TouchWallApp.CalibrateStatus)
             {
+                case 0: // Not in calibration mode
+                    FindGestures();
+                    break;
                 case 1: // Begin Calibration
                     Screen.CreateReferenceFrame(_spacePoints, _depthFrameDataSize);
                     break;
-                case 2: // Right Edge
-                    Screen.PrepareHorizontalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
-                    Screen.CalibrateRightEdge(_pointFound);
-                    break;
-                case 3: // Left Edge
-                    Screen.PrepareHorizontalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
-                    Screen.CalibrateLeftEdge(_pointFound);
-                    break;
-                case 4: // Top Edge
-                    Screen.PrepareVerticalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
-                    Screen.CalibrateTopEdge(_pointFound);
-                    break;
-                case 5: // Bottom Edge
-                    Screen.PrepareVerticalCalibration(ref _pointFound, _spacePoints, _depthFrameDataSize);
-                    Screen.CalibrateBottomEdge(_pointFound);
-                    break;
-                default: // Not in calibration mode
-                    FindGestures();
+                default: // Use frame data to calibrate an edge of screen
+                    Screen.LookForPoints(_spacePoints, _depthFrameDataSize);
+                    Screen.CalibrateEdge();
                     break;
             }
         }
@@ -118,7 +106,7 @@ namespace TouchWall
             _pointFound.Z = 0.0f;
 
             int gesturesFound = 0;
-            for (int i = 0; i < _depthFrameDataSize / sizeof(ushort); i++)
+            for (int i = (int)(_depthFrameDataSize / sizeof(ushort)) - 1; i >= 0; i--)
             {
                 if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge && _spacePoints[i].Y > 0 && _spacePoints[i].Y < _pointFound.Y
                         && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)

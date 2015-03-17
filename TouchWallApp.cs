@@ -49,14 +49,14 @@ namespace TouchWall
         public const int KinectHeight = 424;
 
         /// <summary>
-        /// Knows the dimensions of the screen and has a calibrator
-        /// </summary>
-        private readonly Screen _screen;
-
-        /// <summary>
         /// Collects and processes frame data from sensor
         /// </summary>
         public readonly FrameDataManager FrameDataManager;
+
+        /// <summary>
+        /// Responsible for calibrating and knowing dimensions of the screen
+        /// </summary>
+        private readonly Screen _screen;
 
         /// <summary>
         /// Stream for 32b-16b conversion.
@@ -133,13 +133,13 @@ namespace TouchWall
         {
             switch (CursorStatus)
             {
-                case 1:
+                case 1: // Switch to cursor with click
                     CursorStatus = 2;
                     break;
-                case 2:
+                case 2: // Switch to disabled
                     CursorStatus = 0;
                     break;
-                default:
+                default: // Switch to cursor without click
                     CursorStatus = 1;
                     break;
             }

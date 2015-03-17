@@ -64,8 +64,14 @@ namespace TouchWall
         /// </summary>
         private static CameraSpacePoint[] _calibratePoints;
 
+        /// <summary>
+        /// For storing current position of user's hand
+        /// </summary>
+        private static CameraSpacePoint _pointFound;
+
         public Screen()
         {
+            // Default values
             MouseMoveThreshold = 0.12f;
             MouseDownThreshold = 0.003f;
             MouseUpThreshold = 0.006f;
@@ -77,6 +83,7 @@ namespace TouchWall
             _oldRightEdge = 0.7f;
             _oldTopEdge = 0.19f;
             _oldBottomEdge = -0.11f;
+
             _calibratePoints = new CameraSpacePoint[TouchWallApp.KinectWidth * TouchWallApp.KinectHeight];
         }
 
@@ -115,166 +122,104 @@ namespace TouchWall
             TouchWallApp.CalibrateStatus = 2;
         }
 
-        internal static void PrepareHorizontalCalibration(ref CameraSpacePoint userPoint, CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
+        internal static void LookForPoints(CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {
-            userPoint.Y = MouseMoveThreshold;
-            //userPoint.Z = 4.0f;
-            TouchWallApp.CursorStatus = 0;
-            const float tolerance = 0.1f;
+            _pointFound.Y = MouseMoveThreshold;
+
             for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
             {
-                if (0 < spacePoints[i].Y && spacePoints[i].Y < userPoint.Y && spacePoints[i].X > -0.1f && spacePoints[i].X < 0.1f && spacePoints[i].Z > 0.5f && spacePoints[i].Z < 8.0f)
+                if (TouchWallApp.CalibrateStatus == 2 || TouchWallApp.CalibrateStatus == 3) // Left and right calibration
                 {
-                    if (spacePoints[i].X.Equals(float.NegativeInfinity) || spacePoints[i].X.Equals(float.PositiveInfinity)
+                    if (0 < spacePoints[i].Y && spacePoints[i].Y < _pointFound.Y && spacePoints[i].X > -0.1f && spacePoints[i].X < 0.1f 
+                        && spacePoints[i].Z > 0.5f && spacePoints[i].Z < 8.0f && NewPointFound(spacePoints, i))
+                    {
+                        _pointFound.X = spacePoints[i].X;
+                        _pointFound.Y = spacePoints[i].Y;
+                        _pointFound.Z = spacePoints[i].Z;
+                    }
+                }
+                else // Top and bottom calibration
+                {
+                    if (0 < spacePoints[i].Y && spacePoints[i].Y < _pointFound.Y && spacePoints[i].Z > LeftEdge && spacePoints[i].Z < RightEdge && NewPointFound(spacePoints, i))
+                    {
+                        _pointFound.X = spacePoints[i].X;
+                        _pointFound.Y = spacePoints[i].Y;
+                        _pointFound.Z = spacePoints[i].Z;
+                    }
+                }
+            }
+        }
+        
+        private static bool NewPointFound(CameraSpacePoint[] spacePoints, int i)
+        {
+            const float tolerance = 0.1f;
+            if (spacePoints[i].X.Equals(float.NegativeInfinity) || spacePoints[i].X.Equals(float.PositiveInfinity)
                             || spacePoints[i].Y.Equals(float.NegativeInfinity) || spacePoints[i].Y.Equals(float.PositiveInfinity)
                             || spacePoints[i].Z.Equals(float.NegativeInfinity) || spacePoints[i].Z.Equals(float.PositiveInfinity)
                             || _calibratePoints[i].X.Equals(float.NegativeInfinity) || _calibratePoints[i].X.Equals(float.PositiveInfinity)
                             || _calibratePoints[i].Y.Equals(float.NegativeInfinity) || _calibratePoints[i].Y.Equals(float.PositiveInfinity)
                             || _calibratePoints[i].Z.Equals(float.NegativeInfinity) || _calibratePoints[i].Z.Equals(float.PositiveInfinity))
-                    {
-                        // For this point, the new pixel is unknown. As the point we are looking for isnt unknown, we don't want to use them
-                    }
-                    else if ((_calibratePoints[i].X - spacePoints[i].X) < tolerance && (_calibratePoints[i].X - spacePoints[i].X) > -1 * tolerance
-                        && (_calibratePoints[i].Y - spacePoints[i].Y) < tolerance && (_calibratePoints[i].Y - spacePoints[i].Y) > -1 * tolerance
-                        && (_calibratePoints[i].Z - spacePoints[i].Z) < tolerance && (_calibratePoints[i].Z - spacePoints[i].Z) > -1 * tolerance)
-                    {
-                        // This point is the same as in the reference. We can ignore this piece of data
-                    }
-                    else
-                    {
-                        userPoint.X = spacePoints[i].X;
-                        userPoint.Y = spacePoints[i].Y;
-                        userPoint.Z = spacePoints[i].Z;
-                    }
-                }
-            }
-        }
-
-        internal static void PrepareVerticalCalibration(ref CameraSpacePoint userPoint, CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
-        {
-            userPoint.Y = MouseMoveThreshold;
-            TouchWallApp.CursorStatus = 0;
-            const float tolerance = 0.1f;
-
-            for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
             {
-                if (0 < spacePoints[i].Y && spacePoints[i].Y < userPoint.Y && spacePoints[i].Z > LeftEdge && spacePoints[i].Z < RightEdge)
-                {
-                    if (spacePoints[i].X.Equals(float.NegativeInfinity) || spacePoints[i].X.Equals(float.PositiveInfinity)
-                               || spacePoints[i].Y.Equals(float.NegativeInfinity) || spacePoints[i].Y.Equals(float.PositiveInfinity)
-                               || spacePoints[i].Z.Equals(float.NegativeInfinity) || spacePoints[i].Z.Equals(float.PositiveInfinity)
-                               || _calibratePoints[i].X.Equals(float.NegativeInfinity) || _calibratePoints[i].X.Equals(float.PositiveInfinity)
-                               || _calibratePoints[i].Y.Equals(float.NegativeInfinity) || _calibratePoints[i].Y.Equals(float.PositiveInfinity)
-                               || _calibratePoints[i].Z.Equals(float.NegativeInfinity) || _calibratePoints[i].Z.Equals(float.PositiveInfinity))
-                    {
-                        // For this point, the new pixel is unknown. As the point we are looking for isnt unknown, we don't want to use them
-                    }
-                    else if ((_calibratePoints[i].X - spacePoints[i].X) < tolerance && (_calibratePoints[i].X - spacePoints[i].X) > -1 * tolerance
-                        && (_calibratePoints[i].Y - spacePoints[i].Y) < tolerance && (_calibratePoints[i].Y - spacePoints[i].Y) > -1 * tolerance
-                        && (_calibratePoints[i].Z - spacePoints[i].Z) < tolerance && (_calibratePoints[i].Z - spacePoints[i].Z) > -1 * tolerance)
-                    {
-                        // This point is the same as in the reference. We can ignore this piece of data
-                    }
-                    else
-                    {
-                        userPoint.X = spacePoints[i].X;
-                        userPoint.Y = spacePoints[i].Y;
-                        userPoint.Z = spacePoints[i].Z;
-                    }
-                }
+                // For this , the new pixel is unknown. As the point we are looking for isnt unknown, we don't want to use them
             }
+            else if ((_calibratePoints[i].X - spacePoints[i].X) < tolerance && (_calibratePoints[i].X - spacePoints[i].X) > -tolerance
+                && (_calibratePoints[i].Y - spacePoints[i].Y) < tolerance && (_calibratePoints[i].Y - spacePoints[i].Y) > -tolerance
+                && (_calibratePoints[i].Z - spacePoints[i].Z) < tolerance && (_calibratePoints[i].Z - spacePoints[i].Z) > -tolerance)
+            {
+                // This point is the same as in the reference. We can ignore this piece of data
+            }
+            else
+            {
+                return true; // If a point has been found
+            }
+            return false;
         }
 
-        public static void CalibrateRightEdge(CameraSpacePoint userPoint)
+        public static void CalibrateEdge()
         {
-            if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
+            if (_pointFound.X.Equals(0) && _pointFound.Y.Equals(MouseMoveThreshold) && _pointFound.Z.Equals(0))
             {
                 // No point has been found
             }
             else
             {
-                RightEdge = userPoint.Z;
-
-                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
+                switch (TouchWallApp.CalibrateStatus)
                 {
-                    TouchWallApp.CurrentGestureType = 2;
+                    case 2:
+                        RightEdge = _pointFound.Z;
+                        break;
+                    case 3:
+                        LeftEdge = _pointFound.Z;
+                        break;
+                    case 4:
+                        TopEdge = _pointFound.X;
+                        break;
+                    case 5:
+                        BottomEdge = _pointFound.X;
+                        break;
                 }
-
-                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
-                {
-                    TouchWallApp.CurrentGestureType = 1;
-                    TouchWallApp.CalibrateStatus = 3;
-                }
+                WaitForUserClick(_pointFound);
             }
         }
 
-        public static void CalibrateLeftEdge(CameraSpacePoint userPoint)
+        public static void WaitForUserClick(CameraSpacePoint pointFound)
         {
-            if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
+            if (pointFound.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
             {
-                // No point has been found
+                TouchWallApp.CurrentGestureType = 2;
             }
-            else
+            
+            if (pointFound.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
             {
-                LeftEdge = userPoint.Z;
-
-                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
+                TouchWallApp.CurrentGestureType = 1;
+                if (TouchWallApp.CalibrateStatus < 5)
                 {
-                    TouchWallApp.CurrentGestureType = 2;
+                    TouchWallApp.CalibrateStatus++;
                 }
-
-                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
+                else
                 {
-                    TouchWallApp.CurrentGestureType = 1;
-                    TouchWallApp.CalibrateStatus = 4;
-                }
-            }
-        }
-
-        public static void CalibrateTopEdge(CameraSpacePoint userPoint)
-        {
-            if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
-            {
-                // No point has been found
-            }
-            else
-            {
-                TopEdge = userPoint.X;
-
-                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
-                {
-                    TouchWallApp.CurrentGestureType = 2;
-                }
-
-                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
-                {
-                    TouchWallApp.CurrentGestureType = 1;
-                    TouchWallApp.CalibrateStatus = 5;
-                }
-            }
-        }
-
-        public static void CalibrateBottomEdge(CameraSpacePoint userPoint)
-        {
-
-            if (userPoint.X.Equals(0) && userPoint.Y.Equals(MouseMoveThreshold) && userPoint.Z.Equals(0))
-            {
-                // No point has been found
-            }
-            else
-            {
-                BottomEdge = userPoint.X;
-                
-                if (userPoint.Y < MouseDownThreshold && TouchWallApp.CurrentGestureType == 1)
-                {
-                    TouchWallApp.CurrentGestureType = 2;
-                }
-
-                if (userPoint.Y > MouseUpThreshold && TouchWallApp.CurrentGestureType == 2)
-                {
-                    TouchWallApp.CurrentGestureType = 1;
-                    TouchWallApp.CursorStatus = 1;
                     TouchWallApp.CalibrateStatus = 0;
+                    TouchWallApp.CursorStatus = 1;
                 }
             }
         }

@@ -42,7 +42,7 @@ namespace TouchWall
         /// </summary>
         private static readonly int[] PrevMouseY = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         
-        public Gesture(float y, float z, float x)
+        public Gesture(float y, float z, float x) // Coordinates in camera Space converted to USER space
         {
             X = x;
             Y = y;
