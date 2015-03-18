@@ -121,7 +121,8 @@ namespace TouchWall
             {
                 CoordinatesLabel.Content = "X: " + _touchWall.FrameDataManager.Frame.Gestures[0].X
                     + "\nY: " + _touchWall.FrameDataManager.Frame.Gestures[0].Y
-                    + "\nZ: " + _touchWall.FrameDataManager.Frame.Gestures[0].Z;
+                    + "\nZ: " + _touchWall.FrameDataManager.Frame.Gestures[0].Z
+                    + "\nGesture Status: " + TouchWallApp.CurrentGestureType;
             }
         }
 

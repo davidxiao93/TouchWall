@@ -29,6 +29,7 @@ namespace TouchWall
         /// Points on 3D map
         /// </summary>
         private readonly CameraSpacePoint[] _spacePoints;
+        private readonly CameraSpacePoint[] _foundGestures;
         private CameraSpacePoint _pointFound;
 
         internal Frame(IntPtr depthFrameData, uint depthFrameDataSize, FrameDescription depthFrameDescription)
@@ -108,8 +109,9 @@ namespace TouchWall
             int gesturesFound = 0;
             for (int i = (int)(_depthFrameDataSize / sizeof(ushort)) - 1; i >= 0; i--)
             {
-                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge && _spacePoints[i].Y > 0 && _spacePoints[i].Y < _pointFound.Y
-                        && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
+                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge
+                    && _spacePoints[i].Y > 0 && _spacePoints[i].Y < Screen.MouseMoveThreshold
+                    && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
                 {
                     _pointFound.X = _spacePoints[i].X;
                     _pointFound.Y = _spacePoints[i].Y;
@@ -123,46 +125,112 @@ namespace TouchWall
                     switch (gesturesFound) // Allowing up to four gestures in MultiTouch mode
                     {
                         case 0:
-                            Gestures[0] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                            Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
                             if (TouchWallApp.MultiTouchMode == 0)
                             {
                                 return;
                             }
                             gesturesFound++;
                             break;
-                        case 1:
-                            if (Math.Abs(_pointFound.Z - Gestures[0].X) > 0.07f &&
-                                Math.Abs(_pointFound.X - Gestures[0].Y) > 0.05f)
+                        //case 1: case 2: case 3:
+                        default:
+                            Boolean foundNewPoint = true;
+                            float xTolerance = 0.07f;
+                            float yTolerance = 0.05f;
+                            for (int a = 0; a < gesturesFound; a++)
                             {
-                                Gestures[1] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
-                                gesturesFound++;
+                                if ((Math.Abs(_pointFound.Z - Gestures[a].X) < xTolerance
+                                          && Math.Abs(_pointFound.X - Gestures[a].Y) < yTolerance))
+                                {
+                                    foundNewPoint = false;
+                                    break;
+                                }
+
                             }
-                            break;
-                        case 2:
-                            if (Math.Abs(_pointFound.Z - Gestures[0].X) > 0.07f &&
-                                Math.Abs(_pointFound.X - Gestures[0].Y) > 0.05f
-                                && Math.Abs(_pointFound.Z - Gestures[1].X) > 0.07f &&
-                                Math.Abs(_pointFound.X - Gestures[1].Y) > 0.05f)
+                            if (foundNewPoint == true)
                             {
-                                Gestures[2] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                                Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
                                 gesturesFound++;
-                            }
-                            break;
-                        case 3:
-                            if (Math.Abs(_pointFound.Z - Gestures[0].X) > 0.07f &&
-                                Math.Abs(_pointFound.X - Gestures[0].Y) > 0.05f
-                                && Math.Abs(_pointFound.Z - Gestures[1].X) > 0.07f &&
-                                Math.Abs(_pointFound.X - Gestures[1].Y) > 0.05f
-                                && Math.Abs(_pointFound.Z - Gestures[2].X) > 0.07f &&
-                                Math.Abs(_pointFound.X - Gestures[2].Y) > 0.05f)
-                            {
-                                Gestures[3] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
-                                gesturesFound++;
+                                if (gesturesFound >= 4)
+                                {
+                                    return;
+                                }
                             }
                             break;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Looks for user's hand and creates new gestures
+        /// Testing version!!!!
+        /// </summary>
+        private void FindGestures2()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                _foundGestures[i].X = 0.0f;
+                _foundGestures[i].Y = Screen.MouseMoveThreshold;
+                _foundGestures[i].Z = 0.0f;
+            }
+
+            int gesturesFound = 0;
+            for (int i = (int) (_depthFrameDataSize/sizeof (ushort)) - 1; i >= 0; i--)
+            {
+                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge
+                    && _spacePoints[i].Y > 0 && _spacePoints[i].Y < Screen.MouseMoveThreshold
+                    && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
+                {
+                    Boolean foundNewPoint = true;
+                    float xTolerance = 0.07f;
+                    float yTolerance = 0.05f;
+                    for (int a = 0; a < gesturesFound; a++)
+                    {
+                        if ((Math.Abs(_spacePoints[i].Z - Gestures[a].X) < xTolerance
+                             && Math.Abs(_spacePoints[i].X - Gestures[a].Y) < yTolerance))
+                        {
+                            foundNewPoint = false;
+                            break;
+                        }
+
+                    }
+                    if (foundNewPoint == true)
+                    {
+                        // we've found a new point of interest
+                        if (gesturesFound == 4)
+                        {
+                            // we've reached our limit of 4 guestures.
+                            // check if this new point is closer to the screen than any of the existing points
+                            // this means that the program will look for the nearest up to 4 points
+                            for (int j = 0; j < gesturesFound; j++)
+                            {
+                                if (_foundGestures[gesturesFound].Y > _spacePoints[i].Y)
+                                {
+                                    _foundGestures[gesturesFound].X = _spacePoints[i].X;
+                                    _foundGestures[gesturesFound].Y = _spacePoints[i].Y;
+                                    _foundGestures[gesturesFound].Z = _spacePoints[i].Z;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // we've havent reached 4 points yet. Lets add new point
+                            _foundGestures[gesturesFound].X = _spacePoints[i].X;
+                            _foundGestures[gesturesFound].Y = _spacePoints[i].Y;
+                            _foundGestures[gesturesFound].Z = _spacePoints[i].Z;
+                            gesturesFound++;
+                        }
+                    }
+                }
+            }
+            for (int j = 0; j < gesturesFound; j++)
+            {
+                // gotten all the points. Lets make them
+                Gestures[j] = new Gesture(_foundGestures[j].X, _foundGestures[j].Y, _foundGestures[j].Z);
+            }
+            
         }
     }
 }

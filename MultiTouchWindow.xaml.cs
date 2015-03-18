@@ -36,44 +36,17 @@ namespace TouchWall
             Map.Children.Add(CloseButton);
             Ellipse[] cursors = new Ellipse[4];
 
-            if (_touchWall.FrameDataManager.Frame.Gestures[0] != null)
+            for (int i = 0; i < 4; i++)
             {
-                cursors[0] = new Ellipse { Fill = new SolidColorBrush(Colors.Red), Width = 15, Height = 15 };
-                Canvas.SetLeft(cursors[0], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[0].X - Screen.LeftEdge) /
-                                          (Screen.RightEdge - Screen.LeftEdge)));
-                Canvas.SetBottom(cursors[0], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[0].Y - Screen.BottomEdge) /
-                                          (Screen.TopEdge - Screen.BottomEdge)));
-                Map.Children.Add(cursors[0]);
-            }
-
-            if (_touchWall.FrameDataManager.Frame.Gestures[1] != null)
-            {
-                cursors[1] = new Ellipse { Fill = new SolidColorBrush(Colors.Green), Width = 15, Height = 15 };
-                Canvas.SetLeft(cursors[1], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[1].X - Screen.LeftEdge) /
-                                          (Screen.RightEdge - Screen.LeftEdge)));
-                Canvas.SetBottom(cursors[1], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[1].Y - Screen.BottomEdge) /
-                                            (Screen.TopEdge - Screen.BottomEdge)));
-                Map.Children.Add(cursors[1]);
-            }
-
-            if (_touchWall.FrameDataManager.Frame.Gestures[2] != null)
-            {
-                cursors[2] = new Ellipse { Fill = new SolidColorBrush(Colors.Blue), Width = 15, Height = 15 };
-                Canvas.SetLeft(cursors[2], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[2].X - Screen.LeftEdge) /
-                                          (Screen.RightEdge - Screen.LeftEdge)));
-                Canvas.SetBottom(cursors[2], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[2].Y - Screen.BottomEdge) /
-                                            (Screen.TopEdge - Screen.BottomEdge)));
-                Map.Children.Add(cursors[2]);
-            }
-
-            if (_touchWall.FrameDataManager.Frame.Gestures[3] != null)
-            {
-                cursors[3] = new Ellipse { Fill = new SolidColorBrush(Colors.Yellow), Width = 15, Height = 15 };
-                Canvas.SetLeft(cursors[3], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[3].X - Screen.LeftEdge) /
-                                          (Screen.RightEdge - Screen.LeftEdge)));
-                Canvas.SetBottom(cursors[3], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[3].Y - Screen.BottomEdge) /
-                                            (Screen.TopEdge - Screen.BottomEdge)));
-                Map.Children.Add(cursors[3]);
+                if (_touchWall.FrameDataManager.Frame.Gestures[i] != null)
+                {
+                    cursors[i] = new Ellipse { Fill = new SolidColorBrush(Colors.Red), Width = 15, Height = 15 };
+                    Canvas.SetLeft(cursors[i], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[i].X - Screen.LeftEdge) /
+                                              (Screen.RightEdge - Screen.LeftEdge)));
+                    Canvas.SetBottom(cursors[i], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[i].Y - Screen.BottomEdge) /
+                                              (Screen.TopEdge - Screen.BottomEdge)));
+                    Map.Children.Add(cursors[i]);
+                }
             }
         }
     }
