@@ -72,13 +72,13 @@ namespace TouchWall
         public Screen()
         {
             // Default values
-            MouseMoveThreshold = 0.12f;
+            MouseMoveThreshold = 0.10f;
             MouseDownThreshold = 0.003f;
             MouseUpThreshold = 0.006f;
-            LeftEdge = 0.6f;
-            RightEdge = 0.7f;
-            TopEdge = 0.19f;
-            BottomEdge = -0.11f;
+            LeftEdge = 0.5f;
+            RightEdge = 1.0f;
+            TopEdge = 0.15f;
+            BottomEdge = -0.14f;
             _oldLeftEdge = 0.6f;
             _oldRightEdge = 0.7f;
             _oldTopEdge = 0.19f;

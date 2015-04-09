@@ -12,6 +12,8 @@ namespace TouchWall
         public float Y { get; set; }
         public float Z { get; set; }
 
+        public int Id { get; set; }
+
         /// <summary>
         /// Constant defining the flag for left click down
         /// </summary>
@@ -32,22 +34,41 @@ namespace TouchWall
         /// </summary>
         private const int MouseeventfAbsolute = 0x8000;
 
-        /// <summary>
-        /// Storage for moving average of X values
-        /// </summary>
-        private static readonly int[] PrevMouseX = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-        /// <summary>
-        /// Storage for moving average of Y values
-        /// </summary>
-        private static readonly int[] PrevMouseY = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private static float[] prevX = { -10000, -10000, -10000, -10000 };
+        private static float[] prevY = { -10000, -10000, -10000, -10000 };
+
+        public float getPrevX(int id)
+        {
+            return prevX[id];
+        }
+
+        public float getPrevY(int id)
+        {
+            return prevY[id];
+        }
+
+        public void resetPrevX(int id)
+        {
+            prevX[id] = -10000;
+        }
+
+        public void resetPrevY(int id)
+        {
+            prevY[id] = -10000;
+        }
         
-        public Gesture(float y, float z, float x) // Coordinates in camera Space converted to USER space
+        public Gesture(float y, float z, float x, int id) // Coordinates in camera Space converted to USER space
         {
             X = x;
             Y = y;
             Z = z;
-            ProcessGesture();
+            Id = id;
+            ProcessGesture2();
+        }
+
+        public Gesture() // Coordinates in camera Space converted to USER space
+        {
         }
 
         // Cursor Control events
@@ -57,31 +78,34 @@ namespace TouchWall
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwflags, int dx, int dy, int cButtons, int dwExtraInfo);
 
-        private void ProcessGesture()
+        private void ProcessGesture2()
         {
             float width = Screen.RightEdge - Screen.LeftEdge;
             float height = Screen.TopEdge - Screen.BottomEdge;
 
-            int myX = (int) (Convert.ToDouble((X - Screen.LeftEdge)*65535)/width);
-            int myY = (int) (Convert.ToDouble((Screen.TopEdge - Y)*65535)/height);
+            const float smoothingFactor = 0.25f;
 
-            int oldValueX = 0, oldValueY = 0;
-            for (int i = 0; i < PrevMouseX.Length/sizeof (int); i++)
+            if (prevX[Id] < 0 || prevY[Id] < 0)
             {
-                oldValueX += PrevMouseX[i];
+                prevX[Id] = X;
+                prevY[Id] = Y;
             }
-            for (int i = 0; i < PrevMouseY.Length/sizeof (int); i++)
+            else
             {
-                oldValueY += PrevMouseY[i];
+                X = smoothingFactor * X + (1 - smoothingFactor) * prevX[Id];
+                Y = smoothingFactor * Y + (1 - smoothingFactor) * prevY[Id];
+                prevX[Id] = X;
+                prevY[Id] = Y;
             }
-
             if (TouchWallApp.MultiTouchMode == 0)
             {
-                InteractWithCursor(myX, myY, oldValueX, oldValueY);
+                int myX = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
+                int myY = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
+                InteractWithCursor2(myX, myY);
             }
         }
 
-        private void InteractWithCursor(int myX, int myY, int oldValueX, int oldValueY)
+        private void InteractWithCursor2(int x, int y)
         {
             switch (TouchWallApp.CurrentGestureType)
             {
@@ -89,36 +113,25 @@ namespace TouchWall
                     if (Z < Screen.MouseDownThreshold && TouchWallApp.CursorStatus == 2)
                     {
                         // Left mouse button has gone down 
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftDown,
-                            ((oldValueX + myX)/(PrevMouseX.Length/sizeof (int) + 1)),
-                            ((oldValueY + myY)/(PrevMouseY.Length/sizeof (int) + 1)), 0, 0);
+                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftDown, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 2;
                     }
-                    else
+                    else if (Z < Screen.MouseMoveThreshold - 0.05f)
                     {
                         if (TouchWallApp.CursorStatus != 0)
                         {
-                            mouse_event(MouseeventfAbsolute | MouseeventfMove,
-                                ((oldValueX + myX)/(PrevMouseX.Length/sizeof (int) + 1)),
-                                ((oldValueY + myY)/(PrevMouseY.Length/sizeof (int) + 1)), 0, 0);
+                            mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
                         }
-
-                        for (int i = PrevMouseX.Length/sizeof (int) - 1; i > 0; i--)
-                        {
-                            PrevMouseX[i] = PrevMouseX[i - 1];
-                        }
-
-                        for (int i = PrevMouseY.Length/sizeof (int) - 1; i > 0; i--)
-                        {
-                            PrevMouseY[i] = PrevMouseY[i - 1];
-                        }
-                        PrevMouseX[0] = myX;
-                        PrevMouseY[0] = myY;
+                    }
+                    else
+                    {
+                        prevX[Id] = -10000;
+                        prevY[Id] = -10000;
                     }
                     break;
                 case 2:
                     // User has just pressed down. Do not move cursor until it has moved a certain distance away
-                    double tempDistance = Math.Sqrt((myX - PrevMouseX[0])*(myX - PrevMouseX[0]) + (myY - PrevMouseY[0])*(myY - PrevMouseY[0]));
+                    double tempDistance = Math.Sqrt((x - prevX[Id]) * (x - prevX[Id]) + (y - prevY[Id]) * (y - prevY[Id]));
 
                     if (tempDistance > 3000)
                     {
@@ -130,32 +143,20 @@ namespace TouchWall
                     // User has pressed down and dragged at the same time
                     if (Z > Screen.MouseUpThreshold)
                     {
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp,
-                            ((oldValueX + myX)/(PrevMouseX.Length/sizeof (int) + 1)),
-                            ((oldValueY + myY)/(PrevMouseY.Length/sizeof (int) + 1)), 0, 0);
+                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 1;
                     }
                     else
                     {
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove,
-                            ((oldValueX + myX)/(PrevMouseX.Length/sizeof (int) + 1)),
-                            ((oldValueY + myY)/(PrevMouseY.Length/sizeof (int) + 1)), 0, 0);
-
-                        for (int i = PrevMouseX.Length/sizeof (int) - 1; i > 0; i--)
-                        {
-                            PrevMouseX[i] = PrevMouseX[i - 1];
-                        }
-
-                        for (int i = PrevMouseY.Length/sizeof (int) - 1; i > 0; i--)
-                        {
-                            PrevMouseY[i] = PrevMouseY[i - 1];
-                        }
-
-                        PrevMouseX[0] = myX;
-                        PrevMouseY[0] = myY;
+                        mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
                     }
                     break;
             }
         }
+
+
+
+
+        
     }
 }

@@ -10,6 +10,8 @@ namespace TouchWall
         /// </summary>
         public Gesture[] Gestures = new Gesture[4];
 
+        public Gesture TempGesture = new Gesture();
+
         /// <summary>
         /// Intermediate storage for frame data converted to colour
         /// </summary>
@@ -29,7 +31,7 @@ namespace TouchWall
         /// Points on 3D map
         /// </summary>
         private readonly CameraSpacePoint[] _spacePoints;
-        private readonly CameraSpacePoint[] _foundGestures;
+        private CameraSpacePoint[] _foundGestures = new CameraSpacePoint[4];
         private CameraSpacePoint _pointFound;
 
         internal Frame(IntPtr depthFrameData, uint depthFrameDataSize, FrameDescription depthFrameDescription)
@@ -85,7 +87,7 @@ namespace TouchWall
             switch (TouchWallApp.CalibrateStatus)
             {
                 case 0: // Not in calibration mode
-                    FindGestures();
+                    FindGestures2();
                     break;
                 case 1: // Begin Calibration
                     Screen.CreateReferenceFrame(_spacePoints, _depthFrameDataSize);
@@ -125,7 +127,7 @@ namespace TouchWall
                     switch (gesturesFound) // Allowing up to four gestures in MultiTouch mode
                     {
                         case 0:
-                            Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                            Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z, 0);
                             if (TouchWallApp.MultiTouchMode == 0)
                             {
                                 return;
@@ -149,7 +151,7 @@ namespace TouchWall
                             }
                             if (foundNewPoint == true)
                             {
-                                Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z);
+                                Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z, gesturesFound);
                                 gesturesFound++;
                                 if (gesturesFound >= 4)
                                 {
@@ -170,9 +172,9 @@ namespace TouchWall
         {
             for (int i = 0; i < 4; i++)
             {
-                _foundGestures[i].X = 0.0f;
+                _foundGestures[i].X = -100000.0f;
                 _foundGestures[i].Y = Screen.MouseMoveThreshold;
-                _foundGestures[i].Z = 0.0f;
+                _foundGestures[i].Z = -100000.0f;
             }
 
             int gesturesFound = 0;
@@ -187,8 +189,8 @@ namespace TouchWall
                     float yTolerance = 0.05f;
                     for (int a = 0; a < gesturesFound; a++)
                     {
-                        if ((Math.Abs(_spacePoints[i].Z - Gestures[a].X) < xTolerance
-                             && Math.Abs(_spacePoints[i].X - Gestures[a].Y) < yTolerance))
+                        if ((Math.Abs(_spacePoints[i].Z - _foundGestures[a].Z) < xTolerance
+                             && Math.Abs(_spacePoints[i].X - _foundGestures[a].X) < yTolerance))
                         {
                             foundNewPoint = false;
                             break;
@@ -197,22 +199,38 @@ namespace TouchWall
                     }
                     if (foundNewPoint == true)
                     {
-                        // we've found a new point of interest
-                        if (gesturesFound == 4)
+                        if (TouchWallApp.CurrentGestureType == 0)
+                        {
+                            TouchWallApp.CurrentGestureType = 1;
+                        }
+                        if (gesturesFound == 1 && TouchWallApp.MultiTouchMode == 0)
+                        {
+                            break;
+                        } 
+                        else if (gesturesFound == 4)
                         {
                             // we've reached our limit of 4 guestures.
                             // check if this new point is closer to the screen than any of the existing points
                             // this means that the program will look for the nearest up to 4 points
+                            int pointToReplace = 0;
+                            // first find the point that is furthest from the screen
+                            float furthestY = 0.0f;
                             for (int j = 0; j < gesturesFound; j++)
                             {
-                                if (_foundGestures[gesturesFound].Y > _spacePoints[i].Y)
+                                if (_foundGestures[j].Y > furthestY)
                                 {
-                                    _foundGestures[gesturesFound].X = _spacePoints[i].X;
-                                    _foundGestures[gesturesFound].Y = _spacePoints[i].Y;
-                                    _foundGestures[gesturesFound].Z = _spacePoints[i].Z;
-                                    break;
+                                    pointToReplace = j;
+                                    furthestY = _foundGestures[j].Y;
                                 }
                             }
+                            if (_foundGestures[pointToReplace].Y > _spacePoints[i].Y)
+                            {
+                                _foundGestures[pointToReplace].X = _spacePoints[i].X;
+                                _foundGestures[pointToReplace].Y = _spacePoints[i].Y;
+                                _foundGestures[pointToReplace].Z = _spacePoints[i].Z;
+                            }
+                            break;
+
                         }
                         else
                         {
@@ -225,10 +243,80 @@ namespace TouchWall
                     }
                 }
             }
+            int[] goesTo = {-1, -1, -1, -1};
+
+            // goesTo[i] = j means that prev[j] -> _foundGestures[i]
+
+            for (int i = 0; i < 4; i++)
+            {
+                float prevX = TempGesture.getPrevX(i);
+                float prevY = TempGesture.getPrevY(i);
+                if (prevX > 0 && prevY > 0)
+                {
+                    int closest = -1;
+                    float closestDist = 0.05f; // threshold value
+                    for (int j = 0; j < gesturesFound; j++)
+                    {
+                        if (goesTo[j] < 0)
+                        {
+                            // find the one that is closest to a previous gesture
+                            // and log it into goTo
+                            float dist =
+                                (float)
+                                    Math.Sqrt((_foundGestures[j].Z - prevX)*(_foundGestures[j].Z - prevX) +
+                                              (_foundGestures[j].X - prevY)*(_foundGestures[j].X - prevY));
+                            if (dist < closestDist)
+                            {
+                                closest = j;
+                                closestDist = dist;
+                            }
+                        }
+                    }
+                    if (closest != -1)
+                    {
+                        goesTo[closest] = i;
+                    }
+                }
+            }
+
+
+
+            // then for each goTo that is equal to -1 and is a new gesture, assign an id that isnt being used, and reset that id
+
+
+
             for (int j = 0; j < gesturesFound; j++)
             {
-                // gotten all the points. Lets make them
-                Gestures[j] = new Gesture(_foundGestures[j].X, _foundGestures[j].Y, _foundGestures[j].Z);
+                if (goesTo[j] < 0)
+                {
+                    // find an unused id
+                    for (int a = 0; a < 4; a++)
+                    {
+                        Boolean unusedID = true;
+                        for (int b = 0; b < 4; b++)
+                        {
+                            if (goesTo[a] == b)
+                            {
+                                unusedID = false;
+                                break;
+                            }
+                        }
+                        if (unusedID == true)
+                        {
+                            TempGesture.resetPrevX(a);
+                            TempGesture.resetPrevY(a);
+                            goesTo[j] = a;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            for (int j = 0; j < gesturesFound; j++)
+            {
+                
+                Gestures[j] = new Gesture(_foundGestures[j].X, _foundGestures[j].Y, _foundGestures[j].Z, goesTo[j]);
             }
             
         }
