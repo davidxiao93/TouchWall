@@ -68,7 +68,8 @@
         <Button Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click" FontSize="18"/>
         <Button Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleCursorButton" Content="{Binding Text}" Click="Toggle_Cursor" FontSize="18"/>
         <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="Enable MultiTouch Mode - Experimental" Click="Toggle_MultiTouch" FontSize="18"/>
-        
+        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop" FontSize="18"/>
+
         <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
         <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
 

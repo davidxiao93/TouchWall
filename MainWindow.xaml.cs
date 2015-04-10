@@ -264,6 +264,14 @@ namespace TouchWall
             _touchWall.ToggleCursor();
         }
 
+        /// <summary>
+        /// Launches Touchdevelop in the browser
+        /// </summary>
+        private void Launch_Touchdevelop(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
+        }
+
         #endregion
     }
 }
