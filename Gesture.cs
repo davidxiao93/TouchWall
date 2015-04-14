@@ -64,7 +64,7 @@ namespace TouchWall
             Y = y;
             Z = z;
             Id = id;
-            ProcessGesture2();
+            ProcessGesture();
         }
 
         public Gesture() // Coordinates in camera Space converted to USER space
@@ -78,7 +78,7 @@ namespace TouchWall
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwflags, int dx, int dy, int cButtons, int dwExtraInfo);
 
-        private void ProcessGesture2()
+        private void ProcessGesture()
         {
             float width = Screen.RightEdge - Screen.LeftEdge;
             float height = Screen.TopEdge - Screen.BottomEdge;
@@ -101,11 +101,11 @@ namespace TouchWall
             {
                 int myX = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
                 int myY = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
-                InteractWithCursor2(myX, myY);
+                InteractWithCursor(myX, myY);
             }
         }
 
-        private void InteractWithCursor2(int x, int y)
+        private void InteractWithCursor(int x, int y)
         {
             switch (TouchWallApp.CurrentGestureType)
             {
