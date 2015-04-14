@@ -10,6 +10,12 @@
         </Style>
     </Window.Resources>
 
-    <Canvas Background="LightBlue" Name="Map" SnapsToDevicePixels="True">
+    <Canvas Name="Map" SnapsToDevicePixels="True">
+        <Canvas.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
+                <GradientStop Color="#FF055EFF" Offset="0"/>
+                <GradientStop Color="#FFFFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+        </Canvas.Background>
     </Canvas>
 </Window>
