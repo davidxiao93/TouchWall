@@ -11,15 +11,11 @@
         <Style TargetType="{x:Type Image}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
-
-
-
-
         <Style TargetType="Button">
             <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Margin" Value="2"></Setter>
            <Setter Property="Template">
-               <Setter.Value>
+                <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid Width="{TemplateBinding Width}"  
                                Height="{TemplateBinding Height}" ClipToBounds="True">
@@ -43,7 +39,7 @@
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
-           </Setter>
+            </Setter>
             
             
             
