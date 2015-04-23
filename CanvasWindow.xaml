@@ -1,7 +1,7 @@
 ﻿<Window x:Class="TouchWall.CanvasWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Touch Wall - Depth Mode"
+        Title="TouchWall"
         WindowState="Maximized"
         Closing="WindowClosing"
         >

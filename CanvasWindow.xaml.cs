@@ -11,6 +11,7 @@ namespace TouchWall
     /// </summary>
     public abstract partial class CanvasWindow
     {
+
         /// <summary>
         /// CanvasWindow object, used for Singleton tracking
         /// </summary>
