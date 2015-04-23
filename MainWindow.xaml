@@ -11,17 +11,43 @@
         <Style TargetType="{x:Type Image}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
+
+
+
+
         <Style TargetType="Button">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
-                        <GradientStop Color="#FF077AFF" Offset="1" />
-                        <GradientStop Color="#FFD4E4FF" Offset="0.52" />
-                    </RadialGradientBrush>
-                </Setter.Value>
-            </Setter>
             <Setter Property="Cursor" Value="Hand"></Setter>
-            <Setter Property="Foreground" Value="#FF000000"/>
+            <Setter Property="Margin" Value="2"></Setter>
+           <Setter Property="Template">
+               <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Width="{TemplateBinding Width}"  
+                               Height="{TemplateBinding Height}" ClipToBounds="True">
+
+                            <!-- Outer Rectangle with rounded corners. -->
+                            <Rectangle x:Name="outerRectangle"  
+                                HorizontalAlignment="Stretch"  
+                                VerticalAlignment="Stretch"  
+                                Stroke="DarkGray"  
+                                RadiusX="30" RadiusY="30" StrokeThickness="3"  
+                                Fill="{TemplateBinding Background}" />
+
+                            <!-- Present Content (text) of the button. -->
+                            <DockPanel Name="myContentPresenterDockPanel">
+                                <ContentPresenter x:Name="myContentPresenter" Margin="20"  
+                                  Content="{TemplateBinding  Content}"  
+                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                  TextBlock.Foreground="Black" />
+                            </DockPanel>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+           </Setter>
+            
+            
+            
+            
         </Style>
     </Window.Resources>
 
@@ -100,8 +126,8 @@
 
         <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop" FontSize="20"/>
 
-        <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
-        <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
+        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
+        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
 
         <StatusBar Grid.Row="11" Grid.Column="4" Grid.ColumnSpan="4" Margin="0 0 0 0" HorizontalAlignment="Stretch" x:Name="StatusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource BlackBrush}">
             <StatusBarItem Content="{Binding StatusText}" FontSize="25"/>
