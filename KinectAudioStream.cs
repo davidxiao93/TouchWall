@@ -8,7 +8,7 @@
     /// </summary>
     internal class KinectAudioStream : Stream
     {
-        /// <summary>
+        /// <summary> 
         /// Holds the kinect audio stream, in 32-bit IEEE float format
         /// </summary>
         private readonly Stream _kinect32BitStream;
