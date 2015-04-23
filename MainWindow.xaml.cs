@@ -12,6 +12,9 @@ namespace TouchWall
         /// </summary>
         private readonly TouchWallApp _touchWall;
 
+        private MultiTouchWindow _multiTouchWindow;
+        private DepthTouchWindow _depthTouchWindow;
+
         /// <summary>
         /// Current status text to display
         /// </summary>
@@ -27,7 +30,7 @@ namespace TouchWall
             // Initialize the components (controls) of the window
             InitializeComponent();
 
-            _touchWall = new TouchWallApp();
+            _touchWall = new TouchWallApp(this);
 
             // Wire handler for frame arrival
             _touchWall.FrameDataManager.DepthFrameReader.FrameArrived += _touchWall.FrameDataManager.Reader_FrameArrived;
@@ -49,6 +52,14 @@ namespace TouchWall
             _touchWall.DisableSpeech();
             _touchWall.FrameDataManager.DisposeDepthFrameReader();
             _touchWall.DisableKinect();
+            if (_multiTouchWindow != null)
+            {
+                CloseMultiTouchWindow();
+            }
+            if (_depthTouchWindow != null)
+            {
+                CloseDepthTouchWindow();
+            }
         }
 
         /// <summary>
@@ -97,6 +108,7 @@ namespace TouchWall
             UpdateCoordaintesLabel();
             UpdateCursorStatusLabel();
             UpdateCalibrationLabels();
+            UpdateModeLabels();
         }
 
         private void UpdateDimensionLabels()
@@ -165,6 +177,25 @@ namespace TouchWall
                 default:
                     CalibrateButton.Content = "Click Me For Easy Calibrate";
                     CalibrateStatusLabel.Content = "";
+                    break;
+            }
+        }
+
+        private void UpdateModeLabels()
+        {
+            switch (TouchWallApp.MultiTouchMode)
+            {
+                case 1:
+                    ToggleDepthTouchButton.Content = "Launch Depth Mode";
+                    ToggleMultiTouchButton.Content = "Close Multi Mode";
+                    break;
+                case 2:
+                    ToggleDepthTouchButton.Content = "Close Depth Mode";
+                    ToggleMultiTouchButton.Content = "Launch Multi Mode";
+                    break;
+                default:
+                    ToggleDepthTouchButton.Content = "Launch Depth Mode";
+                    ToggleMultiTouchButton.Content = "Launch Multi Mode";
                     break;
             }
         }
@@ -238,14 +269,35 @@ namespace TouchWall
         }
 
         /// <summary>
-        /// Enables or disables clicking with the cursor
+        /// Enables or disables multitouch mode with the cursor
         /// </summary>
         private void Toggle_MultiTouch(object sender, RoutedEventArgs e)
         {
-            MultiTouchWindow multiTouchWindow = new MultiTouchWindow(_touchWall);
-            multiTouchWindow.Show();
-            TouchWallApp.CursorStatus = 0;
-            TouchWallApp.MultiTouchMode = 1;
+            
+            if (TouchWallApp.MultiTouchMode != 1)
+            {
+                OpenMultiTouchWindow();
+            } 
+            else if (_multiTouchWindow.IsEnabled)
+            {
+                CloseMultiTouchWindow();
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables multitouch mode with the cursor
+        /// </summary>
+        private void Toggle_DepthTouch(object sender, RoutedEventArgs e)
+        {
+            if (TouchWallApp.MultiTouchMode != 2)
+            {
+                OpenDepthTouchWindow();
+            }
+            else if (_depthTouchWindow.IsEnabled)
+            {
+                CloseDepthTouchWindow();
+            }
+            
         }
 
         /// <summary>
@@ -267,11 +319,62 @@ namespace TouchWall
         /// <summary>
         /// Launches Touchdevelop in the browser
         /// </summary>
-        private void Launch_Touchdevelop(object sender, RoutedEventArgs e)
+        public void Launch_Touchdevelop(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
         }
 
         #endregion
+
+
+        public void OpenMultiTouchWindow()
+        {
+            if (TouchWallApp.MultiTouchMode == 2)
+            {
+                CloseDepthTouchWindow();
+            }
+            if (TouchWallApp.MultiTouchMode != 1)
+            {
+                TouchWallApp.CursorStatus = 0;
+                TouchWallApp.MultiTouchMode = 1;
+                _multiTouchWindow = new MultiTouchWindow(_touchWall);
+                _multiTouchWindow.Show();
+            } 
+        }
+
+        public void CloseMultiTouchWindow()
+        {
+            if (_multiTouchWindow.IsEnabled)
+            {
+                _multiTouchWindow.Close();
+                TouchWallApp.MultiTouchMode = 0;
+            }
+        }
+
+        public void OpenDepthTouchWindow()
+        {
+            if (TouchWallApp.MultiTouchMode == 1)
+            {
+                CloseMultiTouchWindow();
+            }
+            if (TouchWallApp.MultiTouchMode != 2)
+            {
+                TouchWallApp.CursorStatus = 0;
+                TouchWallApp.MultiTouchMode = 2;
+                _depthTouchWindow = new DepthTouchWindow(_touchWall);
+                _depthTouchWindow.Show();
+            }
+        }
+
+        public void CloseDepthTouchWindow()
+        {
+            if (_depthTouchWindow.IsEnabled)
+            {
+                _depthTouchWindow.Close();
+                TouchWallApp.MultiTouchMode = 0;
+            }
+        }
+
+
     }
 }

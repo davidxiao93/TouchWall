@@ -63,13 +63,18 @@ namespace TouchWall
         /// </summary>
         private readonly KinectAudioStream _convertStream;
 
+        public readonly MainWindow parentMainWindow;
+
         /// <summary>
         /// Speech recognition engine using audio data from Kinect.
         /// </summary>
         private readonly SpeechRecognitionEngine _speechEngine;
 
-        public TouchWallApp()
+        public TouchWallApp(MainWindow mainWindow)
         {
+            // sorry for needing this. This is because of a bad refactoring job
+            parentMainWindow = mainWindow;
+
             // Get the _kinectSensor object
             KinectSensor = KinectSensor.GetDefault();
             
@@ -104,8 +109,18 @@ namespace TouchWall
                 _speechEngine = new SpeechRecognitionEngine(recognizerInfo.Id);
 
                 var directions = new Choices();
-                directions.Add(new SemanticResultValue("Kinect Calibrate", "CALIBRATE"));
-                directions.Add(new SemanticResultValue("Kinect Cancel", "CANCELCALIBRATE"));
+                directions.Add(new SemanticResultValue("Kinect Calibrate Full", "CALIBRATE_FULL"));
+                directions.Add(new SemanticResultValue("Kinect Calibrate Cancel", "CALIBRATE_CANCEL"));
+                directions.Add(new SemanticResultValue("Kinect Cursor Disable", "CURSOR_DISABLE"));
+                directions.Add(new SemanticResultValue("Kinect Cursor Enable", "CURSOR_ENABLE"));
+                directions.Add(new SemanticResultValue("Kinect Click Disable", "CLICK_DISABLE"));
+                directions.Add(new SemanticResultValue("Kinect Click Enable", "CLICK_ENABLE"));
+                directions.Add(new SemanticResultValue("Kinect Launch Depth", "DEPTH_START"));
+                directions.Add(new SemanticResultValue("Kinect Leave Depth", "DEPTH_END"));
+                directions.Add(new SemanticResultValue("Kinect Launch Multi", "MULTI_START"));
+                directions.Add(new SemanticResultValue("Kinect Leave Multi", "MULTI_END"));
+                directions.Add(new SemanticResultValue("Kinect Open TouchDevelop", "TOUCHDEVELOP"));
+
 
                 var gb = new GrammarBuilder { Culture = recognizerInfo.Culture };
                 gb.Append(directions);
@@ -147,6 +162,7 @@ namespace TouchWall
 
         public void BeginCalibration()
         {
+            //parentMainWindow.
             _screen.BeginCalibration();
         }
 
@@ -221,15 +237,66 @@ namespace TouchWall
 
             if (e.Result.Confidence >= confidenceThreshold)
             {
+
+
                 switch (e.Result.Semantics.Value.ToString())
                 {
-                    case "CALIBRATE":
+                    case "CALIBRATE_FULL":
                         _screen.BeginCalibration();
                         CursorStatus = 0;
                         break;
-                    case "CANCELCALIBRATE":
+                    case "CALIBRATE_CANCEL":
                         _screen.CancelCalibration();
                         CursorStatus = 1;
+                        break;
+                    case "CURSOR_DISABLE":
+                        CursorStatus = 0;
+                        break;
+                    case "CURSOR_ENABLE":
+                        if (CursorStatus == 0)
+                        {
+                            CursorStatus = 1;
+                        }
+                        break;
+                    case "CLICK_DISABLE":
+                        if (CursorStatus == 2)
+                        {
+                            CursorStatus = 1;
+                        }
+                        break;
+                    case "CLICK_ENABLE":
+                        CursorStatus = 2;
+                        break;
+                    case "DEPTH_START":
+                        if (MultiTouchMode != 2)
+                        {
+                            parentMainWindow.OpenDepthTouchWindow();
+                            MultiTouchMode = 2;
+                        }
+                        break;
+                    case "DEPTH_END":
+                        if (MultiTouchMode == 2)
+                        {
+                            parentMainWindow.CloseDepthTouchWindow();
+                            MultiTouchMode = 0;
+                        }
+                        break;
+                    case "MULTI_START":
+                        if (MultiTouchMode != 1)
+                        {
+                            parentMainWindow.OpenMultiTouchWindow();
+                            MultiTouchMode = 1;
+                        }
+                        break;
+                    case "MULTI_END":
+                        if (MultiTouchMode == 1)
+                        {
+                            parentMainWindow.CloseMultiTouchWindow();
+                            MultiTouchMode = 0;
+                        }
+                        break;
+                    case "TOUCHDEVELOP":
+                        System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
                         break;
                 }
             }

@@ -144,7 +144,7 @@
                 </RadialGradientBrush>
             </Button.Background>
         </Button>
-        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="Enable MultiTouch Mode - Experimental" Click="Toggle_MultiTouch" FontSize="20">
+        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleDepthTouchButton" Content="{Binding Text}" Click="Toggle_DepthTouch" FontSize="20">
             <Button.Background>
                 <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
                     <GradientStop Color="#FF077AFF" Offset="1" />
@@ -152,7 +152,15 @@
                 </RadialGradientBrush>
             </Button.Background>
         </Button>
-        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop" FontSize="20">
+        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="{Binding Text}" Click="Toggle_MultiTouch" FontSize="20">
+            <Button.Background>
+                <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
+                    <GradientStop Color="#FF077AFF" Offset="1" />
+                    <GradientStop Color="#FFD4E4FF" Offset="0.52" />
+                </RadialGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop" FontSize="20">
             <Button.Background>
                 <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
                     <GradientStop Color="#FF077AFF" Offset="1" />

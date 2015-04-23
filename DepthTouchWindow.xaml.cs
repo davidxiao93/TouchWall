@@ -7,7 +7,7 @@ using Microsoft.Kinect;
 
 namespace TouchWall
 {
-    public partial class MultiTouchWindow
+    public partial class DepthTouchWindow
     {
         /// <summary>
         /// TouchWallApp object, to provide coordinates for points
@@ -16,7 +16,7 @@ namespace TouchWall
 
         private readonly Color[] idColor = {Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow};
 
-        public MultiTouchWindow(TouchWallApp touchWall)
+        public DepthTouchWindow(TouchWallApp touchWall)
         {
             InitializeComponent();
             _touchWall = touchWall;
@@ -35,11 +35,12 @@ namespace TouchWall
             Map.Children.Clear();
             Ellipse[] cursors = new Ellipse[4];
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 1; i++)
             {
                 if (_touchWall.FrameDataManager.Frame.Gestures[i] != null)
                 {
-                    cursors[i] = new Ellipse { Fill = new SolidColorBrush(idColor[i]), Width = 15, Height = 15 };
+                    double size = 1.5/(_touchWall.FrameDataManager.Frame.Gestures[i].Z + 0.05);
+                    cursors[i] = new Ellipse { Fill = new SolidColorBrush(idColor[i]), Width = size, Height = size };
                     Canvas.SetLeft(cursors[i], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[i].X - Screen.LeftEdge) /
                                               (Screen.RightEdge - Screen.LeftEdge)));
                     Canvas.SetBottom(cursors[i], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[i].Y - Screen.BottomEdge) /

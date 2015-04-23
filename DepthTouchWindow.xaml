@@ -1,7 +1,7 @@
-﻿<Window x:Class="TouchWall.MultiTouchWindow"
+﻿<Window x:Class="TouchWall.DepthTouchWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Touch Wall - MultiTouch Mode"
+        Title="Touch Wall - Depth Mode"
         WindowState="Maximized"
         Closing="MultiTouchWindow_Closing"
         >

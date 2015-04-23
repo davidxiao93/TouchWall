@@ -153,10 +153,6 @@ namespace TouchWall
                     break;
             }
         }
-
-
-
-        // Testing commit
         
     }
 }

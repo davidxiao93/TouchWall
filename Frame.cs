@@ -203,7 +203,7 @@ namespace TouchWall
                         {
                             TouchWallApp.CurrentGestureType = 1;
                         }
-                        if (gesturesFound == 1 && TouchWallApp.MultiTouchMode == 0)
+                        if (gesturesFound == 1 && TouchWallApp.MultiTouchMode != 1)
                         {
                             break;
                         } 
