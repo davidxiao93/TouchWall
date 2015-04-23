@@ -27,6 +27,9 @@ namespace TouchWall
         /// </summary>
         private Frame _frame;
         
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public FrameDataManager()
         {
             // Open the reader for the depth frames
@@ -39,21 +42,33 @@ namespace TouchWall
             _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height, 96.0, 96.0, PixelFormats.Gray8, null);
         }
 
+        /// <summary>
+        /// Getter for the DepthFrameReader Object
+        /// </summary>
         public DepthFrameReader DepthFrameReader
         {
             get { return _depthFrameReader; }
         }
 
+        /// <summary>
+        /// Getter for the DepthBitmap Object
+        /// </summary>
         public static WriteableBitmap DepthBitmap
         {
             get { return _depthBitmap; }
         }
 
+        /// <summary>
+        /// Getter for the Frame Object
+        /// </summary>
         public Frame Frame
         {
             get { return _frame; }
         }
 
+        /// <summary>
+        /// Kills the depthframereader.
+        /// </summary>
         public void DisposeDepthFrameReader()
         {
             if (_depthFrameReader != null) // DepthFrameReader is IDisposable
