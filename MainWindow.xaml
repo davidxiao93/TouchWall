@@ -152,25 +152,31 @@
                 </RadialGradientBrush>
             </Button.Background>
         </Button>
-        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="{Binding Text}" Click="Toggle_MultiTouch" FontSize="20">
-            <Button.Background>
-                <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
-                    <GradientStop Color="#FF077AFF" Offset="1" />
-                    <GradientStop Color="#FFD4E4FF" Offset="0.52" />
-                </RadialGradientBrush>
-            </Button.Background>
+        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Click="Toggle_MultiTouch" FontSize="20" Background="Transparent" BorderBrush="Transparent">
+            <Button.Content>
+                    <Grid>
+                        <Image Source="Images/LaunchTouchDevelopButton.png" Stretch="Fill"/>
+                        <Viewbox Margin="4" VerticalAlignment="Stretch" Height="Auto">
+                            <TextBlock Text="{Binding Text}" Height="30"  Foreground="Azure" FontWeight="DemiBold"/>
+                        </Viewbox>
+                    </Grid>
+            </Button.Content>
         </Button>
-        <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop" FontSize="20">
-            <Button.Background>
-                <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
-                    <GradientStop Color="#FF077AFF" Offset="1" />
-                    <GradientStop Color="#FFD4E4FF" Offset="0.52" />
-                </RadialGradientBrush>
-            </Button.Background>
+        <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Click="Launch_Touchdevelop" FontSize="20">
+            <Button.Template>
+                <ControlTemplate>
+                    <Grid>
+                        <Image Source="Images/LaunchTouchDevelopButton.png" Stretch="Fill"/>
+                        <Viewbox Margin="4" VerticalAlignment="Stretch" Height="Auto">
+                            <TextBlock Name="LaunchTouchdevelopButton" Text="Launch Touchdevelop" Height="30"  Foreground="Azure" FontWeight="DemiBold"/>
+                        </Viewbox>
+                    </Grid>
+                </ControlTemplate>
+            </Button.Template>
         </Button>
 
-        <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
-        <Label Grid.Row="8" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
+        <Label Grid.Row="9" Grid.RowSpan="2" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
+        <Label Grid.Row="9" Grid.RowSpan="2" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
 
         <StatusBar Grid.Row="11" Grid.Column="4" Grid.ColumnSpan="4" Margin="0 0 0 0" HorizontalAlignment="Stretch" x:Name="StatusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource BlackBrush}">
             <StatusBarItem Background="White" Content="{Binding StatusText}" FontSize="25"/>

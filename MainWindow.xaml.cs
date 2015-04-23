@@ -187,7 +187,7 @@ namespace TouchWall
             {
                 case 1:
                     ToggleDepthTouchButton.Content = "Launch Depth Mode";
-                    ToggleMultiTouchButton.Content = "Close Multi Mode";
+                    ToggleDepthTouchButton.Content = "Close Multi Mode";
                     break;
                 case 2:
                     ToggleDepthTouchButton.Content = "Close Depth Mode";
@@ -328,7 +328,7 @@ namespace TouchWall
         /// <summary>
         /// Launches Touchdevelop in the browser
         /// </summary>
-        public void Launch_Touchdevelop(object sender, RoutedEventArgs e)
+        private void Launch_Touchdevelop(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
         }
@@ -383,7 +383,5 @@ namespace TouchWall
                 TouchWallApp.MultiTouchMode = 0;
             }
         }
-
-
     }
 }
