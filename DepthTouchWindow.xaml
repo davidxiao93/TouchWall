@@ -1,9 +1,9 @@
-﻿<Window x:Class="TouchWall.CanvasWindow"
+﻿<Window x:Class="TouchWall.DepthTouchWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="TouchWall"
         WindowState="Maximized"
-        Closing="WindowClosing"
+        Closing="MultiTouchWindow_Closing"
         >
     <Window.Resources>
         <Style TargetType="{x:Type Image}">

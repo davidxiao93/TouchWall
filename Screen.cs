@@ -74,9 +74,6 @@ namespace TouchWall
         /// </summary>
         private static CameraSpacePoint _pointFound;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public Screen()
         {
             // Default values
@@ -96,9 +93,6 @@ namespace TouchWall
             _calibratePoints = new CameraSpacePoint[TouchWallApp.KinectWidth * TouchWallApp.KinectHeight];
         }
 
-        /// <summary>
-        /// Sets up the calibration process by saving the current values of the screen in case the user decides to cancel later
-        /// </summary>
         public void BeginCalibration()
         {
             TouchWallApp.CurrentGestureType = 1;
@@ -113,9 +107,6 @@ namespace TouchWall
             }
         }
 
-        /// <summary>
-        /// Restores the values of the screen to before calibration started
-        /// </summary>
         public void CancelCalibration()
         {
             BottomEdge = _oldBottomEdge;
@@ -126,11 +117,6 @@ namespace TouchWall
             TouchWallApp.CalibrateStatus = 0;
         }
 
-        /// <summary>
-        /// Creates a frame of reference to compare to when calibrating
-        /// </summary>
-        /// <param name="spacePoints">3D model of the world</param>
-        /// <param name="depthFrameDataSize">size of frame</param>
         internal static void CreateReferenceFrame(CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {
             for (int i = 0; i < depthFrameDataSize / sizeof(ushort); i++)
@@ -141,7 +127,6 @@ namespace TouchWall
             }
             TouchWallApp.CalibrateStatus = 2;
         }
-
 
         internal static void LookForPoints(CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {

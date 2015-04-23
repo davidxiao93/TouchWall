@@ -88,16 +88,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CanvasWindow.xaml.cs">
-      <DependentUpon>CanvasWindow.xaml</DependentUpon>
+    <Compile Include="DepthTouchWindow.xaml.cs">
+      <DependentUpon>DepthTouchWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DepthTouchWindow.cs" />
-    <Compile Include="MultiTouchWindow.cs" />
+    <Compile Include="MultiTouchWindow.xaml.cs">
+      <DependentUpon>MultiTouchWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TouchWallApp.cs" />
-    <Page Include="CanvasWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,6 +106,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="DepthTouchWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MultiTouchWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Frame.cs" />

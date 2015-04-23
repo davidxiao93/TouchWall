@@ -10,9 +10,6 @@ namespace TouchWall
         /// </summary>
         public Gesture[] Gestures = new Gesture[4];
 
-        /// <summary>
-        /// Global Gesture that is always alive, and used to keep the previous values in memory
-        /// </summary>
         public Gesture TempGesture = new Gesture();
 
         /// <summary>
@@ -36,7 +33,6 @@ namespace TouchWall
         private readonly CameraSpacePoint[] _spacePoints;
         private readonly CameraSpacePoint[] _foundGestures = new CameraSpacePoint[4];
         private CameraSpacePoint _pointFound;
-
 
         internal Frame(IntPtr depthFrameData, uint depthFrameDataSize, FrameDescription depthFrameDescription)
         {
@@ -86,9 +82,6 @@ namespace TouchWall
             // Now spacePoints contains a 3d virtualisation of where everything is.
         }
 
-        /// <summary>
-        /// Called on every frame update. This function decides what to do
-        /// </summary>
         private void UseDepthFrameData()
         {
             switch (TouchWallApp.CalibrateStatus)

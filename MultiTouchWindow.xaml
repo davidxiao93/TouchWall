@@ -1,0 +1,22 @@
+﻿<Window x:Class="TouchWall.MultiTouchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Touch Wall - MultiTouch Mode"
+        WindowState="Maximized"
+        Closing="MultiTouchWindow_Closing"
+        >
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+    </Window.Resources>
+
+    <Canvas Name="Map" SnapsToDevicePixels="True">
+        <Canvas.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
+                <GradientStop Color="#FF055EFF" Offset="0"/>
+                <GradientStop Color="#FFFFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+        </Canvas.Background>
+    </Canvas>
+</Window>
