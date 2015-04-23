@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -14,7 +13,7 @@ namespace TouchWall
         /// </summary>
         private readonly TouchWallApp _touchWall;
 
-        private readonly Color[] idColor = {Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow};
+        private readonly Color[] _idColor = {Colors.Red, Colors.Green};
 
         public DepthTouchWindow(TouchWallApp touchWall)
         {
@@ -33,20 +32,20 @@ namespace TouchWall
         private void MapPoints(object sender, DepthFrameArrivedEventArgs e)
         {
             Map.Children.Clear();
-            Ellipse[] cursors = new Ellipse[4];
-
-            for (int i = 0; i < 1; i++)
+            if (_touchWall.FrameDataManager.Frame.Gestures[0] != null)
             {
-                if (_touchWall.FrameDataManager.Frame.Gestures[i] != null)
+                double size = 2/(_touchWall.FrameDataManager.Frame.Gestures[0].Z + 0.02);
+                int colorPicker = 0;
+                if (_touchWall.FrameDataManager.Frame.Gestures[0].Z < 0.01f)
                 {
-                    double size = 1.5/(_touchWall.FrameDataManager.Frame.Gestures[i].Z + 0.05);
-                    cursors[i] = new Ellipse { Fill = new SolidColorBrush(idColor[i]), Width = size, Height = size };
-                    Canvas.SetLeft(cursors[i], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[i].X - Screen.LeftEdge) /
-                                              (Screen.RightEdge - Screen.LeftEdge)));
-                    Canvas.SetBottom(cursors[i], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[i].Y - Screen.BottomEdge) /
-                                              (Screen.TopEdge - Screen.BottomEdge)));
-                    Map.Children.Add(cursors[i]);
+                    colorPicker = 1;
                 }
+                Ellipse cursor = new Ellipse { Fill = new SolidColorBrush(_idColor[colorPicker]), Width = size, Height = size };
+                Canvas.SetLeft(cursor, -0.5 * size + Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[0].X - Screen.LeftEdge) /
+                                            (Screen.RightEdge - Screen.LeftEdge)));
+                Canvas.SetBottom(cursor, -0.5 * size + Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[0].Y - Screen.BottomEdge) /
+                                            (Screen.TopEdge - Screen.BottomEdge)));
+                Map.Children.Add(cursor);
             }
         }
     }

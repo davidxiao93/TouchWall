@@ -104,6 +104,7 @@ namespace TouchWall
         /// </summary>
         private void UpdateLabels(object sender, DepthFrameArrivedEventArgs e)
         {
+
             UpdateDimensionLabels();
             UpdateCoordaintesLabel();
             UpdateCursorStatusLabel();
@@ -113,10 +114,10 @@ namespace TouchWall
 
         private void UpdateDimensionLabels()
         {
-            WallTopLabel.Content = "Top Wall M: " + Screen.TopEdge;
-            WallLeftLabel.Content = "Left Wall M: " + Screen.LeftEdge;
-            WallRightLabel.Content = "Right Wall M: " + Screen.RightEdge;
-            WallBottomLabel.Content = "Bottom Wall M: " + Screen.BottomEdge;
+            WallTopLabel.Content = "Top: " + Screen.TopEdge;
+            WallLeftLabel.Content = "Left: " + Screen.LeftEdge;
+            WallRightLabel.Content = "Right: " + Screen.RightEdge;
+            WallBottomLabel.Content = "Bottom: " + Screen.BottomEdge;
         }
 
         private void UpdateCoordaintesLabel()
@@ -140,6 +141,12 @@ namespace TouchWall
 
         private void UpdateCursorStatusLabel()
         {
+            if (TouchWallApp.CalibrateStatus != 0)
+            {
+                ToggleCursorButton.Content = "";
+            }
+            else
+            {
             switch (TouchWallApp.CursorStatus)
             {
                 case 1:
@@ -153,6 +160,7 @@ namespace TouchWall
                     break;
             }
         }
+        }
 
         private void UpdateCalibrationLabels()
         {
@@ -164,18 +172,22 @@ namespace TouchWall
                     break;
                 case 2:
                     CalibrateButton.Content = "Touch right edge of screen";
+                    CoordinatesLabel.Content = "Touch right edge of screen";
                     break;
                 case 3:
                     CalibrateButton.Content = "Touch Left edge of screen";
+                    CoordinatesLabel.Content = "Touch Left edge of screen";
                     break;
                 case 4:
                     CalibrateButton.Content = "Touch top edge of screen";
+                    CoordinatesLabel.Content = "Touch top edge of screen";
                     break;
                 case 5:
                     CalibrateButton.Content = "Touch bottom edge of screen";
+                    CoordinatesLabel.Content = "Touch bottom edge of screen";
                     break;
                 default:
-                    CalibrateButton.Content = "Click Me For Easy Calibrate";
+                    CalibrateButton.Content = "Full Calibration";
                     CalibrateStatusLabel.Content = "";
                     break;
             }
@@ -183,6 +195,15 @@ namespace TouchWall
 
         private void UpdateModeLabels()
         {
+            if (TouchWallApp.CalibrateStatus != 0)
+            {
+                ToggleDepthTouchButton.Content = "";
+                ToggleMultiTouchButton.Content = "";
+                LaunchTouchdevelopButton.Content = "";
+            }
+            else
+            {
+                LaunchTouchdevelopButton.Content = "Launch TouchDevelop";
             switch (TouchWallApp.MultiTouchMode)
             {
                 case 1:
@@ -191,13 +212,14 @@ namespace TouchWall
                     break;
                 case 2:
                     ToggleDepthTouchButton.Content = "Close Depth Mode";
-                    ToggleMultiTouchButton.Content = "Launch Multi Mode";
+                        ToggleMultiTouchButton.Content = "Launch Multi Mode - Incomplete";
                     break;
                 default:
                     ToggleDepthTouchButton.Content = "Launch Depth Mode";
-                    ToggleMultiTouchButton.Content = "Launch Multi Mode";
+                        ToggleMultiTouchButton.Content = "Launch Multi Mode - Incomplete";
                     break;
             }
+        }
         }
 
         #endregion
@@ -305,6 +327,11 @@ namespace TouchWall
         /// </summary>
         private void Calibrate_Click(object sender, RoutedEventArgs e)
         {
+            CalibrateClick();
+        }
+
+        public void CalibrateClick()
+        {
             if (TouchWallApp.MultiTouchMode == 2)
             {
                 CloseDepthTouchWindow();
@@ -322,7 +349,11 @@ namespace TouchWall
         /// </summary>
         private void Toggle_Cursor(object sender, RoutedEventArgs e)
         {
+            if (TouchWallApp.CalibrateStatus == 0)
+            {
             _touchWall.ToggleCursor();
+        }
+
         }
 
         /// <summary>
@@ -330,7 +361,10 @@ namespace TouchWall
         /// </summary>
         private void Launch_Touchdevelop(object sender, RoutedEventArgs e)
         {
+            if (TouchWallApp.CalibrateStatus == 0)
+            {
             System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
+        }
         }
 
         #endregion
@@ -342,7 +376,7 @@ namespace TouchWall
             {
                 CloseDepthTouchWindow();
             }
-            if (TouchWallApp.MultiTouchMode != 1)
+            if (TouchWallApp.MultiTouchMode != 1 && TouchWallApp.CalibrateStatus == 0)
             {
                 TouchWallApp.CursorStatus = 0;
                 TouchWallApp.MultiTouchMode = 1;
@@ -366,7 +400,7 @@ namespace TouchWall
             {
                 CloseMultiTouchWindow();
             }
-            if (TouchWallApp.MultiTouchMode != 2)
+            if (TouchWallApp.MultiTouchMode != 2 && TouchWallApp.CalibrateStatus == 0)
             {
                 TouchWallApp.CursorStatus = 0;
                 TouchWallApp.MultiTouchMode = 2;

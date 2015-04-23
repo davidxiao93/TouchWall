@@ -63,7 +63,7 @@ namespace TouchWall
         /// </summary>
         private readonly KinectAudioStream _convertStream;
 
-        public readonly MainWindow parentMainWindow;
+        public readonly MainWindow ParentMainWindow;
 
         /// <summary>
         /// Speech recognition engine using audio data from Kinect.
@@ -73,7 +73,7 @@ namespace TouchWall
         public TouchWallApp(MainWindow mainWindow)
         {
             // sorry for needing this. This is because of a bad refactoring job
-            parentMainWindow = mainWindow;
+            ParentMainWindow = mainWindow;
 
             // Get the _kinectSensor object
             KinectSensor = KinectSensor.GetDefault();
@@ -242,15 +242,7 @@ namespace TouchWall
                 switch (e.Result.Semantics.Value.ToString())
                 {
                     case "CALIBRATE_FULL":
-                        if (MultiTouchMode == 2)
-                        {
-                            parentMainWindow.CloseDepthTouchWindow();
-                        }
-                        else if (MultiTouchMode == 1)
-                        {
-                            parentMainWindow.CloseMultiTouchWindow();
-                        }
-                        MultiTouchMode = 0;
+                        ParentMainWindow.CalibrateClick();
                         _screen.BeginCalibration();
                         CursorStatus = 0;
                         break;
@@ -279,28 +271,28 @@ namespace TouchWall
                     case "DEPTH_START":
                         if (MultiTouchMode != 2)
                         {
-                            parentMainWindow.OpenDepthTouchWindow();
+                            ParentMainWindow.OpenDepthTouchWindow();
                             MultiTouchMode = 2;
                         }
                         break;
                     case "DEPTH_END":
                         if (MultiTouchMode == 2)
                         {
-                            parentMainWindow.CloseDepthTouchWindow();
+                            ParentMainWindow.CloseDepthTouchWindow();
                             MultiTouchMode = 0;
                         }
                         break;
                     case "MULTI_START":
                         if (MultiTouchMode != 1)
                         {
-                            parentMainWindow.OpenMultiTouchWindow();
+                            ParentMainWindow.OpenMultiTouchWindow();
                             MultiTouchMode = 1;
                         }
                         break;
                     case "MULTI_END":
                         if (MultiTouchMode == 1)
                         {
-                            parentMainWindow.CloseMultiTouchWindow();
+                            ParentMainWindow.CloseMultiTouchWindow();
                             MultiTouchMode = 0;
                         }
                         break;

@@ -7,6 +7,11 @@ namespace TouchWall
         /// <summary>
         /// Distance (metres) from screen before moving the mouse
         /// </summary>
+        public static float DetectThreshold { get; set; }
+
+        /// <summary>
+        /// Distance (metres) from screen before moving the mouse
+        /// </summary>
         public static float MouseMoveThreshold { get; set; }
 
         /// <summary>
@@ -73,8 +78,9 @@ namespace TouchWall
         {
             // Default values
             MouseMoveThreshold = 0.10f;
-            MouseDownThreshold = 0.003f;
-            MouseUpThreshold = 0.006f;
+            MouseDownThreshold = 0.01f;
+            MouseUpThreshold = 0.02f;
+            DetectThreshold = 0.15f;
             LeftEdge = 0.5f;
             RightEdge = 1.0f;
             TopEdge = 0.15f;

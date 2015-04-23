@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -14,7 +13,7 @@ namespace TouchWall
         /// </summary>
         private readonly TouchWallApp _touchWall;
 
-        private readonly Color[] idColor = {Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow};
+        private readonly Color[] _idColor = {Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow};
 
         public MultiTouchWindow(TouchWallApp touchWall)
         {
@@ -39,10 +38,11 @@ namespace TouchWall
             {
                 if (_touchWall.FrameDataManager.Frame.Gestures[i] != null)
                 {
-                    cursors[i] = new Ellipse { Fill = new SolidColorBrush(idColor[i]), Width = 15, Height = 15 };
-                    Canvas.SetLeft(cursors[i], Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[i].X - Screen.LeftEdge) /
-                                              (Screen.RightEdge - Screen.LeftEdge)));
-                    Canvas.SetBottom(cursors[i], Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[i].Y - Screen.BottomEdge) /
+                    cursors[i] = new Ellipse { Fill = new SolidColorBrush(_idColor[i]), Width = 16, Height = 16 };
+                    Canvas.SetLeft(cursors[i], -8 + Map.ActualWidth 
+                                        * ((_touchWall.FrameDataManager.Frame.Gestures[i].X - Screen.LeftEdge) 
+                                        / (Screen.RightEdge - Screen.LeftEdge)));
+                    Canvas.SetBottom(cursors[i], -8 + Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[i].Y - Screen.BottomEdge) /
                                               (Screen.TopEdge - Screen.BottomEdge)));
                     Map.Children.Add(cursors[i]);
                 }
