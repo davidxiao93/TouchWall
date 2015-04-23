@@ -305,6 +305,15 @@ namespace TouchWall
         /// </summary>
         private void Calibrate_Click(object sender, RoutedEventArgs e)
         {
+            if (TouchWallApp.MultiTouchMode == 2)
+            {
+                CloseDepthTouchWindow();
+            }
+            else if (TouchWallApp.MultiTouchMode == 1)
+            {
+                CloseMultiTouchWindow();
+            }
+            TouchWallApp.MultiTouchMode = 0;
             _touchWall.BeginCalibration();
         }
 

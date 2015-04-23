@@ -162,7 +162,7 @@ namespace TouchWall
 
         public void BeginCalibration()
         {
-            //parentMainWindow.
+            
             _screen.BeginCalibration();
         }
 
@@ -242,6 +242,15 @@ namespace TouchWall
                 switch (e.Result.Semantics.Value.ToString())
                 {
                     case "CALIBRATE_FULL":
+                        if (MultiTouchMode == 2)
+                        {
+                            parentMainWindow.CloseDepthTouchWindow();
+                        }
+                        else if (MultiTouchMode == 1)
+                        {
+                            parentMainWindow.CloseMultiTouchWindow();
+                        }
+                        MultiTouchMode = 0;
                         _screen.BeginCalibration();
                         CursorStatus = 0;
                         break;
