@@ -11,24 +11,50 @@
         <Style TargetType="{x:Type Image}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
+
+        <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF00FFFF" Offset="-0.8"/>
+            <GradientStop Color="#FF008EFF" Offset="0.5"/>
+            <GradientStop Color="#FF00FFFF" Offset="1.8"/>
+        </LinearGradientBrush>
+        
         <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}"/>
             <Setter Property="Cursor" Value="Hand"></Setter>
             <Setter Property="Margin" Value="2"></Setter>
-            <Setter Property="Template">
+           <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" ClipToBounds="True">
-                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                       RadiusX="30" RadiusY="30"
-                                       Stroke="LightBlue" StrokeThickness="4"
-                                       Fill="Azure"/>
-                            <Viewbox Margin="16" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="Auto" Width="Auto">
-                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" Height="30" TextBlock.Foreground="MidnightBlue" TextBlock.FontWeight="DemiBold"/>
+                        <Grid Width="{TemplateBinding Width}"  
+                               Height="{TemplateBinding Height}" ClipToBounds="True">
+
+                            <!-- Outer Rectangle with rounded corners. -->
+                            <Rectangle x:Name="outerRectangle"  
+                                HorizontalAlignment="Stretch"  
+                                VerticalAlignment="Stretch"  
+                                Stroke="Black"  
+                                RadiusX="20" RadiusY="20" StrokeThickness="2"  
+                                Fill="{TemplateBinding Background}" >
+                               </Rectangle>
+
+                            <!-- Present Content (text) of the button. -->
+                            <Viewbox Stretch="Uniform">
+                                <Label Content="{TemplateBinding  Content}" />
                             </Viewbox>
+
                         </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property ="Rectangle.StrokeThickness" TargetName="outerRectangle" Value="10" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            
+            
+            
+            
         </Style>
     </Window.Resources>
 
@@ -77,25 +103,33 @@
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill"/>
         </Viewbox>
 
-        <Label Grid.Row="0" Grid.Column="5" Name="WallTopLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="0" Grid.Column="5" Stretch="Uniform">
+          <Label  Name="WallTopLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        </Viewbox>
         <Button Grid.Row="0" Grid.Column="4" Content="Down" Click="WallTop_ClickDown" FontSize="20"/>
         <Button Grid.Row="0" Grid.Column="6" Content="Up" Click="WallTop_ClickUp" FontSize="20"/>
-        <Button Grid.Row="0" Grid.Column="7" Content="Calibrate" Click="WallTop_ClickUp" FontSize="20"/>
+        <Button Grid.Row="0" Grid.Column="7" Content="Calibrate ^" Click="WallTop_ClickUp" FontSize="20"/>
 
-        <Label Grid.Row="1" Grid.Column="5" Name="WallLeftLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="1" Grid.Column="5" Stretch="Uniform">
+             <Label Name="WallLeftLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        </Viewbox>
         <Button Grid.Row="1" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft" FontSize="20"/>
         <Button Grid.Row="1" Grid.Column="6" Content="Right" Click="WallLeft_ClickRight" FontSize="20"/>
-        <Button Grid.Row="1" Grid.Column="7" Content="Calibrate" Click="WallLeft_ClickRight" FontSize="20"/>
+        <Button Grid.Row="1" Grid.Column="7" Content="Calibrate &lt;" Click="WallLeft_ClickRight" FontSize="20"/>
 
-        <Label Grid.Row="2" Grid.Column="5" Name="WallRightLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="2" Grid.Column="5" Stretch="Uniform">
+            <Label Name="WallRightLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        </Viewbox>
         <Button Grid.Row="2" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft" FontSize="20"/>
         <Button Grid.Row="2" Grid.Column="6" Content="Right" Click="WallRight_ClickRight" FontSize="20"/>
-        <Button Grid.Row="2" Grid.Column="7" Content="Calibrate" Click="WallRight_ClickRight" FontSize="20"/>
+        <Button Grid.Row="2" Grid.Column="7" Content="Calibrate >" Click="WallRight_ClickRight" FontSize="20"/>
 
-        <Label Grid.Row="3" Grid.Column="5" Name="WallBottomLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="3" Grid.Column="5" Stretch="Uniform">
+            <Label Name="WallBottomLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        </Viewbox>
         <Button Grid.Row="3" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown" FontSize="20"/>
         <Button Grid.Row="3" Grid.Column="6" Content="Up" Click="WallBottom_ClickUp" FontSize="20"/>
-        <Button Grid.Row="3" Grid.Column="7" Content="Calibrate" Click="WallBottom_ClickUp" FontSize="20"/>
+        <Button Grid.Row="3" Grid.Column="7" Content="Calibrate V" Click="WallBottom_ClickUp" FontSize="20"/>
 
         <Button Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click" FontSize="20"/>
         

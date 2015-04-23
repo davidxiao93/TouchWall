@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Kinect;
 
@@ -7,12 +8,22 @@ namespace TouchWall
 {
     public partial class MainWindow : INotifyPropertyChanged
     {
+
+
+
         /// <summary>
         /// TouchWallApp object, responsible for communicating with kinect and cursor
         /// </summary>
         private readonly TouchWallApp _touchWall;
 
+        /// <summary>
+        /// MultiTouchWindow object. can contain a reference the singleton
+        /// </summary>
         private MultiTouchWindow _multiTouchWindow;
+
+        /// <summary>
+        /// DepthTouchWindow object. can contain a reference the singleton
+        /// </summary>
         private DepthTouchWindow _depthTouchWindow;
 
         /// <summary>
@@ -25,6 +36,9 @@ namespace TouchWall
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainWindow()
         {
             // Initialize the components (controls) of the window
@@ -112,14 +126,20 @@ namespace TouchWall
             UpdateModeLabels();
         }
 
+        /// <summary>
+        /// Update the Calibration numbers
+        /// </summary>
         private void UpdateDimensionLabels()
         {
-            WallTopLabel.Content = "Top: " + Screen.TopEdge;
-            WallLeftLabel.Content = "Left: " + Screen.LeftEdge;
-            WallRightLabel.Content = "Right: " + Screen.RightEdge;
-            WallBottomLabel.Content = "Bottom: " + Screen.BottomEdge;
+            WallTopLabel.Content = Screen.TopEdge.ToString("0.000");
+            WallLeftLabel.Content = Screen.LeftEdge.ToString("0.000");
+            WallRightLabel.Content = Screen.RightEdge.ToString("0.000");
+            WallBottomLabel.Content = Screen.BottomEdge.ToString("0.000");
         }
 
+        /// <summary>
+        /// Update the info labels
+        /// </summary>
         private void UpdateCoordaintesLabel()
         {
             if (TouchWallApp.MultiTouchMode == 1)
@@ -139,6 +159,9 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Update the cursor button
+        /// </summary>
         private void UpdateCursorStatusLabel()
         {
             if (TouchWallApp.CalibrateStatus != 0)
@@ -150,18 +173,21 @@ namespace TouchWall
             switch (TouchWallApp.CursorStatus)
             {
                 case 1:
-                    ToggleCursorButton.Content = "aaaaaaaaaaaaaaCursor Enabled Without Click - Click to toggle";
+                    ToggleCursorButton.Content = "Cursor Enabled, Click Disabled";
                     break;
                 case 2:
-                    ToggleCursorButton.Content = "Cursor Enabled With Click - Click to toggle";
+                    ToggleCursorButton.Content = "Cursor Enabled, Click Enabled";
                     break;
                 default:
-                    ToggleCursorButton.Content = "Cursor Disabled - Click to toggle";
+                    ToggleCursorButton.Content = "Cursor Disabled";
                     break;
             }
         }
         }
 
+        /// <summary>
+        /// Update the calibration Labels
+        /// </summary>
         private void UpdateCalibrationLabels()
         {
             switch (TouchWallApp.CalibrateStatus)
@@ -193,6 +219,9 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Update the Other buttons
+        /// </summary>
         private void UpdateModeLabels()
         {
             if (TouchWallApp.CalibrateStatus != 0)
@@ -203,20 +232,20 @@ namespace TouchWall
             }
             else
             {
-                LaunchTouchdevelopButton.Content = "Launch TouchDevelop";
+                LaunchTouchdevelopButton.Content = "TouchDevelop";
             switch (TouchWallApp.MultiTouchMode)
             {
                 case 1:
-                    ToggleDepthTouchButton.Content = "Launch Depth Mode";
+                    ToggleDepthTouchButton.Content = "Depth Mode";
                     ToggleDepthTouchButton.Content = "Close Multi Mode";
                     break;
                 case 2:
                     ToggleDepthTouchButton.Content = "Close Depth Mode";
-                        ToggleMultiTouchButton.Content = "Launch Multi Mode - Incomplete";
+                        ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
                     break;
                 default:
-                    ToggleDepthTouchButton.Content = "Launch Depth Mode";
-                        ToggleMultiTouchButton.Content = "Launch Multi Mode - Incomplete";
+                    ToggleDepthTouchButton.Content = "Depth Mode";
+                        ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
                     break;
             }
         }
@@ -330,6 +359,9 @@ namespace TouchWall
             CalibrateClick();
         }
 
+        /// <summary>
+        /// Closes any canvas windows, and begins calibration
+        /// </summary>
         public void CalibrateClick()
         {
             if (TouchWallApp.MultiTouchMode == 2)
@@ -363,13 +395,15 @@ namespace TouchWall
         {
             if (TouchWallApp.CalibrateStatus == 0)
             {
-            System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
-        }
+                System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
+            }
         }
 
         #endregion
 
-
+        /// <summary>
+        /// Closes the DepthModeWindow if it exists, then opens the Multitouchwindow
+        /// </summary>
         public void OpenMultiTouchWindow()
         {
             if (TouchWallApp.MultiTouchMode == 2)
@@ -380,11 +414,14 @@ namespace TouchWall
             {
                 TouchWallApp.CursorStatus = 0;
                 TouchWallApp.MultiTouchMode = 1;
-                _multiTouchWindow = new MultiTouchWindow(_touchWall);
+                _multiTouchWindow = (MultiTouchWindow)MultiTouchWindow.GetMultiTouchWindowInstance(_touchWall);
                 _multiTouchWindow.Show();
             } 
         }
 
+        /// <summary>
+        /// Closes the MultitouchWindow if it exists
+        /// </summary>
         public void CloseMultiTouchWindow()
         {
             if (_multiTouchWindow.IsEnabled)
@@ -394,6 +431,9 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Closes the MultitouchWindow if it exists, then opens the DepthTouchWindow
+        /// </summary>
         public void OpenDepthTouchWindow()
         {
             if (TouchWallApp.MultiTouchMode == 1)
@@ -404,11 +444,14 @@ namespace TouchWall
             {
                 TouchWallApp.CursorStatus = 0;
                 TouchWallApp.MultiTouchMode = 2;
-                _depthTouchWindow = new DepthTouchWindow(_touchWall);
+                _depthTouchWindow = (DepthTouchWindow)DepthTouchWindow.GetDepthTouchWindowInstance(_touchWall);
                 _depthTouchWindow.Show();
             }
         }
 
+        /// <summary>
+        /// Closes the DepthTouchWindow if it exists
+        /// </summary>
         public void CloseDepthTouchWindow()
         {
             if (_depthTouchWindow.IsEnabled)
