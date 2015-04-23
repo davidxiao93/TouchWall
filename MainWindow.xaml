@@ -14,14 +14,13 @@
         <Style TargetType="Button">
             <Setter Property="Background">
                 <Setter.Value>
-                    <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="5" RadiusY="0.75">
-                        <GradientStop Color="#FF077AFF" Offset="1" />
-                        <GradientStop Color="#FFD4E4FF" Offset="0.52" />
-                    </RadialGradientBrush>
+                    <ImageBrush ImageSource="Images/LaunchTouchDevelopButton.png"/>
                 </Setter.Value>
             </Setter>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
             <Setter Property="Cursor" Value="Hand"></Setter>
-            <Setter Property="Foreground" Value="#FF000000"/>
         </Style>
     </Window.Resources>
 
