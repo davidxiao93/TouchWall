@@ -114,10 +114,10 @@ namespace TouchWall
 
         private void UpdateDimensionLabels()
         {
-            WallTopLabel.Content = "Top: " + Screen.TopEdge;
-            WallLeftLabel.Content = "Left: " + Screen.LeftEdge;
-            WallRightLabel.Content = "Right: " + Screen.RightEdge;
-            WallBottomLabel.Content = "Bottom: " + Screen.BottomEdge;
+            WallTopLabel.Content = Screen.TopEdge.ToString("0.000");
+            WallLeftLabel.Content = Screen.LeftEdge.ToString("0.000");
+            WallRightLabel.Content = Screen.RightEdge.ToString("0.000");
+            WallBottomLabel.Content = Screen.BottomEdge.ToString("0.000");
         }
 
         private void UpdateCoordaintesLabel()
