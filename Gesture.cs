@@ -34,34 +34,63 @@ namespace TouchWall
         /// </summary>
         private const int MouseeventfAbsolute = 0x8000;
 
-
+        /// <summary>
+        /// Previous Values. Kept alive by TempGesture
+        /// </summary>
         private static readonly float[] PrevX = { -10000, -10000, -10000, -10000 };
         private static readonly float[] PrevY = { -10000, -10000, -10000, -10000 };
 
+        /// <summary>
+        /// Previous X and Y used to make clicking stick
+        /// </summary>
         private static float _clickX;
         private static float _clickY;
 
-
+        /// <summary>
+        /// Getter for a previous value in X
+        /// </summary>
+        /// <param name="id">Which previous value in X</param>
+        /// <returns>value of X</returns>
         public float GetPrevX(int id)
         {
             return PrevX[id];
         }
 
+        /// <summary>
+        /// Getter for a previous value in Y
+        /// </summary>
+        /// <param name="id">Which previous value in Y</param>
+        /// <returns>value of Y</returns>
         public float GetPrevY(int id)
         {
             return PrevY[id];
         }
 
+        /// <summary>
+        /// Resets a previous value in X
+        /// </summary>
+        /// <param name="id">Which previous value in X</param>
         public void ResetPrevX(int id)
         {
             PrevX[id] = -10000;
         }
 
+        /// <summary>
+        /// Resets a previous value in Y
+        /// </summary>
+        /// <param name="id">Which previous value in Y</param>
         public void ResetPrevY(int id)
         {
             PrevY[id] = -10000;
         }
         
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="y">CameraSpace X coordinate</param>
+        /// <param name="z">CameraSpace Y coordinate</param>
+        /// <param name="x">CameraSpace Z coordinate</param>
+        /// <param name="id">ID of the point</param>
         public Gesture(float y, float z, float x, int id) // Coordinates in camera Space converted to USER space
         {
             X = x;
@@ -71,6 +100,9 @@ namespace TouchWall
             ProcessGesture();
         }
 
+        /// <summary>
+        /// Empty constructor for TempGesture
+        /// </summary>
         public Gesture() // Coordinates in camera Space converted to USER space
         {
         }
@@ -82,6 +114,9 @@ namespace TouchWall
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwflags, int dx, int dy, int cButtons, int dwExtraInfo);
 
+        /// <summary>
+        /// Applies Exponential Filtering
+        /// </summary>
         private void ProcessGesture()
         {
             float width = Screen.RightEdge - Screen.LeftEdge;
@@ -109,6 +144,11 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Moves the cursor
+        /// </summary>
+        /// <param name="x">value from 0 to 65535 representing x coordinate for mouse</param>
+        /// <param name="y">value from 0 to 65535 representing y coordinate for mouse</param>
         private void InteractWithCursor(int x, int y)
         {
             switch (TouchWallApp.CurrentGestureType)

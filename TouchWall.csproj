@@ -88,36 +88,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DepthTouchWindow.xaml.cs">
-      <DependentUpon>DepthTouchWindow.xaml</DependentUpon>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CanvasWindow.xaml.cs">
+      <DependentUpon>CanvasWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MultiTouchWindow.xaml.cs">
-      <DependentUpon>MultiTouchWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TouchWallApp.cs" />
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Screen.cs" />
+    <Compile Include="DepthTouchWindow.cs" />
+    <Compile Include="Frame.cs" />
     <Compile Include="FrameDataManager.cs" />
+    <Compile Include="Gesture.cs" />
     <Compile Include="KinectAudioStream.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
-    <Page Include="DepthTouchWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MultiTouchWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Frame.cs" />
-    <Compile Include="Gesture.cs" />
+    <Compile Include="MultiTouchWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -131,6 +115,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Screen.cs" />
+    <Compile Include="TouchWallApp.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -173,6 +159,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\LaunchTouchdevelopButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CanvasWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

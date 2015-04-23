@@ -63,6 +63,9 @@ namespace TouchWall
         /// </summary>
         private readonly KinectAudioStream _convertStream;
 
+        /// <summary>
+        /// Handle for the mainWindow. Sorry for implementing it in this way
+        /// </summary>
         public readonly MainWindow ParentMainWindow;
 
         /// <summary>
@@ -70,6 +73,10 @@ namespace TouchWall
         /// </summary>
         private readonly SpeechRecognitionEngine _speechEngine;
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="mainWindow"></param>
         public TouchWallApp(MainWindow mainWindow)
         {
             // sorry for needing this. This is because of a bad refactoring job
@@ -144,6 +151,9 @@ namespace TouchWall
             #endregion
         }
 
+        /// <summary>
+        /// switch the cursor mode
+        /// </summary>
         public void ToggleCursor()
         {
             switch (CursorStatus)
@@ -160,12 +170,18 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Initiate the calibration process
+        /// </summary>
         public void BeginCalibration()
         {
             
             _screen.BeginCalibration();
         }
 
+        /// <summary>
+        /// Kills the speech recognition when the window gets closed
+        /// </summary>
         public void DisableSpeech()
         {
             if (_convertStream != null)
@@ -181,6 +197,9 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Kills the Kinect connection when the window gets closed
+        /// </summary>
         public void DisableKinect()
         {
             if (KinectSensor != null)
