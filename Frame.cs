@@ -100,7 +100,14 @@ namespace TouchWall
             switch (TouchWallApp.CalibrateStatus)
             {
                 case 0: // Not in calibration mode
-                    FindGestures2();
+                    if (TouchWallApp.MultiTouchMode != 1)
+                    {
+                        FindGestures2();
+                    }
+                    else
+                    {
+                        FindGestures();
+                    }
                     break;
                 case 1: // Begin Calibration
                     Screen.CreateReferenceFrame(_spacePoints, _depthFrameDataSize);
