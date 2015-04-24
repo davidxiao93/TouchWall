@@ -1,8 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Windows.Input;
-
-namespace TouchWall
+﻿namespace TouchWall
 {
     public class Gesture
     {
@@ -87,10 +83,8 @@ namespace TouchWall
         /// </summary>
         private void ProcessGesture()
         {
-            float width = Screen.RightEdge - Screen.LeftEdge;
-            float height = Screen.TopEdge - Screen.BottomEdge;
-
-            const float smoothingFactor = 0.2f;
+            // 1 means it never uses the previous value
+            const float smoothingFactor = 0.25f;
 
             if (PrevX[Id] < -1000 || PrevY[Id] < -1000)
             {
@@ -104,10 +98,11 @@ namespace TouchWall
                 PrevX[Id] = X;
                 PrevY[Id] = Y;
             }
-            if (TouchWallApp.MultiTouchMode == 0)
+            ICursor iCursor = CursorFactory.GetICursor();
+            if (iCursor.InteractWithCursor(X, Y, Z) == 1)
             {
-                ICursor iCursor = CursorFactory.GetICursor();
-                iCursor.InteractWithCursor(X, Y, Z);
+                ResetPrevX(Id);
+                ResetPrevY(Id);
             }
         }
     }

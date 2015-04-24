@@ -269,25 +269,27 @@ namespace TouchWall
                     case "CALIBRATE_CANCEL":
                         _screen.CancelCalibration();
                         CursorStatus = 1;
-                        ParentMainWindow.WindowState = WindowState.Minimized;
                         break;
                     case "CURSOR_DISABLE":
                         CursorStatus = 0;
                         break;
                     case "CURSOR_ENABLE":
-                        if (CursorStatus == 0)
+                        if (CursorStatus == 0 && MultiTouchMode == 0)
                         {
                             CursorStatus = 1;
                         }
                         break;
                     case "CLICK_DISABLE":
-                        if (CursorStatus == 2)
+                        if (CursorStatus == 2 && MultiTouchMode == 0)
                         {
                             CursorStatus = 1;
                         }
                         break;
                     case "CLICK_ENABLE":
-                        CursorStatus = 2;
+                        if (MultiTouchMode == 0)
+                        {
+                            CursorStatus = 2;
+                        }
                         break;
                     case "DEPTH_START":
                         if (MultiTouchMode != 2)

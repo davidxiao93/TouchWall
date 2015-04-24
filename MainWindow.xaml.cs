@@ -131,10 +131,10 @@ namespace TouchWall
         /// </summary>
         private void UpdateDimensionLabels()
         {
-            WallTopLabel.Content = Screen.TopEdge.ToString("0.000") + "m";
-            WallLeftLabel.Content = Screen.LeftEdge.ToString("0.000") + "m";
-            WallRightLabel.Content = Screen.RightEdge.ToString("0.000") + "m";
-            WallBottomLabel.Content = Screen.BottomEdge.ToString("0.000") + "m";
+            WallTopLabel.Content = Screen.TopEdge.ToString("0.00") + "m";
+            WallLeftLabel.Content = Screen.LeftEdge.ToString("0.00") + "m";
+            WallRightLabel.Content = Screen.RightEdge.ToString("0.00") + "m";
+            WallBottomLabel.Content = Screen.BottomEdge.ToString("0.00") + "m";
         }
 
         /// <summary>

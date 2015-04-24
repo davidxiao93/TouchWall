@@ -53,7 +53,7 @@ namespace TouchWall
             {
                 double size = 2 / (_touchWall.FrameDataManager.Frame.Gestures[0].Z + 0.02);
                 int colorPicker = 0;
-                if (_touchWall.FrameDataManager.Frame.Gestures[0].Z < 0.01f)
+                if (_touchWall.FrameDataManager.Frame.Gestures[0].Z < 0.0001f)
                 {
                     colorPicker = 1;
                 }

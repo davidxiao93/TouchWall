@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Documents;
 using Microsoft.Kinect;
 
 namespace TouchWall
@@ -70,7 +74,9 @@ namespace TouchWall
                     {
                         ushort depth = frameData[y * TouchWallApp.KinectWidth + x];
                         DepthPixels[y * TouchWallApp.KinectWidth + x] =
-                            (byte) (depth >= 500 && depth <= 5000 ? (depth*256/5000) : 0);
+                            (byte)(depth >= Screen.LeftEdge * 1000 && depth <= Screen.RightEdge * 1000 ? 
+                                ((depth - Screen.LeftEdge*1000) * 256 / ((Screen.RightEdge - Screen.LeftEdge) * 1000)) 
+                                : 0);
                     }
                 }
             }
@@ -106,76 +112,104 @@ namespace TouchWall
             }
         }
 
+        private void FindGestures2()
+        {
+            List<SpacePoint> pointsFound = new List<SpacePoint>();
+            SpacePoint newPoint;
+            CameraSpacePoint smallestYPoint = new CameraSpacePoint();
+            smallestYPoint.Y = 1.0f;
+            for (int i = (int) (_depthFrameDataSize/sizeof (ushort)) - 1; i >= 0; i--)
+            {
+                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge
+                    && _spacePoints[i].Y > 0 && _spacePoints[i].Y < Screen.DetectThreshold
+                    && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
+                {
+                    newPoint = new SpacePoint(_spacePoints[i], 0);
+                    if (_spacePoints[i].Y < smallestYPoint.Y)
+                    {
+                        smallestYPoint = _spacePoints[i];
+                    }
+                    pointsFound.Add(newPoint);
+                }
+            }
+            // pointsFound contains all the points in the screen space
+            // now refine it
+            List<SpacePoint> refinedPointsFound = new List<SpacePoint>();
+            for (int i = 0; i < pointsFound.Count; i++)
+            {
+                if (Math.Abs(pointsFound[i].Point3D.X - smallestYPoint.X) < 0.1f && Math.Abs(pointsFound[i].Point3D.Z - smallestYPoint.Z) < 0.1f)
+                {
+                    refinedPointsFound.Add(pointsFound[i]);
+                }
+            }
+            // refinedPointsFound contains a slither of the screen space
+
+            
+
+
+
+            // at this point pointsFound contains the 3D coordiantes of every point within the screen space
+            int maxPoints = 2;
+            List<SpacePoint> pointsToUse = new List<SpacePoint>();
+            for (int i = 0; i < refinedPointsFound.Count; i++)
+            {
+                for (int j = i + 1; j < refinedPointsFound.Count; j++)
+                {
+
+                    float deltaX = refinedPointsFound[i].Point3D.X - refinedPointsFound[j].Point3D.X;
+                    float deltaZ = refinedPointsFound[i].Point3D.Z - refinedPointsFound[j].Point3D.Z;
+                    if (Math.Sqrt(deltaX * deltaX + deltaZ * deltaZ) < 0.03f)
+                    {
+                        refinedPointsFound[i].PointNear++;
+                        refinedPointsFound[j].PointNear++;
+                        if (refinedPointsFound[i].PointNear >= maxPoints)
+                        {
+                            pointsToUse.Add(refinedPointsFound[i]);
+                            j = refinedPointsFound.Count;
+                        }
+                    }
+                }
+            }
+            // at this point pointsToUse contains all the possible points. 
+            // for single touch mode, simply find the one that has the smallest Y
+
+            if (TouchWallApp.CurrentGestureType == 0)
+            {
+                TouchWallApp.CurrentGestureType = 1;
+            }
+
+            if (TouchWallApp.MultiTouchMode != 1)
+            {
+                // single point only
+                float nearestY = 1.0f;
+                int indexToUse = -1;
+                for (int i = 0; i < pointsToUse.Count; i++)
+                {
+                    if (pointsToUse[i].Point3D.Y < nearestY)
+                    {
+                        indexToUse = i;
+                        nearestY = pointsToUse[i].Point3D.Y;
+                    }
+                }
+                if (indexToUse != -1)
+                {
+                    Gestures[0] = new Gesture(pointsToUse[indexToUse].Point3D.X, pointsToUse[indexToUse].Point3D.Y,
+                        pointsToUse[indexToUse].Point3D.Z, 0);
+                }
+            }
+
+        }
+
+
+
+
+
+
+
         /// <summary>
         /// Looks for user's hand and creates new gestures
         /// </summary>
         private void FindGestures()
-        {
-            _pointFound.X = 0.0f;
-            _pointFound.Y = Screen.MouseMoveThreshold;
-            _pointFound.Z = 0.0f;
-
-            int gesturesFound = 0;
-            for (int i = (int)(_depthFrameDataSize / sizeof(ushort)) - 1; i >= 0; i--)
-            {
-                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge
-                    && _spacePoints[i].Y > 0 && _spacePoints[i].Y < Screen.MouseMoveThreshold
-                    && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
-                {
-                    _pointFound.X = _spacePoints[i].X;
-                    _pointFound.Y = _spacePoints[i].Y;
-                    _pointFound.Z = _spacePoints[i].Z;
-
-                    if (TouchWallApp.CurrentGestureType == 0)
-                    {
-                        TouchWallApp.CurrentGestureType = 1;
-                    }
-
-                    switch (gesturesFound) // Allowing up to four gestures in MultiTouch mode
-                    {
-                        case 0:
-                            Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z, 0);
-                            if (TouchWallApp.MultiTouchMode == 0)
-                            {
-                                return;
-                            }
-                            gesturesFound++;
-                            break;
-                        //case 1: case 2: case 3:
-                        default:
-                            Boolean foundNewPoint = true;
-                            const float xTolerance = 0.07f;
-                            const float yTolerance = 0.05f;
-                            for (int a = 0; a < gesturesFound; a++)
-                            {
-                                if ((Math.Abs(_pointFound.Z - Gestures[a].X) < xTolerance
-                                          && Math.Abs(_pointFound.X - Gestures[a].Y) < yTolerance))
-                                {
-                                    foundNewPoint = false;
-                                    break;
-                                }
-
-                            }
-                            if (foundNewPoint)
-                            {
-                                Gestures[gesturesFound] = new Gesture(_pointFound.X, _pointFound.Y, _pointFound.Z, gesturesFound);
-                                gesturesFound++;
-                                if (gesturesFound >= 4)
-                                {
-                                    return;
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Looks for user's hand and creates new gestures
-        /// Testing version!!!!
-        /// </summary>
-        private void FindGestures2()
         {
             for (int i = 0; i < 4; i++)
             {
