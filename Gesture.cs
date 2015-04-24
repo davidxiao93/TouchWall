@@ -16,36 +16,10 @@ namespace TouchWall
         public int Id { get; set; }
 
         /// <summary>
-        /// Constant defining the flag for left click down
-        /// </summary>
-        private const int MouseeventfLeftDown = 0x0002;
-
-        /// <summary>
-        /// Constant defining the flag for left click up
-        /// </summary>
-        private const int MouseeventfLeftUp = 0x0004;
-        
-        /// <summary>
-        /// Constant defining the flag for mouse movement
-        /// </summary>
-        private const int MouseeventfMove = 0x0001;
-
-        /// <summary>
-        /// Constant defining the flag for making mouse_event move in an absolute manner
-        /// </summary>
-        private const int MouseeventfAbsolute = 0x8000;
-
-        /// <summary>
         /// Previous Values. Kept alive by TempGesture
         /// </summary>
         private static readonly float[] PrevX = { -10000, -10000, -10000, -10000 };
         private static readonly float[] PrevY = { -10000, -10000, -10000, -10000 };
-
-        /// <summary>
-        /// Previous X and Y used to make clicking stick
-        /// </summary>
-        private static float _clickX;
-        private static float _clickY;
 
         /// <summary>
         /// Getter for a previous value in X
@@ -108,13 +82,6 @@ namespace TouchWall
         {
         }
 
-        // Cursor Control events
-        //[DllImport("user32")]
-        //public static extern int SetCursorPos(int x, int y);
-        
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern void mouse_event(int dwflags, int dx, int dy, int cButtons, int dwExtraInfo);
-
         /// <summary>
         /// Applies Exponential Filtering
         /// </summary>
@@ -141,9 +108,6 @@ namespace TouchWall
             {
                 ICursor iCursor = CursorFactory.GetICursor();
                 iCursor.InteractWithCursor(X, Y, Z);
-                //int myX = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
-                //int myY = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
-                //InteractWithCursor(myX, myY);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Windows;
 using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
@@ -116,16 +117,16 @@ namespace TouchWall
                 _speechEngine = new SpeechRecognitionEngine(recognizerInfo.Id);
 
                 var directions = new Choices();
-                directions.Add(new SemanticResultValue("Kinect Calibrate Full", "CALIBRATE_FULL"));
-                directions.Add(new SemanticResultValue("Kinect Calibrate Cancel", "CALIBRATE_CANCEL"));
-                directions.Add(new SemanticResultValue("Kinect Cursor Disable", "CURSOR_DISABLE"));
+                directions.Add(new SemanticResultValue("Kinect Calibrate Enable", "CALIBRATE_FULL"));
+                directions.Add(new SemanticResultValue("Kinect Calibrate Disable", "CALIBRATE_CANCEL"));
                 directions.Add(new SemanticResultValue("Kinect Cursor Enable", "CURSOR_ENABLE"));
-                directions.Add(new SemanticResultValue("Kinect Click Disable", "CLICK_DISABLE"));
+                directions.Add(new SemanticResultValue("Kinect Cursor Disable", "CURSOR_DISABLE"));
                 directions.Add(new SemanticResultValue("Kinect Click Enable", "CLICK_ENABLE"));
-                directions.Add(new SemanticResultValue("Kinect Launch Depth", "DEPTH_START"));
-                directions.Add(new SemanticResultValue("Kinect Leave Depth", "DEPTH_END"));
-                directions.Add(new SemanticResultValue("Kinect Launch Multi", "MULTI_START"));
-                directions.Add(new SemanticResultValue("Kinect Leave Multi", "MULTI_END"));
+                directions.Add(new SemanticResultValue("Kinect Click Disable", "CLICK_DISABLE"));
+                directions.Add(new SemanticResultValue("Kinect Depth Enable", "DEPTH_START"));
+                directions.Add(new SemanticResultValue("Kinect Depth Disable", "DEPTH_END"));
+                directions.Add(new SemanticResultValue("Kinect Multi Enable", "MULTI_START"));
+                directions.Add(new SemanticResultValue("Kinect Multi Disable", "MULTI_END"));
                 directions.Add(new SemanticResultValue("Kinect Open TouchDevelop", "TOUCHDEVELOP"));
 
 
@@ -268,6 +269,7 @@ namespace TouchWall
                     case "CALIBRATE_CANCEL":
                         _screen.CancelCalibration();
                         CursorStatus = 1;
+                        ParentMainWindow.WindowState = WindowState.Minimized;
                         break;
                     case "CURSOR_DISABLE":
                         CursorStatus = 0;

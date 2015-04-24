@@ -1,10 +1,11 @@
 ﻿<Window x:Class="TouchWall.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Touch Wall" 
+        Title="Touch Wall"
         WindowState="Maximized"
         MinWidth="1280"
         MinHeight="720"
+        Icon="Images/TouchWallLogoSmall.ico"
         Closing="MainWindow_Closing">
     <Window.Resources>
         <SolidColorBrush x:Key="BlackBrush" Color="#ff000000"/>
@@ -103,34 +104,42 @@
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill"/>
         </Viewbox>
 
-        <Viewbox Grid.Row="0" Grid.Column="5" Stretch="Uniform">
-          <Label  Name="WallTopLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="0" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
+            <Label Content="Top:" FontSize="20"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
+          <Label  Name="WallTopLabel" Content="{Binding Text}" FontSize="20"/>
         </Viewbox>
         <Button Grid.Row="0" Grid.Column="4" Content="Down" Click="WallTop_ClickDown" FontSize="20"/>
-        <Button Grid.Row="0" Grid.Column="6" Content="Up" Click="WallTop_ClickUp" FontSize="20"/>
-        <Button Grid.Row="0" Grid.Column="7" Content="Calibrate ^" Click="WallTop_ClickUp" FontSize="20"/>
+        <Button Grid.Row="0" Grid.Column="7" Content="Up" Click="WallTop_ClickUp" FontSize="20"/>
 
-        <Viewbox Grid.Row="1" Grid.Column="5" Stretch="Uniform">
-             <Label Name="WallLeftLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="1" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
+            <Label Content="Left:" FontSize="20"/>
+        </Viewbox>
+        <Viewbox Grid.Row="1" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
+            <Label  Name="WallLeftLabel" Content="{Binding Text}" FontSize="20"/>
         </Viewbox>
         <Button Grid.Row="1" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft" FontSize="20"/>
-        <Button Grid.Row="1" Grid.Column="6" Content="Right" Click="WallLeft_ClickRight" FontSize="20"/>
-        <Button Grid.Row="1" Grid.Column="7" Content="Calibrate &lt;" Click="WallLeft_ClickRight" FontSize="20"/>
+        <Button Grid.Row="1" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight" FontSize="20"/>
 
-        <Viewbox Grid.Row="2" Grid.Column="5" Stretch="Uniform">
-            <Label Name="WallRightLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="2" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
+            <Label Content="Right:" FontSize="20"/>
+        </Viewbox>
+        <Viewbox Grid.Row="2" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
+            <Label  Name="WallRightLabel" Content="{Binding Text}" FontSize="20"/>
         </Viewbox>
         <Button Grid.Row="2" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft" FontSize="20"/>
-        <Button Grid.Row="2" Grid.Column="6" Content="Right" Click="WallRight_ClickRight" FontSize="20"/>
-        <Button Grid.Row="2" Grid.Column="7" Content="Calibrate >" Click="WallRight_ClickRight" FontSize="20"/>
+        <Button Grid.Row="2" Grid.Column="7" Content="Right" Click="WallRight_ClickRight" FontSize="20"/>
 
-        <Viewbox Grid.Row="3" Grid.Column="5" Stretch="Uniform">
-            <Label Name="WallBottomLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+        <Viewbox Grid.Row="3" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
+            <Label Content="Bottom:" FontSize="20"/>
+        </Viewbox>
+        <Viewbox Grid.Row="3" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
+            <Label  Name="WallBottomLabel" Content="{Binding Text}" FontSize="20"/>
         </Viewbox>
         <Button Grid.Row="3" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown" FontSize="20"/>
-        <Button Grid.Row="3" Grid.Column="6" Content="Up" Click="WallBottom_ClickUp" FontSize="20"/>
-        <Button Grid.Row="3" Grid.Column="7" Content="Calibrate V" Click="WallBottom_ClickUp" FontSize="20"/>
-
+        <Button Grid.Row="3" Grid.Column="7" Content="Up" Click="WallBottom_ClickUp" FontSize="20"/>
+        
         <Button Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click" FontSize="20"/>
         
         <Button Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleCursorButton" Content="{Binding Text}" Click="Toggle_Cursor" FontSize="20"/>
