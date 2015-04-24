@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Windows.Documents;
 using Microsoft.Kinect;
 
 namespace TouchWall
@@ -39,7 +36,6 @@ namespace TouchWall
         /// </summary>
         private readonly CameraSpacePoint[] _spacePoints;
         private readonly CameraSpacePoint[] _foundGestures = new CameraSpacePoint[4];
-        private CameraSpacePoint _pointFound;
 
 
         internal Frame(IntPtr depthFrameData, uint depthFrameDataSize, FrameDescription depthFrameDescription)
@@ -119,19 +115,29 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Newer version of FindGestures that uses more advanced techniques to determine where to plot the user's finger.
+        /// Sadly, it isnt able to do multiple points at the moment.
+        /// </summary>
         private void FindGestures2()
         {
+            // list of SpacePoints that are inside the screen space
             List<SpacePoint> pointsFound = new List<SpacePoint>();
-            SpacePoint newPoint;
+            // cameraSpacePoint that contains the coordinates of the point that is closest to the screen
             CameraSpacePoint smallestYPoint = new CameraSpacePoint();
             smallestYPoint.Y = 1.0f;
+
+            // go through each point.
             for (int i = (int) (_depthFrameDataSize/sizeof (ushort)) - 1; i >= 0; i--)
             {
+                // if the point is within screen space...
                 if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge
                     && _spacePoints[i].Y > 0 && _spacePoints[i].Y < Screen.DetectThreshold
                     && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
                 {
-                    newPoint = new SpacePoint(_spacePoints[i], 0);
+                    // ... add that point to the pointsFound List
+                    var newPoint = new SpacePoint(_spacePoints[i], 0);
+                    // check if this point is the closest to the screen
                     if (_spacePoints[i].Y < smallestYPoint.Y)
                     {
                         smallestYPoint = _spacePoints[i];
@@ -151,33 +157,33 @@ namespace TouchWall
             }
             // refinedPointsFound contains a slither of the screen space
 
-            
-
-
-
-            // at this point pointsFound contains the 3D coordiantes of every point within the screen space
             int maxPoints = 2;
             List<SpacePoint> pointsToUse = new List<SpacePoint>();
+            // go through each point in refinedPointsFound
             for (int i = 0; i < refinedPointsFound.Count; i++)
             {
+                // and again
                 for (int j = i + 1; j < refinedPointsFound.Count; j++)
                 {
-
+                    // check if the two points are near each other
                     float deltaX = refinedPointsFound[i].Point3D.X - refinedPointsFound[j].Point3D.X;
                     float deltaZ = refinedPointsFound[i].Point3D.Z - refinedPointsFound[j].Point3D.Z;
                     if (Math.Sqrt(deltaX * deltaX + deltaZ * deltaZ) < 0.03f)
                     {
+                        // if they are, then add to their total
                         refinedPointsFound[i].PointNear++;
                         refinedPointsFound[j].PointNear++;
                         if (refinedPointsFound[i].PointNear >= maxPoints)
                         {
+                            // if the number of points near is greater than maxPoints, then add to pointsToUse
                             pointsToUse.Add(refinedPointsFound[i]);
+                            // then close the j loop
                             j = refinedPointsFound.Count;
                         }
                     }
                 }
             }
-            // at this point pointsToUse contains all the possible points. 
+            // at this point, pointsToUse contains all the possible points. 
             // for single touch mode, simply find the one that has the smallest Y
 
             if (TouchWallApp.CurrentGestureType == 0)
@@ -208,13 +214,9 @@ namespace TouchWall
         }
 
 
-
-
-
-
-
         /// <summary>
         /// Looks for user's hand and creates new gestures
+        /// Old messy version, kept only because it can sort of do multipoints
         /// </summary>
         private void FindGestures()
         {

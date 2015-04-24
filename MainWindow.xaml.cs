@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Kinect;
 
@@ -395,7 +395,7 @@ namespace TouchWall
         {
             if (TouchWallApp.CalibrateStatus == 0)
             {
-                System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
+                Process.Start("https://www.touchdevelop.com/app/");
             }
         }
 

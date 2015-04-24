@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Net;
 using System.Runtime.InteropServices;
 
 namespace TouchWall
 {
+    /// <summary>
+    /// Abstract template class for the null cursor and the normal cursor
+    /// </summary>
     public abstract class ICursor
     {
         protected static ICursor Instance;
@@ -12,6 +14,10 @@ namespace TouchWall
 
     class NullMouse : ICursor
     {
+        /// <summary>
+        /// Returns a singleton instance of NullMouse
+        /// </summary>
+        /// <returns></returns>
         public static ICursor GetNullCursor()
         {
             if (Instance == null)
@@ -31,7 +37,10 @@ namespace TouchWall
 
     class UseMouse : ICursor
     {
-
+        /// <summary>
+        /// Returns a singleton instance of UseMouse
+        /// </summary>
+        /// <returns></returns>
         public static ICursor GetUseCursor()
         {
             if (Instance == null)
@@ -67,6 +76,8 @@ namespace TouchWall
         /// </summary>
         private const int MouseeventfAbsolute = 0x8000;
 
+
+        // Lets import mouse_event in order to enable cursor control
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwflags, int dx, int dy, int cButtons, int dwExtraInfo);
 
@@ -77,15 +88,19 @@ namespace TouchWall
         /// <param name="Y"></param>
         /// <param name="Z"></param>
         /// <returns>
-        ///     1 if prev[ID] needs to be reset
+        ///     1 if prev[ID] needs to be reset. This occurs when we don't want to keep the previous value
+        ///             For example, when no points are detected
         ///     0 otherwise
         /// </returns>
         public override int InteractWithCursor(float X, float Y, float Z)
         {
             float width = Screen.RightEdge - Screen.LeftEdge;
             float height = Screen.TopEdge - Screen.BottomEdge;
+
+            // Find the x and y coordinates of the point in the units that mouse_event wants
             int x = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
             int y = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
+
             switch (TouchWallApp.CurrentGestureType)
             {
                 case 1:
@@ -127,11 +142,13 @@ namespace TouchWall
                     // User has pressed down and dragged at the same time
                     if (Z > Screen.MouseUpThreshold)
                     {
+                        // user has moved their hand far enough from the screen to cause a left click up
                         mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 1;
                     }
                     else
                     {
+                        // dragging the cursor
                         mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
                     }
                     break;

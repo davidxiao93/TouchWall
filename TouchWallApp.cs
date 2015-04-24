@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using System.Windows;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
@@ -105,7 +106,7 @@ namespace TouchWall
 
             // Grab the audio stream
             IReadOnlyList<AudioBeam> audioBeamList = KinectSensor.AudioSource.AudioBeams;
-            System.IO.Stream audioStream = audioBeamList[0].OpenInputStream();
+            Stream audioStream = audioBeamList[0].OpenInputStream();
 
             // Create the convert stream
             _convertStream = new KinectAudioStream(audioStream);
@@ -320,7 +321,7 @@ namespace TouchWall
                         }
                         break;
                     case "TOUCHDEVELOP":
-                        System.Diagnostics.Process.Start("https://www.touchdevelop.com/app/");
+                        Process.Start("https://www.touchdevelop.com/app/");
                         break;
                 }
             }

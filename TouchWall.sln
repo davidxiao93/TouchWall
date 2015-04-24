@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchWall", "TouchWall.csproj", "{B814AEE7-0717-4BF4-BACB-150E8AA91633}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ProjectModel", "..\ProjectModel\ProjectModel.modelproj", "{C3FD0894-DBA0-43AB-A0A5-7EB0D30C1EB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B814AEE7-0717-4BF4-BACB-150E8AA91633}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B814AEE7-0717-4BF4-BACB-150E8AA91633}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B814AEE7-0717-4BF4-BACB-150E8AA91633}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3FD0894-DBA0-43AB-A0A5-7EB0D30C1EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3FD0894-DBA0-43AB-A0A5-7EB0D30C1EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3FD0894-DBA0-43AB-A0A5-7EB0D30C1EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3FD0894-DBA0-43AB-A0A5-7EB0D30C1EB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -72,7 +72,7 @@
         }
 
         /// <summary>
-        /// Empty constructor for TempGesture
+        /// Empty constructor for TempGesture in FindGesture
         /// </summary>
         public Gesture() // Coordinates in camera Space converted to USER space
         {

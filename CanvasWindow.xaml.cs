@@ -45,7 +45,6 @@ namespace TouchWall
             Instance = null;
             TouchWallApp.MultiTouchMode = 0;
             TouchWallApp.CursorStatus = 1;
-            //Close();
         }
 
         /// <summary>
