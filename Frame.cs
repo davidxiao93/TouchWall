@@ -98,7 +98,7 @@ namespace TouchWall
                 case 0: // Not in calibration mode
                     if (TouchWallApp.MultiTouchMode != 1)
                     {
-                        FindGestures2();
+                        FindSingleGesture();
                     }
                     else
                     {
@@ -119,7 +119,7 @@ namespace TouchWall
         /// Newer version of FindGestures that uses more advanced techniques to determine where to plot the user's finger.
         /// Sadly, it isnt able to do multiple points at the moment.
         /// </summary>
-        private void FindGestures2()
+        private void FindSingleGesture()
         {
             // list of SpacePoints that are inside the screen space
             List<SpacePoint> pointsFound = new List<SpacePoint>();
@@ -131,9 +131,10 @@ namespace TouchWall
             for (int i = (int) (_depthFrameDataSize/sizeof (ushort)) - 1; i >= 0; i--)
             {
                 // if the point is within screen space...
-                if (_spacePoints[i].X > Screen.BottomEdge && _spacePoints[i].X < Screen.TopEdge
+
+                if (_spacePoints[i].X > Screen.BottomEdge - 0.05f && _spacePoints[i].X < Screen.TopEdge + 0.05f
                     && _spacePoints[i].Y > 0 && _spacePoints[i].Y < Screen.DetectThreshold
-                    && _spacePoints[i].Z > Screen.LeftEdge && _spacePoints[i].Z < Screen.RightEdge)
+                    && _spacePoints[i].Z > Screen.LeftEdge - 0.05f && _spacePoints[i].Z < Screen.RightEdge + 0.05f + 0.15f)
                 {
                     // ... add that point to the pointsFound List
                     var newPoint = new SpacePoint(_spacePoints[i], 0);

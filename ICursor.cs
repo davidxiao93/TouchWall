@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows.Controls;
 
 namespace TouchWall
 {
@@ -9,7 +10,7 @@ namespace TouchWall
     public abstract class ICursor
     {
         protected static ICursor Instance;
-        public abstract int InteractWithCursor(float X, float Y, float Z);
+        public abstract int InteractWithMouse(float X, float Y, float Z);
     }
 
     class NullMouse : ICursor
@@ -26,8 +27,8 @@ namespace TouchWall
             }
             return Instance;
         }
-        
-        public override int InteractWithCursor(float X, float Y, float Z)
+
+        public override int InteractWithMouse(float X, float Y, float Z)
         {
             // Purposefully provides no behaviour.
             return 0;
@@ -77,12 +78,15 @@ namespace TouchWall
         private const int MouseeventfAbsolute = 0x8000;
 
 
+        private const int MouseeventfWheel = 0x0800;
+
+
         // Lets import mouse_event in order to enable cursor control
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(int dwflags, int dx, int dy, int cButtons, int dwExtraInfo);
 
         /// <summary>
-        /// Takes in the corrdinates in USER SPACE and convers it to the Screen for cursor control
+        /// Takes in the corrdinates and passes it to either cursor movement or scroll movement
         /// </summary>
         /// <param name="X"></param>
         /// <param name="Y"></param>
@@ -92,7 +96,80 @@ namespace TouchWall
         ///             For example, when no points are detected
         ///     0 otherwise
         /// </returns>
-        public override int InteractWithCursor(float X, float Y, float Z)
+        public override int InteractWithMouse(float X, float Y, float Z)
+        {
+            if (X < Screen.RightEdge + 0.05f)
+            {
+                return InteractWithCursor(X, Y, Z);
+            }
+            else
+            {
+                InteractWithScroll(X, Y, Z);
+                return 0;
+            }
+            
+
+        }
+
+        /// <summary>
+        /// Takes in the coordinates, converts to scroll wheel movement
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <param name="Z"></param>
+        private void InteractWithScroll(float X, float Y, float Z)
+        {
+            switch (TouchWallApp.CurrentGestureType)
+            {
+                case 1:
+                    //point has been detected in the scroll space
+                    if (Z < Screen.MouseDownThreshold)// && TouchWallApp.CursorStatus == 2)
+                    {
+                        // begin scrolling
+                        TouchWallApp.CurrentGestureType = 5;
+                        _clickX = X;
+                        _clickY = Y;
+                    }
+                    break;
+                case 5:
+                    // user has pressed down in scroll space
+                    double tempDistance = (Y - _clickY);
+                    if (Z > Screen.MouseUpThreshold)
+                    {
+                        TouchWallApp.CurrentGestureType = 1;
+                    }
+                    if (tempDistance > 0.02f)
+                    {
+                        // implement a scroll down
+                        mouse_event(MouseeventfWheel, 0, 0, -120, 0);
+                        _clickX = X;
+                        _clickY = Y;
+                    }
+                    else if (tempDistance < -0.02f)
+                    {
+                        // scroll up
+                        mouse_event(MouseeventfWheel, 0, 0, 120, 0);
+                        _clickX = X;
+                        _clickY = Y;
+                    }
+                    break;
+            }
+
+        }
+
+
+        /// <summary>
+        /// Takes in coordinates, and converts it to x and y for the cursor
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <param name="Z"></param>
+        /// <returns>
+        ///     1 if prev[ID] needs to be reset. This occurs when we don't want to keep the previous value
+        ///             For example, when no points are detected
+        ///     0 otherwise
+        /// </returns>
+        private int InteractWithCursor(float X, float Y, float Z)
         {
             float width = Screen.RightEdge - Screen.LeftEdge;
             float height = Screen.TopEdge - Screen.BottomEdge;
@@ -151,6 +228,9 @@ namespace TouchWall
                         // dragging the cursor
                         mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
                     }
+                    break;
+                default:
+                    TouchWallApp.CurrentGestureType = 0;
                     break;
             }
             return 0;

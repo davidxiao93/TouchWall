@@ -99,7 +99,7 @@
                 PrevY[Id] = Y;
             }
             ICursor iCursor = CursorFactory.GetICursor();
-            if (iCursor.InteractWithCursor(X, Y, Z) == 1)
+            if (iCursor.InteractWithMouse(X, Y, Z) == 1)
             {
                 ResetPrevX(Id);
                 ResetPrevY(Id);
