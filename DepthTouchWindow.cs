@@ -19,7 +19,8 @@ namespace TouchWall
         /// Constructor, uses the constructor of CanvasWindow as well
         /// </summary>
         /// <param name="touchWall"></param>
-        private DepthTouchWindow(TouchWallApp touchWall) : base(touchWall)
+        private DepthTouchWindow(TouchWallApp touchWall)
+            : base(touchWall, "Touch Wall - Depth Touch Mode")
         {
             InitializeComponent();
             _touchWall = touchWall;
@@ -33,11 +34,11 @@ namespace TouchWall
         /// <returns>Returns the DepthTouchWindow instance</returns>
         public static CanvasWindow GetDepthTouchWindowInstance(TouchWallApp touchWall)
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = new DepthTouchWindow(touchWall);
+                Instance = new DepthTouchWindow(touchWall);
             }
-            return instance;
+            return Instance;
         }
 
         /// <summary>

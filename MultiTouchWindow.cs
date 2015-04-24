@@ -19,7 +19,7 @@ namespace TouchWall
         /// Constructor, uses the constructor of CanvasWindow as well
         /// </summary>
         /// <param name="touchWall"></param>
-        private MultiTouchWindow(TouchWallApp touchWall) : base (touchWall)
+        private MultiTouchWindow(TouchWallApp touchWall) : base (touchWall, "Touch Wall - Multi Touch Mode")
         {
             InitializeComponent();
             _touchWall = touchWall;
@@ -33,11 +33,11 @@ namespace TouchWall
         /// <returns>Returns the MultiTouchWindow instance</returns>
         public static CanvasWindow GetMultiTouchWindowInstance(TouchWallApp touchWall)
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = new MultiTouchWindow(touchWall);
+                Instance = new MultiTouchWindow(touchWall);
             }
-            return instance;
+            return Instance;
         }
 
         /// <summary>

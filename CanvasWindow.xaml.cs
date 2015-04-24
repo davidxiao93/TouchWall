@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -14,7 +15,7 @@ namespace TouchWall
         /// <summary>
         /// CanvasWindow object, used for Singleton tracking
         /// </summary>
-        protected static CanvasWindow instance;
+        protected static CanvasWindow Instance;
 
         /// <summary>
         /// TouchWallApp object, to provide coordinates for points
@@ -25,11 +26,13 @@ namespace TouchWall
         /// Constructor to initialize
         /// </summary>
         /// <param name="touchWall">TouchWallApp Object</param>
-        public CanvasWindow(TouchWallApp touchWall)
+        /// <param name="winTitle">Title of the window</param>
+        public CanvasWindow(TouchWallApp touchWall, String winTitle)
         {
             InitializeComponent();
             _touchWall = touchWall;
             _touchWall.FrameDataManager.DepthFrameReader.FrameArrived += MapPoints;
+            Title = winTitle;
         }
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace TouchWall
         /// <param name="e"></param>
         public void WindowClosing(object sender, CancelEventArgs e)
         {
-            instance = null;
+            Instance = null;
             TouchWallApp.MultiTouchMode = 0;
             TouchWallApp.CursorStatus = 1;
             //Close();
