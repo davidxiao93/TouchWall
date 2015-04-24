@@ -81,7 +81,6 @@ namespace TouchWall
         /// <param name="mainWindow"></param>
         public TouchWallApp(MainWindow mainWindow)
         {
-            // sorry for needing this. This is because of a bad refactoring job
             ParentMainWindow = mainWindow;
 
             // Get the _kinectSensor object
@@ -177,7 +176,6 @@ namespace TouchWall
         /// </summary>
         public void BeginCalibration()
         {
-            
             _screen.BeginCalibration();
         }
 
@@ -211,7 +209,7 @@ namespace TouchWall
             }
         }
 
-        #region Speech2
+        #region SpeechMethods
         
         /// <summary>
         /// Gets the metadata for the speech recognizer (acoustic model) most suitable to process audio from Kinect

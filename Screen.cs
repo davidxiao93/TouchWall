@@ -142,7 +142,6 @@ namespace TouchWall
             TouchWallApp.CalibrateStatus = 2;
         }
 
-
         internal static void LookForPoints(CameraSpacePoint[] spacePoints, uint depthFrameDataSize)
         {
             _pointFound.Y = MouseMoveThreshold;

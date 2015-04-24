@@ -37,7 +37,6 @@ namespace TouchWall
         private readonly CameraSpacePoint[] _spacePoints;
         private readonly CameraSpacePoint[] _foundGestures = new CameraSpacePoint[4];
 
-
         internal Frame(IntPtr depthFrameData, uint depthFrameDataSize, FrameDescription depthFrameDescription)
         {
             _depthFrameData = depthFrameData;
@@ -211,9 +210,7 @@ namespace TouchWall
                         pointsToUse[indexToUse].Point3D.Z, 0);
                 }
             }
-
         }
-
 
         /// <summary>
         /// Looks for user's hand and creates new gestures
@@ -246,7 +243,6 @@ namespace TouchWall
                             foundNewPoint = false;
                             break;
                         }
-
                     }
                     if (foundNewPoint)
                     {
@@ -281,7 +277,6 @@ namespace TouchWall
                                 _foundGestures[pointToReplace].Z = _spacePoints[i].Z;
                             }
                             break;
-
                         }
                         else
                         {
@@ -298,7 +293,6 @@ namespace TouchWall
 
             if (gesturesFound != 1)
             {
-
                 // goesTo[i] = j means that prev[j] -> _foundGestures[i]
 
                 for (int i = 0; i < 4; i++)
@@ -366,10 +360,8 @@ namespace TouchWall
             }
             for (int j = 0; j < gesturesFound; j++)
             {
-                
                 Gestures[j] = new Gesture(_foundGestures[j].X, _foundGestures[j].Y, _foundGestures[j].Z, goesTo[j]);
             }
-            
         }
     }
 }

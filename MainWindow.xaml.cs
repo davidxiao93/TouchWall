@@ -8,9 +8,6 @@ namespace TouchWall
 {
     public partial class MainWindow : INotifyPropertyChanged
     {
-
-
-
         /// <summary>
         /// TouchWallApp object, responsible for communicating with kinect and cursor
         /// </summary>
@@ -118,7 +115,6 @@ namespace TouchWall
         /// </summary>
         private void UpdateLabels(object sender, DepthFrameArrivedEventArgs e)
         {
-
             UpdateDimensionLabels();
             UpdateCoordaintesLabel();
             UpdateCursorStatusLabel();

@@ -33,7 +33,6 @@ namespace TouchWall
             // Purposefully provides no behaviour.
             return 0;
         }
-
     }
 
     class UseMouse : ICursor
@@ -77,9 +76,10 @@ namespace TouchWall
         /// </summary>
         private const int MouseeventfAbsolute = 0x8000;
 
-
+        /// <summary>
+        /// Constant defining the flag for scrolling
+        /// </summary>
         private const int MouseeventfWheel = 0x0800;
-
 
         // Lets import mouse_event in order to enable cursor control
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
@@ -107,8 +107,6 @@ namespace TouchWall
                 InteractWithScroll(X, Y, Z);
                 return 0;
             }
-            
-
         }
 
         /// <summary>
@@ -154,9 +152,7 @@ namespace TouchWall
                     }
                     break;
             }
-
         }
-
 
         /// <summary>
         /// Takes in coordinates, and converts it to x and y for the cursor
