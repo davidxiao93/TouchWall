@@ -169,10 +169,13 @@ namespace TouchWall
             switch (TouchWallApp.CursorStatus)
             {
                 case 1:
-                    ToggleCursorButton.Content = "Cursor Enabled, Click Disabled";
+                    ToggleCursorButton.Content = "Cursor Enabled only";
                     break;
                 case 2:
                     ToggleCursorButton.Content = "Cursor Enabled, Click Enabled";
+                    break;
+                case 3:
+                    ToggleCursorButton.Content = "Cursor Enabled, Scroll Enabled";
                     break;
                 default:
                     ToggleCursorButton.Content = "Cursor Disabled";

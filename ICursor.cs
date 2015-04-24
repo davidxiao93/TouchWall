@@ -121,7 +121,7 @@ namespace TouchWall
             {
                 case 1:
                     //point has been detected in the scroll space
-                    if (Z < Screen.MouseDownThreshold)// && TouchWallApp.CursorStatus == 2)
+                    if (Z < Screen.MouseDownThreshold && TouchWallApp.CursorStatus != 0)
                     {
                         // begin scrolling
                         TouchWallApp.CurrentGestureType = 5;
@@ -185,6 +185,13 @@ namespace TouchWall
                         _clickX = X;
                         _clickY = Y;
                     }
+                    else if (Z < Screen.MouseDownThreshold && TouchWallApp.CursorStatus == 3)
+                    {
+                        mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
+                        TouchWallApp.CurrentGestureType = 5;
+                        _clickX = X;
+                        _clickY = Y;
+                    }
                     else if (Z < Screen.MouseMoveThreshold)
                     {
                         if (TouchWallApp.CursorStatus != 0)
@@ -223,6 +230,28 @@ namespace TouchWall
                     {
                         // dragging the cursor
                         mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
+                    }
+                    break;
+                case 5:
+                    // user has pressed down in scroll space
+                    double tempDistance2 = (Y - _clickY);
+                    if (Z > Screen.MouseUpThreshold)
+                    {
+                        TouchWallApp.CurrentGestureType = 1;
+                    }
+                    if (tempDistance2 > 0.02f)
+                    {
+                        // implement a scroll down
+                        mouse_event(MouseeventfWheel, 0, 0, -120, 0);
+                        _clickX = X;
+                        _clickY = Y;
+                    }
+                    else if (tempDistance2 < -0.02f)
+                    {
+                        // scroll up
+                        mouse_event(MouseeventfWheel, 0, 0, 120, 0);
+                        _clickX = X;
+                        _clickY = Y;
                     }
                     break;
                 default:

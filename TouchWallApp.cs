@@ -24,7 +24,7 @@ namespace TouchWall
         public static int CurrentGestureType { get; set; }
 
         /// <summary>
-        /// Determines if the cursor can be moved. 0 = Disabled, 1 = Movement, 2 = Movement + Click
+        /// Determines if the cursor can be moved. 0 = Disabled, 1 = Movement, 2 = Movement + Click, 3 = Movement + Scroll
         /// </summary>
         public static int CursorStatus { get; set; }
 
@@ -123,6 +123,8 @@ namespace TouchWall
                 directions.Add(new SemanticResultValue("Kinect Cursor Disable", "CURSOR_DISABLE"));
                 directions.Add(new SemanticResultValue("Kinect Click Enable", "CLICK_ENABLE"));
                 directions.Add(new SemanticResultValue("Kinect Click Disable", "CLICK_DISABLE"));
+                directions.Add(new SemanticResultValue("Kinect Scroll Enable", "SCROLL_ENABLE"));
+                directions.Add(new SemanticResultValue("Kinect Scroll Disable", "SCROLL_DISABLE"));
                 directions.Add(new SemanticResultValue("Kinect Depth Enable", "DEPTH_START"));
                 directions.Add(new SemanticResultValue("Kinect Depth Disable", "DEPTH_END"));
                 directions.Add(new SemanticResultValue("Kinect Multi Enable", "MULTI_START"));
@@ -157,18 +159,12 @@ namespace TouchWall
         /// </summary>
         public void ToggleCursor()
         {
-            switch (CursorStatus)
+            CursorStatus ++;
+            if (CursorStatus == 4)
             {
-                case 1: // Switch to cursor with click
-                    CursorStatus = 2;
-                    break;
-                case 2: // Switch to disabled
-                    CursorStatus = 0;
-                    break;
-                default: // Switch to cursor without click
-                    CursorStatus = 1;
-                    break;
+                CursorStatus = 0;
             }
+          
         }
 
         /// <summary>
@@ -279,7 +275,8 @@ namespace TouchWall
                         }
                         break;
                     case "CLICK_DISABLE":
-                        if (CursorStatus == 2 && MultiTouchMode == 0)
+                    case "SCROLL_DISABLE":
+                        if (CursorStatus != 0 && MultiTouchMode == 0)
                         {
                             CursorStatus = 1;
                         }
@@ -288,6 +285,12 @@ namespace TouchWall
                         if (MultiTouchMode == 0)
                         {
                             CursorStatus = 2;
+                        }
+                        break;
+                    case "SCROLL_ENABLE":
+                        if (MultiTouchMode == 0)
+                        {
+                            CursorStatus = 3;
                         }
                         break;
                     case "DEPTH_START":
