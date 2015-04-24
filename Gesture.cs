@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows.Input;
 
 namespace TouchWall
 {
@@ -138,71 +139,14 @@ namespace TouchWall
             }
             if (TouchWallApp.MultiTouchMode == 0)
             {
-                int myX = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
-                int myY = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
-                InteractWithCursor(myX, myY);
+                ICursor iCursor = CursorFactory.GetICursor();
+                iCursor.InteractWithCursor(X, Y, Z);
+                //int myX = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
+                //int myY = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
+                //InteractWithCursor(myX, myY);
             }
         }
-
-        /// <summary>
-        /// Moves the cursor
-        /// </summary>
-        /// <param name="x">value from 0 to 65535 representing x coordinate for mouse</param>
-        /// <param name="y">value from 0 to 65535 representing y coordinate for mouse</param>
-        private void InteractWithCursor(int x, int y)
-        {
-            switch (TouchWallApp.CurrentGestureType)
-            {
-                case 1:
-                    if (Z < Screen.MouseDownThreshold && TouchWallApp.CursorStatus == 2)
-                    {
-                        // Left mouse button has gone down 
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftDown, x, y, 0, 0);
-                        TouchWallApp.CurrentGestureType = 2;
-                        _clickX = X;
-                        _clickY = Y;
-                    }
-                    else if (Z < Screen.MouseMoveThreshold)
-                    {
-                        if (TouchWallApp.CursorStatus != 0)
-                        {
-                            mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
-                        }
-                    }
-                    else
-                    {
-                        PrevX[Id] = -10000;
-                        PrevY[Id] = -10000;
-                    }
-                    break;
-                case 2:
-                    // User has just pressed down. Do not move cursor until it has moved a certain distance away
-                    double tempDistance = Math.Sqrt((X - _clickX) * (X - _clickX) + (Y - _clickY) * (Y - _clickY));
-                    if (Z > Screen.MouseUpThreshold)
-                    {
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
-                        TouchWallApp.CurrentGestureType = 1;
-                    }
-                    if (tempDistance > 0.01f)
-                    {
-                        // If distance moved has moved beyond a certain threshold, then the user has intended to click and drag
-                        TouchWallApp.CurrentGestureType = 3;
-                    }
-                    break;
-                case 3:
-                    // User has pressed down and dragged at the same time
-                    if (Z > Screen.MouseUpThreshold)
-                    {
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
-                        TouchWallApp.CurrentGestureType = 1;
-                    }
-                    else
-                    {
-                        mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
-                    }
-                    break;
-            }
-        }
-        
     }
+
+    
 }

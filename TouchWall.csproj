@@ -93,10 +93,12 @@
     <Compile Include="CanvasWindow.xaml.cs">
       <DependentUpon>CanvasWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ICursor.cs" />
     <Compile Include="DepthTouchWindow.cs" />
     <Compile Include="Frame.cs" />
     <Compile Include="FrameDataManager.cs" />
     <Compile Include="Gesture.cs" />
+    <Compile Include="CursorFactory.cs" />
     <Compile Include="KinectAudioStream.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
