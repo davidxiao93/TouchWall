@@ -213,7 +213,7 @@ namespace TouchWall
                     CoordinatesLabel.Content = "Touch bottom edge of screen";
                     break;
                 default:
-                    CalibrateButton.Content = "Full Calibration";
+                    CalibrateButton.Content = "Calibrate";
                     CalibrateStatusLabel.Content = "";
                     break;
             }

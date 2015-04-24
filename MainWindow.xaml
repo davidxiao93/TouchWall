@@ -15,47 +15,34 @@
 
         <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="1,0">
             <GradientStop Color="#FF00FFFF" Offset="-0.8"/>
-            <GradientStop Color="#FF008EFF" Offset="0.5"/>
+            <GradientStop Color="#FF009EFF" Offset="0.5"/>
             <GradientStop Color="#FF00FFFF" Offset="1.8"/>
         </LinearGradientBrush>
         
         <Style TargetType="Button">
             <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}"/>
-            <Setter Property="Cursor" Value="Hand"></Setter>
-            <Setter Property="Margin" Value="2"></Setter>
-           <Setter Property="Template">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid Width="{TemplateBinding Width}"  
-                               Height="{TemplateBinding Height}" ClipToBounds="True">
-
-                            <!-- Outer Rectangle with rounded corners. -->
-                            <Rectangle x:Name="outerRectangle"  
-                                HorizontalAlignment="Stretch"  
-                                VerticalAlignment="Stretch"  
-                                Stroke="Black"  
-                                RadiusX="20" RadiusY="20" StrokeThickness="2"  
-                                Fill="{TemplateBinding Background}" >
-                               </Rectangle>
-
-                            <!-- Present Content (text) of the button. -->
+                        <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" ClipToBounds="True">
+                            <Rectangle x:Name="outerRectangle"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                       Stroke="Black" RadiusX="20" RadiusY="20" StrokeThickness="2"
+                                       Fill="{TemplateBinding Background}"/>
                             <Viewbox Stretch="Uniform">
-                                <Label Content="{TemplateBinding  Content}" />
+                                <Label Content="{TemplateBinding  Content}" FontSize="20" FontWeight="Medium"  Height="38"/>
                             </Viewbox>
-
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property ="Rectangle.StrokeThickness" TargetName="outerRectangle" Value="10" />
+                                <Setter Property ="Rectangle.StrokeThickness" TargetName="outerRectangle" Value="10"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            
-            
-            
-            
         </Style>
     </Window.Resources>
 
@@ -96,7 +83,7 @@
         <Viewbox Grid.Row="0" Grid.RowSpan="12" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="-44 0 -44 0">
             <Viewbox.RenderTransform>
                 <MatrixTransform>
-                    <MatrixTransform.Matrix >
+                    <MatrixTransform.Matrix>
                         <Matrix OffsetX="0" OffsetY="0" M11="0" M12="-1" M21="-1" M22="0"/>
                     </MatrixTransform.Matrix>
                 </MatrixTransform>
@@ -105,56 +92,52 @@
         </Viewbox>
 
         <Viewbox Grid.Row="0" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Top:" FontSize="20"/>
+            <Label Content="Top:" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
         <Viewbox Grid.Row="0" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-          <Label  Name="WallTopLabel" Content="{Binding Text}" FontSize="20"/>
+            <Label Name="WallTopLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
-        <Button Grid.Row="0" Grid.Column="4" Content="Down" Click="WallTop_ClickDown" FontSize="20"/>
-        <Button Grid.Row="0" Grid.Column="7" Content="Up" Click="WallTop_ClickUp" FontSize="20"/>
+        <Button Grid.Row="0" Grid.Column="4" Content="Down" Click="WallTop_ClickDown"/>
+        <Button Grid.Row="0" Grid.Column="7" Content="Up" Click="WallTop_ClickUp"/>
 
         <Viewbox Grid.Row="1" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Left:" FontSize="20"/>
+            <Label Content="Left:" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
         <Viewbox Grid.Row="1" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label  Name="WallLeftLabel" Content="{Binding Text}" FontSize="20"/>
+            <Label  Name="WallLeftLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
-        <Button Grid.Row="1" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft" FontSize="20"/>
-        <Button Grid.Row="1" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight" FontSize="20"/>
+        <Button Grid.Row="1" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft"/>
+        <Button Grid.Row="1" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight"/>
 
         <Viewbox Grid.Row="2" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Right:" FontSize="20"/>
+            <Label Content="Right:" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
         <Viewbox Grid.Row="2" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label  Name="WallRightLabel" Content="{Binding Text}" FontSize="20"/>
+            <Label  Name="WallRightLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
-        <Button Grid.Row="2" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft" FontSize="20"/>
-        <Button Grid.Row="2" Grid.Column="7" Content="Right" Click="WallRight_ClickRight" FontSize="20"/>
+        <Button Grid.Row="2" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft"/>
+        <Button Grid.Row="2" Grid.Column="7" Content="Right" Click="WallRight_ClickRight"/>
 
         <Viewbox Grid.Row="3" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Bottom:" FontSize="20"/>
+            <Label Content="Bottom:" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label  Name="WallBottomLabel" Content="{Binding Text}" FontSize="20"/>
+            <Label  Name="WallBottomLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
         </Viewbox>
-        <Button Grid.Row="3" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown" FontSize="20"/>
-        <Button Grid.Row="3" Grid.Column="7" Content="Up" Click="WallBottom_ClickUp" FontSize="20"/>
+        <Button Grid.Row="3" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown"/>
+        <Button Grid.Row="3" Grid.Column="7" Content="Up" Click="WallBottom_ClickUp"/>
         
-        <Button Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click" FontSize="20"/>
-        
-        <Button Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleCursorButton" Content="{Binding Text}" Click="Toggle_Cursor" FontSize="20"/>
-        
-        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleDepthTouchButton" Content="{Binding Text}" Click="Toggle_DepthTouch" FontSize="20"/>
-        
-        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="{Binding Text}" Click="Toggle_MultiTouch" FontSize="20"/>
+        <Button Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click"/>
+        <Button Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleCursorButton" Content="{Binding Text}" Click="Toggle_Cursor"/>
+        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleDepthTouchButton" Content="{Binding Text}" Click="Toggle_DepthTouch"/>
+        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="{Binding Text}" Click="Toggle_MultiTouch"/>
+        <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop"/>
 
-        <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop" FontSize="20"/>
+        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium"/>
+        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium"/>
 
-        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
-        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
-
-        <StatusBar Grid.Row="11" Grid.Column="4" Grid.ColumnSpan="4" Margin="0 0 0 0" HorizontalAlignment="Stretch" x:Name="StatusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource BlackBrush}">
-            <StatusBarItem Content="{Binding StatusText}" FontSize="25"/>
+        <StatusBar x:Name="StatusBar" Grid.Row="11" Grid.Column="4" Grid.ColumnSpan="4" Margin="0 0 0 0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="Transparent" Foreground="{StaticResource BlackBrush}">
+            <StatusBarItem Content="{Binding StatusText}" HorizontalAlignment="Right" FontSize="25" FontWeight="Medium"/>
         </StatusBar>
     </Grid>
 </Window>
