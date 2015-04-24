@@ -158,9 +158,6 @@
     <Resource Include="Images\TouchWallLogoSmall.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\LaunchTouchdevelopButton.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="CanvasWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
