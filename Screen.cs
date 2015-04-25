@@ -81,8 +81,8 @@ namespace TouchWall
         {
             // Default values
             MouseMoveThreshold = 0.10f;
-            MouseDownThreshold = 0.02f;
-            MouseUpThreshold = 0.02f;
+            MouseDownThreshold = 0.001f;
+            MouseUpThreshold = 0.03f;
             DetectThreshold = 0.15f;
             LeftEdge = 0.5f;
             RightEdge = 1.0f;

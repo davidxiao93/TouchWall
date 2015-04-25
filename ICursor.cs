@@ -100,6 +100,8 @@ namespace TouchWall
         {
             if (X < Screen.RightEdge + 0.05f)
             {
+
+
                 return InteractWithCursor(X, Y, Z);
             }
             else
@@ -169,7 +171,22 @@ namespace TouchWall
         {
             float width = Screen.RightEdge - Screen.LeftEdge;
             float height = Screen.TopEdge - Screen.BottomEdge;
-
+            if (X < Screen.LeftEdge)
+            {
+                X = Screen.LeftEdge;
+            }
+            else if (X > Screen.RightEdge)
+            {
+                X = Screen.RightEdge;
+            }
+            if (Y < Screen.BottomEdge)
+            {
+                Y = Screen.BottomEdge;
+            }
+            else if (Y > Screen.TopEdge)
+            {
+                Y = Screen.TopEdge;
+            }
             // Find the x and y coordinates of the point in the units that mouse_event wants
             int x = (int)(Convert.ToDouble((X - Screen.LeftEdge) * 65535) / width);
             int y = (int)(Convert.ToDouble((Screen.TopEdge - Y) * 65535) / height);
@@ -212,7 +229,8 @@ namespace TouchWall
                         mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 1;
                     }
-                    if (tempDistance > 0.01f)
+                    const float movementThreshold = 0.01f;
+                    if (tempDistance > movementThreshold)
                     {
                         // If distance moved has moved beyond a certain threshold, then the user has intended to click and drag
                         TouchWallApp.CurrentGestureType = 3;

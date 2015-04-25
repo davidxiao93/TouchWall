@@ -13,7 +13,7 @@ namespace TouchWall
         /// <summary>
         /// Array of colours to be used for the colour picking
         /// </summary>
-        private readonly Color[] _idColor = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow };
+        private readonly Color[] _idColor = { Colors.Yellow, Colors.Black, Colors.Blue, Colors.Yellow };
 
         /// <summary>
         /// Constructor, uses the constructor of CanvasWindow as well
@@ -53,7 +53,7 @@ namespace TouchWall
             {
                 double size = 2 / (_touchWall.FrameDataManager.Frame.Gestures[0].Z + 0.02);
                 int colorPicker = 0;
-                if (_touchWall.FrameDataManager.Frame.Gestures[0].Z < 0.0001f)
+                if (_touchWall.FrameDataManager.Frame.Gestures[0].Z < Screen.MouseDownThreshold)
                 {
                     colorPicker = 1;
                 }

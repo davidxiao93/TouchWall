@@ -69,8 +69,8 @@ namespace TouchWall
                     {
                         ushort depth = frameData[y * TouchWallApp.KinectWidth + x];
                         DepthPixels[y * TouchWallApp.KinectWidth + x] =
-                            (byte)(depth >= Screen.LeftEdge * 1000 && depth <= Screen.RightEdge * 1000 ? 
-                                ((depth - Screen.LeftEdge*1000) * 256 / ((Screen.RightEdge - Screen.LeftEdge) * 1000)) 
+                            (byte)(depth >= 500 && depth <= 5000 ?
+                                ((depth) * 256 / 5000)
                                 : 0);
                     }
                 }

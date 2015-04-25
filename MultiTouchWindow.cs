@@ -13,13 +13,14 @@ namespace TouchWall
         /// <summary>
         /// Array of colours to be used for the colour picking
         /// </summary>
-        private readonly Color[] _idColor = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow};
+        private readonly Color[] _idColor = { Colors.Red, Colors.Green, Colors.Blue, Colors.Yellow };
 
         /// <summary>
         /// Constructor, uses the constructor of CanvasWindow as well
         /// </summary>
         /// <param name="touchWall"></param>
-        private MultiTouchWindow(TouchWallApp touchWall) : base (touchWall, "Touch Wall - Multi Touch Mode")
+        private MultiTouchWindow(TouchWallApp touchWall)
+            : base(touchWall, "Touch Wall - Multi Touch Mode")
         {
             InitializeComponent();
             _touchWall = touchWall;
@@ -48,11 +49,11 @@ namespace TouchWall
         public override void MapPoints(object sender, DepthFrameArrivedEventArgs e)
         {
             Map.Children.Clear();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
                 if (_touchWall.FrameDataManager.Frame.Gestures[i] != null)
                 {
-                    MapPoint(_idColor[i], 16,i);
+                    MapPoint(_idColor[i], 16, i);
                 }
             }
         }

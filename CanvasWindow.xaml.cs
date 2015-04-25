@@ -62,15 +62,31 @@ namespace TouchWall
         /// <param name="id">ID number of the circle</param>
         public void MapPoint(Color colour, double size, int id)
         {
-            Ellipse cursor = new Ellipse
+            if (size > 90)
             {
-                Fill = new SolidColorBrush(colour),
-                Width = size,
-                Height = size
-            };
-            Canvas.SetLeft(cursor, -0.5*size + Map.ActualWidth*((_touchWall.FrameDataManager.Frame.Gestures[id].X - Screen.LeftEdge)/ (Screen.RightEdge - Screen.LeftEdge)));
-            Canvas.SetBottom(cursor, -0.5*size + Map.ActualHeight*((_touchWall.FrameDataManager.Frame.Gestures[id].Y - Screen.BottomEdge)/(Screen.TopEdge - Screen.BottomEdge)));
-            Map.Children.Add(cursor);
+                Rectangle cursor = new Rectangle
+                {
+                    Fill = new SolidColorBrush(colour),
+                    Width = size,
+                    Height = size
+                };
+                Canvas.SetLeft(cursor, -0.5 * size + Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[id].X - Screen.LeftEdge) / (Screen.RightEdge - Screen.LeftEdge)));
+                Canvas.SetBottom(cursor, -0.5 * size + Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[id].Y - Screen.BottomEdge) / (Screen.TopEdge - Screen.BottomEdge)));
+                Map.Children.Add(cursor);
+            }
+            else
+            {
+                Ellipse cursor = new Ellipse
+                {
+                    Fill = new SolidColorBrush(colour),
+                    Width = size,
+                    Height = size
+                };
+                Canvas.SetLeft(cursor, -0.5 * size + Map.ActualWidth * ((_touchWall.FrameDataManager.Frame.Gestures[id].X - Screen.LeftEdge) / (Screen.RightEdge - Screen.LeftEdge)));
+                Canvas.SetBottom(cursor, -0.5 * size + Map.ActualHeight * ((_touchWall.FrameDataManager.Frame.Gestures[id].Y - Screen.BottomEdge) / (Screen.TopEdge - Screen.BottomEdge)));
+                Map.Children.Add(cursor);
+            }
+
         }
     }
 }
