@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Kinect;
@@ -87,6 +88,15 @@ namespace TouchWall
                 Map.Children.Add(cursor);
             }
 
+        }
+
+        private void CanvasWindow_Keydown(object sender, KeyEventArgs e)
+        {
+            if (e.Key.ToString().Equals("F1"))
+            {
+                _touchWall.ParentMainWindow.OpenHelpWindow();
+            }
+            
         }
     }
 }

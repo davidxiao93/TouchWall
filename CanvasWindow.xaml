@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowState="Maximized"
         Icon="Images/TouchWallLogoSmall.ico"
-        Closing="WindowClosing">
+        Closing="WindowClosing" KeyDown="CanvasWindow_Keydown">
     <Window.Resources>
         <Style TargetType="{x:Type Image}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
