@@ -339,7 +339,7 @@ namespace TouchWall
             }
             else
             {
-                VoiceLabel.Content = "Voice Commands Unavaliable";
+                VoiceLabel.Content = "Voice Commands Unavailable";
             }
         }
 
