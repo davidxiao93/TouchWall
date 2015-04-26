@@ -121,6 +121,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Screen.cs" />
+    <Compile Include="ScreenMemento.cs" />
     <Compile Include="SpacePoint.cs" />
     <Compile Include="TouchWallApp.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

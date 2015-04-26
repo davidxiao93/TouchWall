@@ -25,6 +25,9 @@ namespace TouchWall
         /// </summary>
         private DepthTouchWindow _depthTouchWindow;
 
+        /// <summary>
+        /// HelpWindow object. can contain a reference the singleton
+        /// </summary>
         private HelpWindow _helpWindow;
 
         /// <summary>

@@ -2,6 +2,8 @@
 
 namespace TouchWall
 {
+
+
     public class Screen
     {
         /// <summary>
@@ -44,25 +46,7 @@ namespace TouchWall
         /// </summary>
         public static float BottomEdge { get; set; }
 
-        /// <summary>
-        /// Previous distance between sensor and left edge of screen, used for calibration
-        /// </summary>
-        private float _oldLeftEdge;
-
-        /// <summary>
-        /// Previous distance between sensor and right edge of screen, used for calibration
-        /// </summary>
-        private float _oldRightEdge;
-
-        /// <summary>
-        /// Previous distance between sensor and top edge of screen, used for calibration
-        /// </summary>
-        private float _oldTopEdge;
-
-        /// <summary>
-        /// Previous distance between sensor and bottom edge of screen, used for calibration
-        /// </summary>
-        private float _oldBottomEdge;
+        
 
         /// <summary>
         /// Storage of previous calibration values
@@ -73,6 +57,9 @@ namespace TouchWall
         /// For storing current position of user's hand
         /// </summary>
         private static CameraSpacePoint _pointFound;
+
+
+        private ScreenMemento _screenMemento;
 
         /// <summary>
         /// Constructor
@@ -88,11 +75,7 @@ namespace TouchWall
             RightEdge = 1.0f;
             TopEdge = 0.15f;
             BottomEdge = -0.14f;
-            _oldLeftEdge = 0.6f;
-            _oldRightEdge = 0.7f;
-            _oldTopEdge = 0.19f;
-            _oldBottomEdge = -0.11f;
-
+            _screenMemento = new ScreenMemento(TopEdge, LeftEdge, RightEdge, BottomEdge);
             _calibratePoints = new CameraSpacePoint[TouchWallApp.KinectWidth * TouchWallApp.KinectHeight];
         }
 
@@ -103,10 +86,7 @@ namespace TouchWall
         {
             TouchWallApp.CurrentGestureType = 1;
             TouchWallApp.CursorStatus = 0;
-            _oldBottomEdge = BottomEdge;
-            _oldLeftEdge = LeftEdge;
-            _oldRightEdge = RightEdge;
-            _oldTopEdge = TopEdge;
+            _screenMemento = new ScreenMemento(TopEdge, LeftEdge, RightEdge, BottomEdge);
             if (TouchWallApp.CalibrateStatus == 0)
             {
                 TouchWallApp.CalibrateStatus = 1;
@@ -118,10 +98,10 @@ namespace TouchWall
         /// </summary>
         public void CancelCalibration()
         {
-            BottomEdge = _oldBottomEdge;
-            RightEdge = _oldRightEdge;
-            LeftEdge = _oldLeftEdge;
-            TopEdge = _oldTopEdge;
+            BottomEdge = _screenMemento.BottomEdge;
+            RightEdge = _screenMemento.RightEdge;
+            LeftEdge = _screenMemento.LeftEdge;
+            TopEdge = _screenMemento.TopEdge;
             TouchWallApp.CurrentGestureType = 1;
             TouchWallApp.CalibrateStatus = 0;
         }
