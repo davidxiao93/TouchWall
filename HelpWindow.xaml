@@ -1,48 +1,55 @@
 ﻿<Window x:Class="TouchWall.HelpWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="List of Voice Commands" Height="600" Width="400"
+        Title="List of Voice Commands" Height="600" Width="600"
+        Icon="Images/TouchWallLogoSmall.ico"
         Closing="WindowClosing">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-
         <TextBlock HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" FontSize="20" FontWeight="Medium">
-          
-                    <Bold>List Of Voice Commands</Bold><LineBreak/>
-                    <LineBreak/>
+            <TextBlock.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
+                    <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                    <GradientStop Color="#FF059EFF" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
             
-                    <Underline><Italic>Kinect Open TouchDevelop</Italic><LineBreak/></Underline>
-                    <!-- Foreground = transparent to provide empty space. -->
-                    <Run Foreground="Transparent">SPACER</Run>Opens TouchDevelop in the default browser<LineBreak/><LineBreak/>
+            <Bold>List Of Voice Commands</Bold><LineBreak/>
+            <Italic>Here is a list of voice commands you can say to the Kinect:</Italic><LineBreak/>            
+            <LineBreak/>
             
-                    <Underline><Italic>Kinect Calibrate Enable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Begins the calibration process<LineBreak/><LineBreak/>
-                    <Underline><Italic>Kinect Calibrate Disable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Cancels the calibration process<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Open TouchDevelop</Italic><LineBreak/></Underline>
+            <!-- Foreground = transparent to provide empty space. -->
+            <Run Foreground="Transparent">SPACER</Run>Opens TouchDevelop in the default browser<LineBreak/><LineBreak/>
             
-                    <Underline><Italic>Kinect Cursor Enable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Allows the application to use the Kinect to control the position of the cursor<LineBreak/><LineBreak/>
-                    <Underline><Italic>Kinect Cursor Disable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Prevents the application to use the Kinect to control the position of the cursor, clicking or scrolling<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Calibrate Enable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Begins the calibration process<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Calibrate Disable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Cancels the calibration process<LineBreak/><LineBreak/>
             
-                    <Underline><Italic>Kinect Click Enable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Allows the application to use the Kinect to control the position of the cursor and to control left clicks<LineBreak/><LineBreak/>
-                    <Underline><Italic>Kinect Click Disable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Prevents the application to use the Kinect to control the clicking<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Cursor Enable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Allows the application to use the Kinect to control the position of the cursor<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Cursor Disable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Prevents the application from using the Kinect to control the position of the cursor, click or scroll<LineBreak/><LineBreak/>
             
-                    <Underline><Italic>Kinect Scroll Enable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Allows the application to use the Kinect to control the position of the cursor and to control wheel scrolling<LineBreak/><LineBreak/>
-                    <Underline><Italic>Kinect Scroll Disable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Prevents the application to use the Kinect to control the wheel scrolling<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Click Enable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Allows the application to use the Kinect to control the position of the cursor and to control left clicks<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Click Disable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Prevents the application from using the Kinect to click the mouse<LineBreak/><LineBreak/>
             
-                    <Underline><Italic>Kinect Depth Enable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Launches the Depth Mode. If Multi Mode is open, it will be closed<LineBreak/><LineBreak/>
-                    <Underline><Italic>Kinect Depth Disable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Closes the Depth Mode if it is open<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Scroll Enable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Allows the application to use the Kinect to control the position of the cursor and to control wheel scrolling<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Scroll Disable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Prevents the application from using the Kinect to control the wheel scrolling<LineBreak/><LineBreak/>
             
-                    <Underline><Italic>Kinect Multi Enable</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Launches the Multi Mode. If Depth Mode is open, it will be closed<LineBreak/><LineBreak/>
-                    <Underline><Italic>Kinect Depth Multi</Italic><LineBreak/></Underline>
-                    <Run Foreground="Transparent">SPACER</Run>Closes the Multi Mode if it is open<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Depth Enable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Launches the Depth Mode. If Multi Mode is open, it will be closed<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Depth Disable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Closes the Depth Mode if it is open<LineBreak/><LineBreak/>
+            
+            <Underline><Italic>Kinect Multi Enable</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Launches the Multi Mode. If Depth Mode is open, it will be closed<LineBreak/><LineBreak/>
+            <Underline><Italic>Kinect Depth Multi</Italic><LineBreak/></Underline>
+            <Run Foreground="Transparent">SPACER</Run>Closes the Multi Mode if it is open
         </TextBlock>
     </ScrollViewer>
 </Window>
