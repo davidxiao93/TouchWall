@@ -81,7 +81,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Viewbox Grid.Row="0" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="-44 0 -44 0">
+        <Viewbox Grid.Row="0" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" 
+                 Stretch="Uniform"
+                 RenderTransformOrigin="0.5,0.5" Margin="-44 0 -44 0">
             <Viewbox.RenderTransform>
                 <MatrixTransform>
                     <MatrixTransform.Matrix>
@@ -89,7 +91,7 @@
                     </MatrixTransform.Matrix>
                 </MatrixTransform>
             </Viewbox.RenderTransform>
-            <Image Name="DepthViewer" Source="{Binding ImageSource}" Stretch="UniformToFill"/>
+            <Image Name="DepthViewer" Source="{Binding ImageSource}"/>
         </Viewbox>
 
         <Viewbox Grid.Row="0" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
@@ -138,5 +140,8 @@
         <Label Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="4" Name="StatusLabel" 
                Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25" FontWeight="Medium"
                HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom"/>
+        <Label Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="4" Name="VoiceLabel"
+               Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25" FontWeight="Medium"
+               HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom"/>
     </Grid>
 </Window>

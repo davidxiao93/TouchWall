@@ -156,6 +156,19 @@ namespace TouchWall
         }
 
         /// <summary>
+        /// Checks if the voice recognition is avalibale?
+        /// </summary>
+        /// <returns></returns>
+        public bool checkVoiceEngine()
+        {
+            if (_speechEngine == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// switch the cursor mode
         /// </summary>
         public void ToggleCursor()

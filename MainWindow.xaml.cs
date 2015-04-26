@@ -61,9 +61,6 @@ namespace TouchWall
         }
 
 
-
-
-
         /// <summary>
         /// Execute shutdown tasks
         /// </summary>
@@ -126,6 +123,9 @@ namespace TouchWall
             UpdateStatusLabel();
         }
 
+        /// <summary>
+        /// Clears all UI labels when Kinect no longer avaliable
+        /// </summary>
         private void ClearLabels()
         {
             WallTopLabel.Content = "";
@@ -138,6 +138,7 @@ namespace TouchWall
             ToggleDepthTouchButton.Content = "";
             ToggleMultiTouchButton.Content = "";
             LaunchTouchdevelopButton.Content = "";
+            VoiceLabel.Content = "";
             DepthViewer.Visibility = Visibility.Hidden;
         }
 
@@ -160,6 +161,7 @@ namespace TouchWall
             UpdateCalibrationLabels();
             UpdateModeLabels();
             UpdateStatusLabel2();
+            UpdateVoiceLabel();
             DepthViewer.Visibility = Visibility.Visible;
         }
 
@@ -327,6 +329,18 @@ namespace TouchWall
         private void UpdateStatusLabel2()
         {
             StatusLabel.Content = "Kinect In Use";
+        }
+
+        private void UpdateVoiceLabel()
+        {
+            if (_touchWall.checkVoiceEngine())
+            {
+                VoiceLabel.Content = "Press F1 For Voice Commands";
+            }
+            else
+            {
+                VoiceLabel.Content = "Voice Commands Unavaliable";
+            }
         }
 
         #endregion
@@ -597,6 +611,11 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Whenever a key press is activated on this window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainWindow_Keydown(object sender, KeyEventArgs e)
         {
             if (e.Key.ToString().Equals("F1"))
@@ -605,6 +624,9 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Opens new help window and brings it to focus
+        /// </summary>
         public void OpenHelpWindow()
         {
             _helpWindow = HelpWindow.OpenHelpWindow();
