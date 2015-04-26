@@ -81,6 +81,7 @@ namespace TouchWall
         /// <param name="mainWindow"></param>
         public TouchWallApp(MainWindow mainWindow)
         {
+            // sorry for this
             ParentMainWindow = mainWindow;
 
             // Get the _kinectSensor object
@@ -173,6 +174,14 @@ namespace TouchWall
         public void BeginCalibration()
         {
             _screen.BeginCalibration();
+        }
+
+        /// <summary>
+        /// Cancel the calibration process
+        /// </summary>
+        public void CancelCalibration()
+        {
+            _screen.CancelCalibration();
         }
 
         /// <summary>

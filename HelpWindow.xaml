@@ -1,0 +1,45 @@
+﻿<Window x:Class="TouchWall.HelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HelpWindow" Height="600" Width="800"
+        Closing="WindowClosing">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        
+        <Label HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium">
+            <Label.Content>
+                <TextBlock>
+                    <Bold>
+                        Test
+                    </Bold>
+                    <LineBreak/>
+                    <Italic>
+                        Italic
+                    </Italic>
+                    <Underline>
+                        Underline
+                    </Underline>
+                    <LineBreak/>
+                    Lorem
+                    <LineBreak/>
+                    ipsum
+                    <LineBreak/>
+                    Lorem
+                    <LineBreak/>
+                    ipsum
+                    <LineBreak/>
+                    Lorem
+                    <LineBreak/>
+                    ipsum
+                    <LineBreak/>
+                    Lorem
+                    <LineBreak/>
+                    ipsum
+                    <LineBreak/>
+                    Lorem
+                    <LineBreak/>
+                    ipsum
+                </TextBlock>
+            </Label.Content>    
+        </Label>
+    </ScrollViewer>
+</Window>

@@ -6,7 +6,7 @@
         MinWidth="1280"
         MinHeight="720"
         Icon="Images/TouchWallLogoSmall.ico"
-        Closing="MainWindow_Closing">
+        Closing="MainWindow_Closing" KeyDown="MainWindow_Keydown">
     <Window.Resources>
         <SolidColorBrush x:Key="BlackBrush" Color="#ff000000"/>
         <Style TargetType="{x:Type Image}">
@@ -78,9 +78,10 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Viewbox Grid.Row="0" Grid.RowSpan="12" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="-44 0 -44 0">
+        <Viewbox Grid.Row="0" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="-44 0 -44 0">
             <Viewbox.RenderTransform>
                 <MatrixTransform>
                     <MatrixTransform.Matrix>
@@ -88,7 +89,7 @@
                     </MatrixTransform.Matrix>
                 </MatrixTransform>
             </Viewbox.RenderTransform>
-            <Image Source="{Binding ImageSource}" Stretch="UniformToFill"/>
+            <Image Name="DepthViewer" Source="{Binding ImageSource}" Stretch="UniformToFill"/>
         </Viewbox>
 
         <Viewbox Grid.Row="0" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
@@ -133,11 +134,9 @@
         <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="{Binding Text}" Click="Toggle_MultiTouch"/>
         <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop"/>
 
-        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium"/>
-        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Name="CalibrateStatusLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium"/>
-
-        <StatusBar x:Name="StatusBar" Grid.Row="11" Grid.Column="4" Grid.ColumnSpan="4" Margin="0 0 0 0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="Transparent" Foreground="{StaticResource BlackBrush}">
-            <StatusBarItem Content="{Binding StatusText}" HorizontalAlignment="Right" FontSize="25" FontWeight="Medium"/>
-        </StatusBar>
+        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="4" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium"/>
+        <Label Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="4" Name="StatusLabel" 
+               Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25" FontWeight="Medium"
+               HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom"/>
     </Grid>
 </Window>

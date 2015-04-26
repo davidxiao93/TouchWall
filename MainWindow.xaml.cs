@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Kinect;
 
@@ -22,6 +24,8 @@ namespace TouchWall
         /// DepthTouchWindow object. can contain a reference the singleton
         /// </summary>
         private DepthTouchWindow _depthTouchWindow;
+
+        private HelpWindow _helpWindow;
 
         /// <summary>
         /// Current status text to display
@@ -53,7 +57,12 @@ namespace TouchWall
             TouchWallApp.KinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
 
             DataContext = this;
+            UpdateAllLabels();
         }
+
+
+
+
 
         /// <summary>
         /// Execute shutdown tasks
@@ -71,6 +80,11 @@ namespace TouchWall
             {
                 CloseDepthTouchWindow();
             }
+            if (_helpWindow != null)
+            {
+                CloseHelpWindow();
+            }
+
         }
 
         /// <summary>
@@ -83,13 +97,7 @@ namespace TouchWall
 
         #region TextUpdates
 
-        /// <summary>
-        /// Changes the status text when the sensor is available/unavailable (e.g. paused, closed, unplugged)
-        /// </summary>
-        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
-        {
-            StatusText = TouchWallApp.KinectSensor.IsAvailable ? Properties.Resources.RunningStatusText : Properties.Resources.SensorNotAvailableStatusText;
-        }
+       
 
         /// <summary>
         /// Gets or sets the current status text to display
@@ -104,10 +112,33 @@ namespace TouchWall
                     _statusText = value;
                     if (PropertyChanged != null) // Notify any bound elements that the text has changed
                     {
-                        PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
+                        //PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Changes the status text when the sensor is available/unavailable (e.g. paused, closed, unplugged)
+        /// </summary>
+        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
+        {
+            UpdateStatusLabel();
+        }
+
+        private void ClearLabels()
+        {
+            WallTopLabel.Content = "";
+            WallLeftLabel.Content = "";
+            WallRightLabel.Content = "";
+            WallBottomLabel.Content = "";
+            CoordinatesLabel.Content = "";
+            ToggleCursorButton.Content = "";
+            CalibrateButton.Content = "";
+            ToggleDepthTouchButton.Content = "";
+            ToggleMultiTouchButton.Content = "";
+            LaunchTouchdevelopButton.Content = "";
+            DepthViewer.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -115,11 +146,21 @@ namespace TouchWall
         /// </summary>
         private void UpdateLabels(object sender, DepthFrameArrivedEventArgs e)
         {
+            UpdateAllLabels();
+        }
+
+        /// <summary>
+        /// Update the UI
+        /// </summary>
+        private void UpdateAllLabels()
+        {
             UpdateDimensionLabels();
             UpdateCoordaintesLabel();
             UpdateCursorStatusLabel();
             UpdateCalibrationLabels();
             UpdateModeLabels();
+            UpdateStatusLabel2();
+            DepthViewer.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -140,18 +181,32 @@ namespace TouchWall
         {
             if (TouchWallApp.MultiTouchMode == 1)
             {
-                CoordinatesLabel.Content = "MultiTouch Mode Enabled";
+                CoordinatesLabel.Content = "Multi Mode Enabled";
             } 
-            else if (_touchWall.FrameDataManager.Frame.Gestures[0] == null)
+            else if (TouchWallApp.MultiTouchMode == 2)
             {
-                CoordinatesLabel.Content = "No points found";
+                CoordinatesLabel.Content = "Depth Mode Enabled";
             }
             else
             {
-                CoordinatesLabel.Content = "X: " + _touchWall.FrameDataManager.Frame.Gestures[0].X
-                    + "\nY: " + _touchWall.FrameDataManager.Frame.Gestures[0].Y
-                    + "\nZ: " + _touchWall.FrameDataManager.Frame.Gestures[0].Z
-                    + "\nGesture Status: " + TouchWallApp.CurrentGestureType;
+                try
+                {
+                    if (_touchWall.FrameDataManager.Frame.Gestures[0] == null)
+                    {
+                        CoordinatesLabel.Content = "No points found";
+                    }
+                    else
+                    {
+                        CoordinatesLabel.Content = "X: " + _touchWall.FrameDataManager.Frame.Gestures[0].X
+                            + "\nY: " + _touchWall.FrameDataManager.Frame.Gestures[0].Y
+                            + "\nZ: " + _touchWall.FrameDataManager.Frame.Gestures[0].Z
+                            + "\nGesture Status: " + TouchWallApp.CurrentGestureType;
+                    }
+                }
+                catch (NullReferenceException e)
+                {
+                    CoordinatesLabel.Content = "";
+                }
             }
         }
 
@@ -192,7 +247,6 @@ namespace TouchWall
             switch (TouchWallApp.CalibrateStatus)
             {
                 case 1:
-                    CalibrateStatusLabel.Content = "Calibrating...";
                     CalibrateButton.Content = "Calibrating...";
                     break;
                 case 2:
@@ -213,7 +267,6 @@ namespace TouchWall
                     break;
                 default:
                     CalibrateButton.Content = "Calibrate";
-                    CalibrateStatusLabel.Content = "";
                     break;
             }
         }
@@ -232,22 +285,48 @@ namespace TouchWall
             else
             {
                 LaunchTouchdevelopButton.Content = "TouchDevelop";
-            switch (TouchWallApp.MultiTouchMode)
-            {
-                case 1:
-                    ToggleDepthTouchButton.Content = "Depth Mode";
-                    ToggleDepthTouchButton.Content = "Close Multi Mode";
-                    break;
-                case 2:
-                    ToggleDepthTouchButton.Content = "Close Depth Mode";
-                        ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
-                    break;
-                default:
-                    ToggleDepthTouchButton.Content = "Depth Mode";
-                        ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
-                    break;
+                switch (TouchWallApp.MultiTouchMode)
+                {
+                    case 1:
+                        ToggleDepthTouchButton.Content = "Depth Mode";
+                        ToggleDepthTouchButton.Content = "Close Multi Mode";
+                        break;
+                    case 2:
+                        ToggleDepthTouchButton.Content = "Close Depth Mode";
+                            ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
+                        break;
+                    default:
+                        ToggleDepthTouchButton.Content = "Depth Mode";
+                            ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
+                        break;
+                }
             }
         }
+
+        /// <summary>
+        /// Status label updater - called when the Sensor connection is changed
+        /// </summary>
+        private void UpdateStatusLabel()
+        {
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                StatusLabel.Content = "Kinect Avaliable";
+            }
+            else
+            {
+                StatusLabel.Content = "Kinect Not Avaliable!";
+                CloseDepthTouchWindow();
+                CloseMultiTouchWindow();
+                ClearLabels();
+            }
+        }
+
+        /// <summary>
+        /// Status label updater - called when the application has access to the depth data
+        /// </summary>
+        private void UpdateStatusLabel2()
+        {
+            StatusLabel.Content = "Kinect In Use";
         }
 
         #endregion
@@ -259,7 +338,10 @@ namespace TouchWall
         /// </summary>
         private void WallTop_ClickUp(object sender, RoutedEventArgs e)
         {
-            Screen.TopEdge += 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.TopEdge += 0.01f;
+            }
         }
 
         /// <summary>
@@ -267,7 +349,10 @@ namespace TouchWall
         /// </summary>
         private void WallTop_ClickDown(object sender, RoutedEventArgs e)
         {
-            Screen.TopEdge -= 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.TopEdge -= 0.01f;
+            }
         }
 
         /// <summary>
@@ -275,7 +360,10 @@ namespace TouchWall
         /// </summary>
         private void WallLeft_ClickLeft(object sender, RoutedEventArgs e)
         {
-            Screen.LeftEdge -= 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.LeftEdge -= 0.01f;
+            }
         }
 
         /// <summary>
@@ -283,7 +371,10 @@ namespace TouchWall
         /// </summary>
         private void WallLeft_ClickRight(object sender, RoutedEventArgs e)
         {
-            Screen.LeftEdge += 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.LeftEdge += 0.01f;
+            }
         }
 
         /// <summary>
@@ -291,7 +382,10 @@ namespace TouchWall
         /// </summary>
         private void WallRight_ClickLeft(object sender, RoutedEventArgs e)
         {
-            Screen.RightEdge -= 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.RightEdge -= 0.01f;
+            }
         }
 
         /// <summary>
@@ -299,7 +393,10 @@ namespace TouchWall
         /// </summary>
         private void WallRight_ClickRight(object sender, RoutedEventArgs e)
         {
-            Screen.RightEdge += 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.RightEdge += 0.01f;
+            }
         }
 
         /// <summary>
@@ -307,7 +404,10 @@ namespace TouchWall
         /// </summary>
         private void WallBottom_ClickUp(object sender, RoutedEventArgs e)
         {
-            Screen.BottomEdge += 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.BottomEdge += 0.01f;
+            }
         }
 
         /// <summary>
@@ -315,7 +415,10 @@ namespace TouchWall
         /// </summary>
         private void WallBottom_ClickDown(object sender, RoutedEventArgs e)
         {
-            Screen.BottomEdge -= 0.01f;
+            if (TouchWallApp.KinectSensor.IsAvailable)
+            {
+                Screen.BottomEdge -= 0.01f;
+            }
         }
 
         /// <summary>
@@ -363,16 +466,26 @@ namespace TouchWall
         /// </summary>
         public void CalibrateClick()
         {
-            if (TouchWallApp.MultiTouchMode == 2)
+            if (TouchWallApp.KinectSensor.IsAvailable)
             {
-                CloseDepthTouchWindow();
+                if (TouchWallApp.CalibrateStatus == 0)
+                {
+                    if (TouchWallApp.MultiTouchMode == 2)
+                    {
+                        CloseDepthTouchWindow();
+                    }
+                    else if (TouchWallApp.MultiTouchMode == 1)
+                    {
+                        CloseMultiTouchWindow();
+                    }
+                    TouchWallApp.MultiTouchMode = 0;
+                    _touchWall.BeginCalibration();
+                }
+                else
+                {
+                    _touchWall.CancelCalibration();
+                }
             }
-            else if (TouchWallApp.MultiTouchMode == 1)
-            {
-                CloseMultiTouchWindow();
-            }
-            TouchWallApp.MultiTouchMode = 0;
-            _touchWall.BeginCalibration();
         }
 
         /// <summary>
@@ -380,10 +493,13 @@ namespace TouchWall
         /// </summary>
         private void Toggle_Cursor(object sender, RoutedEventArgs e)
         {
-            if (TouchWallApp.CalibrateStatus == 0)
+            if (TouchWallApp.KinectSensor.IsAvailable)
             {
-            _touchWall.ToggleCursor();
-        }
+                if (TouchWallApp.CalibrateStatus == 0)
+                {
+                    _touchWall.ToggleCursor();
+                }
+            }
 
         }
 
@@ -405,17 +521,20 @@ namespace TouchWall
         /// </summary>
         public void OpenMultiTouchWindow()
         {
-            if (TouchWallApp.MultiTouchMode == 2)
+            if (TouchWallApp.KinectSensor.IsAvailable)
             {
-                CloseDepthTouchWindow();
+                if (TouchWallApp.MultiTouchMode == 2)
+                {
+                    CloseDepthTouchWindow();
+                }
+                if (TouchWallApp.MultiTouchMode != 1 && TouchWallApp.CalibrateStatus == 0)
+                {
+                    TouchWallApp.CursorStatus = 0;
+                    TouchWallApp.MultiTouchMode = 1;
+                    _multiTouchWindow = (MultiTouchWindow) MultiTouchWindow.GetMultiTouchWindowInstance(_touchWall);
+                    _multiTouchWindow.Show();
+                }
             }
-            if (TouchWallApp.MultiTouchMode != 1 && TouchWallApp.CalibrateStatus == 0)
-            {
-                TouchWallApp.CursorStatus = 0;
-                TouchWallApp.MultiTouchMode = 1;
-                _multiTouchWindow = (MultiTouchWindow)MultiTouchWindow.GetMultiTouchWindowInstance(_touchWall);
-                _multiTouchWindow.Show();
-            } 
         }
 
         /// <summary>
@@ -423,11 +542,19 @@ namespace TouchWall
         /// </summary>
         public void CloseMultiTouchWindow()
         {
-            if (_multiTouchWindow.IsEnabled)
+            try
             {
-                _multiTouchWindow.Close();
-                TouchWallApp.MultiTouchMode = 0;
+                if (_multiTouchWindow.IsEnabled)
+                {
+                    _multiTouchWindow.Close();
+                    TouchWallApp.MultiTouchMode = 0;
+                }
             }
+            catch (NullReferenceException e)
+            {
+                // _multitouchWindow not initialized -> hasn't been opened yet -> so ignore error
+            }
+            
         }
 
         /// <summary>
@@ -435,16 +562,19 @@ namespace TouchWall
         /// </summary>
         public void OpenDepthTouchWindow()
         {
-            if (TouchWallApp.MultiTouchMode == 1)
+            if (TouchWallApp.KinectSensor.IsAvailable)
             {
-                CloseMultiTouchWindow();
-            }
-            if (TouchWallApp.MultiTouchMode != 2 && TouchWallApp.CalibrateStatus == 0)
-            {
-                TouchWallApp.CursorStatus = 0;
-                TouchWallApp.MultiTouchMode = 2;
-                _depthTouchWindow = (DepthTouchWindow)DepthTouchWindow.GetDepthTouchWindowInstance(_touchWall);
-                _depthTouchWindow.Show();
+                if (TouchWallApp.MultiTouchMode == 1)
+                {
+                    CloseMultiTouchWindow();
+                }
+                if (TouchWallApp.MultiTouchMode != 2 && TouchWallApp.CalibrateStatus == 0)
+                {
+                    TouchWallApp.CursorStatus = 0;
+                    TouchWallApp.MultiTouchMode = 2;
+                    _depthTouchWindow = (DepthTouchWindow) DepthTouchWindow.GetDepthTouchWindowInstance(_touchWall);
+                    _depthTouchWindow.Show();
+                }
             }
         }
 
@@ -453,11 +583,45 @@ namespace TouchWall
         /// </summary>
         public void CloseDepthTouchWindow()
         {
-            if (_depthTouchWindow.IsEnabled)
+            try
             {
-                _depthTouchWindow.Close();
-                TouchWallApp.MultiTouchMode = 0;
+                if (_depthTouchWindow.IsEnabled)
+                {
+                    _depthTouchWindow.Close();
+                    TouchWallApp.MultiTouchMode = 0;
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                // _depthTouchWindow not initialized -> hasn't been opened yet -> so ignore error
             }
         }
+
+        private void MainWindow_Keydown(object sender, KeyEventArgs e)
+        {
+            if (e.Key.ToString().Equals("F1"))
+            {
+                OpenHelpWindow();
+            }
+        }
+
+        public void OpenHelpWindow()
+        {
+            _helpWindow = HelpWindow.OpenHelpWindow();
+            _helpWindow.Show();
+            _helpWindow.Focus();
+        }
+
+        /// <summary>
+        /// Closes the HelpWindow if it exists
+        /// </summary>
+        public void CloseHelpWindow()
+        {
+            if (_helpWindow.IsEnabled)
+            {
+                _helpWindow.Close();
+            }
+        }
+
     }
 }
