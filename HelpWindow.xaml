@@ -48,7 +48,7 @@
             
             <Underline><Italic>Kinect Multi Enable</Italic><LineBreak/></Underline>
             <Run Foreground="Transparent">SPACER</Run>Launches the Multi Mode. If Depth Mode is open, it will be closed<LineBreak/><LineBreak/>
-            <Underline><Italic>Kinect Depth Multi</Italic><LineBreak/></Underline>
+            <Underline><Italic>Kinect Multi Disable</Italic><LineBreak/></Underline>
             <Run Foreground="Transparent">SPACER</Run>Closes the Multi Mode if it is open
         </TextBlock>
     </ScrollViewer>
