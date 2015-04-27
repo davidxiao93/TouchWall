@@ -1,4 +1,6 @@
-﻿namespace TouchWall
+﻿using System;
+
+namespace TouchWall
 {
     public class Gesture
     {
@@ -83,18 +85,34 @@
         /// </summary>
         private void ProcessGesture()
         {
-            // 1 means it never uses the previous value
-            const float smoothingFactor = 0.25f;
+            
 
-            if (PrevX[Id] < -1000 || PrevY[Id] < -1000)
+            float prevX = PrevX[Id];
+            float prevY = PrevY[Id];
+
+            // 1 means it never uses the previous value
+            //const float smoothingFactor = 0.25f;
+
+            // Experimental - but seems to give positive results :D
+            // Useing the difference between current vvalues of X and Y with PrevX and PrevY to determine smoothing factor
+            // instead of using a constant
+            // normal exponential smoothing keeps its smoothing factor constant
+            float tempDistance = (float)Math.Sqrt((X - prevX)*(X - prevX) + (Y - prevY)*(Y - prevY));
+            float smoothingFactor = tempDistance*10 + 0.01f;
+            if (smoothingFactor > 1)
+            {
+                smoothingFactor = 1;
+            }
+
+            if (prevX < -1000 || prevY < -1000)
             {
                 PrevX[Id] = X;
                 PrevY[Id] = Y;
             }
             else
             {
-                X = smoothingFactor * X + (1 - smoothingFactor) * PrevX[Id];
-                Y = smoothingFactor * Y + (1 - smoothingFactor) * PrevY[Id];
+                X = smoothingFactor * X + (1 - smoothingFactor) * prevX;
+                Y = smoothingFactor * Y + (1 - smoothingFactor) * prevY;
                 PrevX[Id] = X;
                 PrevY[Id] = Y;
             }
