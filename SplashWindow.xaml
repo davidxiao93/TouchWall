@@ -1,0 +1,61 @@
+﻿<Window x:Class="TouchWall.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Touch Wall" Height="480" Width="640"
+        WindowStartupLocation="CenterScreen"
+        Closing="WindowClosing"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow"
+        Icon="Images/TouchWallLogoSmall.ico"
+        ShowInTaskbar="False">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Source="Images/TouchWallLogo.png"/>
+        <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="Images/TouchDevelopLogo.png"/>
+        <Image Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Source="Images/UCLLogo.png"/>
+
+        <TextBlock Grid.Row="4" Grid.RowSpan="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" FontSize="20" FontWeight="Medium">
+            <TextBlock.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
+                    <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                    <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+            <TextBlock.TextAlignment>Center</TextBlock.TextAlignment>
+            Supervisors: <LineBreak/>
+            Dr Dean Mohamedally and Dr Yun Fu<LineBreak/>
+            Lead Developer:<LineBreak/>
+            David Xiao<LineBreak/>
+            Other Contributers:<LineBreak/>
+            Mark Menezes, Tycho Bickerstaff<LineBreak/>
+        </TextBlock>
+        <TextBlock Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" FontSize="20" FontWeight="Medium">
+            <TextBlock.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
+                    <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                    <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+            <TextBlock.TextAlignment>Center</TextBlock.TextAlignment>
+            <Bold>Please (re)connect the Kinect 2 Sensor to continue.</Bold><LineBreak/>
+            If this message persists, then seek technical support.
+        </TextBlock>
+        
+    </Grid>
+</Window>
