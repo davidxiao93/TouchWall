@@ -46,8 +46,6 @@ namespace TouchWall
         /// </summary>
         public static float BottomEdge { get; set; }
 
-        
-
         /// <summary>
         /// Storage of previous calibration values
         /// </summary>
@@ -58,7 +56,9 @@ namespace TouchWall
         /// </summary>
         private static CameraSpacePoint _pointFound;
 
-
+        /// <summary>
+        /// ScreenMemento object to look after undoing of screen values
+        /// </summary>
         private ScreenMemento _screenMemento;
 
         /// <summary>
@@ -77,12 +77,12 @@ namespace TouchWall
             TopEdge = 0.15f;
             BottomEdge = -0.14f;
 
-            float savedTop = (float)Properties.Settings.Default["TopScreen"];
-            float savedBottom = (float)Properties.Settings.Default["BottomScreen"];
-            float savedRight = (float)Properties.Settings.Default["RightScreen"];
-            float savedLeft = (float)Properties.Settings.Default["LeftScreen"];
+            float savedTop = (float)Properties.Settings.Default.TopScreen;
+            float savedBottom = (float)Properties.Settings.Default.BottomScreen;
+            float savedRight = (float)Properties.Settings.Default.RightScreen;
+            float savedLeft = (float)Properties.Settings.Default.LeftScreen;
 
-            if (savedTop.Equals(-1) || savedBottom.Equals(-1) || savedRight.Equals(-1) || savedLeft.Equals(-1))
+            if (savedTop < 0 || savedBottom < 0 || savedRight < 0 || savedLeft < 0)
             {
                 BeginCalibration();
             }

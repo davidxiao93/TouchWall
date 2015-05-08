@@ -8,7 +8,6 @@
         Icon="Images/TouchWallLogoSmall.ico"
         Closing="MainWindow_Closing" KeyDown="MainWindow_Keydown">
     <Window.Resources>
-        <SolidColorBrush x:Key="BlackBrush" Color="#ff000000"/>
         <Style TargetType="{x:Type Image}">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>

@@ -14,7 +14,7 @@
             </TextBlock.Background>
             
             <Bold>List Of Voice Commands</Bold><LineBreak/>
-            <Italic>Here is a list of voice commands you can say to the Kinect:</Italic><LineBreak/>            
+            <Italic>Here is a list of voice commands you can say to the Kinect</Italic><LineBreak/>            
             <LineBreak/>
 
             <Underline><Italic>Kinect Open TouchDevelop</Italic><LineBreak/></Underline>

@@ -16,7 +16,7 @@ namespace TouchWall
         private readonly Color[] _idColor = { Colors.Green, Colors.Black, Colors.Blue, Colors.Yellow };
 
         /// <summary>
-        /// Constructor, uses the constructor of CanvasWindow as well
+        /// Constructor, uses the constructor of CanvasWindow as well to pass the desired title name
         /// </summary>
         /// <param name="touchWall"></param>
         private DepthTouchWindow(TouchWallApp touchWall)

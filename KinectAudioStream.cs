@@ -14,7 +14,7 @@
         private readonly Stream _kinect32BitStream;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KinectAudioStream" /> class.
+        /// Initializes a new instance of the KinectAudioStream /> class.
         /// </summary>
         /// <param name="input">Kinect audio stream</param>
         public KinectAudioStream(Stream input)

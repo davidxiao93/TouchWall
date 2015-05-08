@@ -37,11 +37,6 @@ namespace TouchWall
         private SplashWindow _splashWindow;
 
         /// <summary>
-        /// Current status text to display
-        /// </summary>
-        private string _statusText;
-
-        /// <summary>
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
@@ -66,8 +61,6 @@ namespace TouchWall
             TouchWallApp.KinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
 
             DataContext = this;
-
-            //OpenSplashWindow();
 
             UpdateAllLabels();
         }
@@ -345,7 +338,7 @@ namespace TouchWall
             if (_touchWall.VoiceRecoginitionMode == 1)
             {
                 ToggleVoiceButton.Content = "Voice Control ON";
-                if (_touchWall.checkVoiceEngine())
+                if (_touchWall.CheckVoiceEngine())
                 {
                     VoiceLabel.Content = "Press F1 For Voice Commands";
                 }
@@ -745,6 +738,12 @@ namespace TouchWall
             }
         }
 
+
+        /// <summary>
+        /// Toggles the Voice Recognition abilities (if desired)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Toggle_Voice(object sender, RoutedEventArgs e)
         {
             _touchWall.VoiceRecoginitionMode = (_touchWall.VoiceRecoginitionMode + 1)%2;

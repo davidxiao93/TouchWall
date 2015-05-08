@@ -8,7 +8,6 @@ namespace TouchWall
 {
     public class Frame
     {
-        // Test github commit
         /// <summary>
         /// Any new gestures are stored and handled by Gesture
         /// </summary>

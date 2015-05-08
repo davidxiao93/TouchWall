@@ -25,7 +25,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
         public float TopScreen {
             get {
                 return ((float)(this["TopScreen"]));
@@ -37,7 +37,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
         public float BottomScreen {
             get {
                 return ((float)(this["BottomScreen"]));
@@ -49,7 +49,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
         public float LeftScreen {
             get {
                 return ((float)(this["LeftScreen"]));
@@ -61,13 +61,25 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
         public float RightScreen {
             get {
                 return ((float)(this["RightScreen"]));
             }
             set {
                 this["RightScreen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"HelloWorld\"")]
+        public string test {
+            get {
+                return ((string)(this["test"]));
+            }
+            set {
+                this["test"] = value;
             }
         }
     }

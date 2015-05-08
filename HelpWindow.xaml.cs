@@ -9,12 +9,19 @@ namespace TouchWall
     /// </summary>
     public partial class HelpWindow : Window
     {
+        /// <summary>
+        /// Static instance to make sure only one instance exists
+        /// </summary>
         private static HelpWindow _instance;
         private HelpWindow()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Called when MainWindow wants the helpwindow on screen
+        /// </summary>
+        /// <returns></returns>
         public static HelpWindow OpenHelpWindow()
         {
             if (_instance == null)

@@ -61,15 +61,6 @@ namespace TouchWall.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to write screenshot to {0}.
-        /// </summary>
-        internal static string FailedScreenshotStatusTextFormat {
-            get {
-                return ResourceManager.GetString("FailedScreenshotStatusTextFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No ready Kinect found!.
         /// </summary>
         internal static string NoSensorStatusText {
@@ -84,15 +75,6 @@ namespace TouchWall.Properties {
         internal static string RunningStatusText {
             get {
                 return ResourceManager.GetString("RunningStatusText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Saved screenshot to {0}.
-        /// </summary>
-        internal static string SavedScreenshotStatusTextFormat {
-            get {
-                return ResourceManager.GetString("SavedScreenshotStatusTextFormat", resourceCulture);
             }
         }
         

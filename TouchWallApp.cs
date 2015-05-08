@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Kinect;
@@ -159,7 +158,7 @@ namespace TouchWall
         /// Checks if the voice recognition is avalibale?
         /// </summary>
         /// <returns></returns>
-        public bool checkVoiceEngine()
+        public bool CheckVoiceEngine()
         {
             if (_speechEngine == null)
             {

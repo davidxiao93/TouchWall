@@ -30,7 +30,7 @@
         <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Source="Images/TouchDevelopLogo.png"/>
         <Image Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Source="Images/UCLLogo.png"/>
 
-        <TextBlock Grid.Row="4" Grid.RowSpan="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" FontSize="20" FontWeight="Medium">
+        <TextBlock Grid.Column="0" Grid.Row="4" Grid.RowSpan="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" FontSize="20" FontWeight="Medium">
             <TextBlock.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
                     <GradientStop Color="#FFFFFFFF" Offset="0"/>

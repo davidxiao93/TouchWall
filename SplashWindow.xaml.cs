@@ -8,6 +8,9 @@ namespace TouchWall
     /// </summary>
     public partial class SplashWindow : Window
     {
+        /// <summary>
+        /// Static instance to make sure only one instance exists
+        /// </summary>
         private static SplashWindow _instance;
 
         private SplashWindow()
@@ -15,6 +18,10 @@ namespace TouchWall
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Called when mainWindow requests this window to open
+        /// </summary>
+        /// <returns></returns>
         public static SplashWindow OpenSplashWindow()
         {
             if (_instance == null)

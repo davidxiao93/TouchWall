@@ -22,6 +22,13 @@
         /// </summary>
         public readonly float BottomEdge;
 
+        /// <summary>
+        /// Constructor to keep the previous values
+        /// </summary>
+        /// <param name="currentTop"></param>
+        /// <param name="currentLeft"></param>
+        /// <param name="currentRight"></param>
+        /// <param name="currentBottom"></param>
         public ScreenMemento(float currentTop, float currentLeft, float currentRight, float currentBottom)
         {
             TopEdge = currentTop;

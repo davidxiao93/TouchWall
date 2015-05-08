@@ -3,16 +3,19 @@
   <Profiles />
   <Settings>
     <Setting Name="TopScreen" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+      <Value Profile="(Default)">-2</Value>
     </Setting>
     <Setting Name="BottomScreen" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+      <Value Profile="(Default)">-2</Value>
     </Setting>
     <Setting Name="LeftScreen" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+      <Value Profile="(Default)">-2</Value>
     </Setting>
     <Setting Name="RightScreen" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+      <Value Profile="(Default)">-2</Value>
+    </Setting>
+    <Setting Name="test" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"HelloWorld"</Value>
     </Setting>
   </Settings>
 </SettingsFile>

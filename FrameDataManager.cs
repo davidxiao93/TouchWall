@@ -103,7 +103,7 @@ namespace TouchWall
         }
 
         /// <summary>
-        /// Renders coluor pixels into the WriteableBitmap.
+        /// Renders colour pixels into the WriteableBitmap.
         /// </summary>
         private void RenderDepthPixels()
         {

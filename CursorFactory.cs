@@ -17,7 +17,7 @@
                     // interact with cursor
                     return UseMouse.GetUseCursor();
                 default:
-                    // some other mode
+                    // don't interact with cursor
                     return NullMouse.GetNullCursor();
             }
         }

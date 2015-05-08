@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Windows.Controls;
 
 namespace TouchWall
 {
@@ -13,6 +12,9 @@ namespace TouchWall
         public abstract int InteractWithMouse(float X, float Y, float Z);
     }
 
+    /// <summary>
+    /// ICursor subclass that provides no behaviour on purpose
+    /// </summary>
     class NullMouse : ICursor
     {
         /// <summary>
@@ -35,6 +37,9 @@ namespace TouchWall
         }
     }
 
+    /// <summary>
+    /// ICursor subclass that applies cursor control
+    /// </summary>
     class UseMouse : ICursor
     {
         /// <summary>
@@ -228,6 +233,7 @@ namespace TouchWall
                     if (Z > Screen.MouseUpThreshold)
                     {
                         // user has let go. represent this as a click
+                        // send another left click down so that it works in javascript as well (i.e. touchdevelop)
                         mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftDown, x, y, 0, 0);
                         mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 1;
