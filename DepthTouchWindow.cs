@@ -13,7 +13,7 @@ namespace TouchWall
         /// <summary>
         /// Array of colours to be used for the colour picking
         /// </summary>
-        private readonly Color[] _idColor = { Colors.Yellow, Colors.Black, Colors.Blue, Colors.Yellow };
+        private readonly Color[] _idColor = { Colors.Green, Colors.Black, Colors.Blue, Colors.Yellow };
 
         /// <summary>
         /// Constructor, uses the constructor of CanvasWindow as well

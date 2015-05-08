@@ -14,9 +14,9 @@
         </Style>
 
         <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#FF00FFFF" Offset="-0.8"/>
-            <GradientStop Color="#FF009EFF" Offset="0.5"/>
-            <GradientStop Color="#FF00FFFF" Offset="1.8"/>
+            <GradientStop Color="#5cb85c" Offset="-0.8"/>
+            <GradientStop Color="#5cb85c" Offset="0.5"/>
+            <GradientStop Color="#5cb85c" Offset="1.8"/>
         </LinearGradientBrush>
         
         <Style TargetType="Button">
@@ -29,15 +29,15 @@
                         <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" ClipToBounds="True">
                             <Rectangle x:Name="outerRectangle"
                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                       Stroke="Black" RadiusX="20" RadiusY="20" StrokeThickness="2"
+                                       Stroke="Transparent" RadiusX="5" RadiusY="5" StrokeThickness="5"
                                        Fill="{TemplateBinding Background}"/>
                             <Viewbox Stretch="Uniform">
-                                <Label Content="{TemplateBinding  Content}" FontSize="20" FontWeight="Medium"  Height="38"/>
+                                <Label Content="{TemplateBinding  Content}" FontSize="20" Height="38" Foreground="White"/>
                             </Viewbox>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property ="Rectangle.StrokeThickness" TargetName="outerRectangle" Value="10"/>
+                                <Setter Property ="Rectangle.Fill" TargetName="outerRectangle" Value="#449d44"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -49,8 +49,8 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
-                <GradientStop Color="#FF055EFF" Offset="0"/>
-                <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                <GradientStop Color="#FFEEEEEE" Offset="0"/>
+                <GradientStop Color="#FFEEEEEE" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
         
@@ -81,67 +81,75 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <Viewbox Grid.Row="0" Grid.RowSpan="13" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" 
+        <Viewbox Grid.Row="1" Grid.RowSpan="12" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" 
                  Stretch="Uniform"
                  RenderTransformOrigin="0.5,0.5" Margin="-44 0 -44 0">
             <Viewbox.RenderTransform>
                 <MatrixTransform>
                     <MatrixTransform.Matrix>
-                        <Matrix OffsetX="0" OffsetY="0" M11="0" M12="-1" M21="-1" M22="0"/>
+                        <Matrix OffsetX="0" OffsetY="0" M11="0" M12="-0.8" M21="-0.8" M22="0"/>
                     </MatrixTransform.Matrix>
                 </MatrixTransform>
             </Viewbox.RenderTransform>
             <Image Name="DepthViewer" Source="{Binding ImageSource}"/>
         </Viewbox>
 
-        <Viewbox Grid.Row="0" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Top:" FontSize="20" FontWeight="Medium"/>
+        <Viewbox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" HorizontalAlignment="Center" Stretch="Uniform">
+            <Label Content="TouchWall Configuration and Settings" FontSize="20"/>
         </Viewbox>
-        <Viewbox Grid.Row="0" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label Name="WallTopLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
-        </Viewbox>
-        <Button Grid.Row="0" Grid.Column="4" Content="Down" Click="WallTop_ClickDown"/>
-        <Button Grid.Row="0" Grid.Column="7" Content="Up" Click="WallTop_ClickUp"/>
-
-        <Viewbox Grid.Row="1" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Left:" FontSize="20" FontWeight="Medium"/>
-        </Viewbox>
-        <Viewbox Grid.Row="1" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label  Name="WallLeftLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
-        </Viewbox>
-        <Button Grid.Row="1" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft"/>
-        <Button Grid.Row="1" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight"/>
-
+        
         <Viewbox Grid.Row="2" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Right:" FontSize="20" FontWeight="Medium"/>
+            <Label Content="Top:" FontSize="20"/>
         </Viewbox>
         <Viewbox Grid.Row="2" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label  Name="WallRightLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
+            <Label Name="WallTopLabel" Content="{Binding Text}" FontSize="20"/>
         </Viewbox>
-        <Button Grid.Row="2" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft"/>
-        <Button Grid.Row="2" Grid.Column="7" Content="Right" Click="WallRight_ClickRight"/>
+        <Button Grid.Row="2" Grid.Column="4" Content="Down" Click="WallTop_ClickDown"/>
+        <Button Grid.Row="2" Grid.Column="7" Content="Up" Click="WallTop_ClickUp"/>
 
         <Viewbox Grid.Row="3" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
-            <Label Content="Bottom:" FontSize="20" FontWeight="Medium"/>
+            <Label Content="Left:" FontSize="20"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
-            <Label  Name="WallBottomLabel" Content="{Binding Text}" FontSize="20" FontWeight="Medium"/>
+            <Label  Name="WallLeftLabel" Content="{Binding Text}" FontSize="20"/>
         </Viewbox>
-        <Button Grid.Row="3" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown"/>
-        <Button Grid.Row="3" Grid.Column="7" Content="Up" Click="WallBottom_ClickUp"/>
-        
-        <Button Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="{Binding Text}" Click="Calibrate_Click"/>
-        <Button Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleCursorButton" Content="{Binding Text}" Click="Toggle_Cursor"/>
-        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleDepthTouchButton" Content="{Binding Text}" Click="Toggle_DepthTouch"/>
-        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleMultiTouchButton" Content="{Binding Text}" Click="Toggle_MultiTouch"/>
-        <Button Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="4" Name="LaunchTouchdevelopButton" Content="Launch Touchdevelop" Click="Launch_Touchdevelop"/>
+        <Button Grid.Row="3" Grid.Column="4" Content="Left" Click="WallLeft_ClickLeft"/>
+        <Button Grid.Row="3" Grid.Column="7" Content="Right" Click="WallLeft_ClickRight"/>
 
-        <Label Grid.Row="9" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="4" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25" FontWeight="Medium"/>
+        <Viewbox Grid.Row="4" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
+            <Label Content="Right:" FontSize="20"/>
+        </Viewbox>
+        <Viewbox Grid.Row="4" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
+            <Label  Name="WallRightLabel" Content="{Binding Text}" FontSize="20"/>
+        </Viewbox>
+        <Button Grid.Row="4" Grid.Column="4" Content="Left" Click="WallRight_ClickLeft"/>
+        <Button Grid.Row="4" Grid.Column="7" Content="Right" Click="WallRight_ClickRight"/>
+
+        <Viewbox Grid.Row="5" Grid.Column="5" HorizontalAlignment="Right" Stretch="Uniform">
+            <Label Content="Bottom:" FontSize="20"/>
+        </Viewbox>
+        <Viewbox Grid.Row="5" Grid.Column="6" HorizontalAlignment="Left" Stretch="Uniform">
+            <Label  Name="WallBottomLabel" Content="{Binding Text}" FontSize="20"/>
+        </Viewbox>
+        <Button Grid.Row="5" Grid.Column="4" Content="Down" Click="WallBottom_ClickDown"/>
+        <Button Grid.Row="5" Grid.Column="7" Content="Up" Click="WallBottom_ClickUp"/>
+        
+        <Button Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="4" Name="CalibrateButton" Content="Full Calibration Process" Click="Calibrate_Click"/>
+        <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="4" Name="ToggleCursorButton" Content="Cursor Enabled With Click" Click="Toggle_Cursor"/>
+        <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Name="ToggleVoiceButton" Content="Voice Control ON" Click="Toggle_Voice"/>
+        <Button Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="2" Name="LaunchKeyboardButton" Content="Launch Keyboard" Click="Launch_Keyboard"/>
+        <Button Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="2" Name="ToggleDepthTouchButton" Content="Depth Mode" Click="Toggle_DepthTouch"/>
+        <Button Grid.Row="9" Grid.Column="6" Grid.ColumnSpan="2" Name="ToggleMultiTouchButton" Content="Multi Mode" Click="Toggle_MultiTouch"/>
+        <Button Grid.Row="10" Grid.Column="6" Grid.ColumnSpan="2" Name="LaunchTouchdevelopButton" Content="Touchdevelop" Click="Launch_Touchdevelop"/>
+        <Button Grid.Row="11" Grid.Column="6" Grid.ColumnSpan="2" Name="LaunchTouchdevelopLocalButton" Content="Touchdevelop Local" Click="Launch_TouchdevelopLocal"/>
+        
+
+        <Label Grid.Row="8" Grid.RowSpan="4" Grid.Column="4" Grid.ColumnSpan="2" Name="CoordinatesLabel" Content="{Binding Text}" HorizontalAlignment="Stretch" FontSize="25"/>
         <Label Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="4" Name="StatusLabel" 
-               Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25" FontWeight="Medium"
+               Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25"
                HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom"/>
         <Label Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="4" Name="VoiceLabel"
-               Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25" FontWeight="Medium"
+               Content="{Binding Text}" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" FontSize="25"
                HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom"/>
     </Grid>
 </Window>

@@ -75,6 +75,8 @@ namespace TouchWall
         /// </summary>
         private readonly SpeechRecognitionEngine _speechEngine;
 
+        public int VoiceRecoginitionMode = 1;
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -99,7 +101,7 @@ namespace TouchWall
             // Set the statuses: Calibration disabled, No current gesture, Cursor with movement, MultiTouch disabled
             CalibrateStatus = 0;
             CurrentGestureType = 0;
-            CursorStatus = 1;
+            CursorStatus = 2;
             MultiTouchMode = 0;
 
             #region Speech
@@ -122,15 +124,13 @@ namespace TouchWall
                 directions.Add(new SemanticResultValue("Kinect Calibrate Disable", "CALIBRATE_CANCEL"));
                 directions.Add(new SemanticResultValue("Kinect Cursor Enable", "CURSOR_ENABLE"));
                 directions.Add(new SemanticResultValue("Kinect Cursor Disable", "CURSOR_DISABLE"));
-                directions.Add(new SemanticResultValue("Kinect Click Enable", "CLICK_ENABLE"));
-                directions.Add(new SemanticResultValue("Kinect Click Disable", "CLICK_DISABLE"));
-                directions.Add(new SemanticResultValue("Kinect Scroll Enable", "SCROLL_ENABLE"));
-                directions.Add(new SemanticResultValue("Kinect Scroll Disable", "SCROLL_DISABLE"));
                 directions.Add(new SemanticResultValue("Kinect Depth Enable", "DEPTH_START"));
                 directions.Add(new SemanticResultValue("Kinect Depth Disable", "DEPTH_END"));
                 directions.Add(new SemanticResultValue("Kinect Multi Enable", "MULTI_START"));
                 directions.Add(new SemanticResultValue("Kinect Multi Disable", "MULTI_END"));
                 directions.Add(new SemanticResultValue("Kinect Open TouchDevelop", "TOUCHDEVELOP"));
+                directions.Add(new SemanticResultValue("Kinect Open TouchDevelop Local", "TOUCHDEVELOPLOCAL"));
+                directions.Add(new SemanticResultValue("Kinect Open Keyboard", "KEYBOARD"));
 
 
                 var gb = new GrammarBuilder { Culture = recognizerInfo.Culture };
@@ -173,12 +173,15 @@ namespace TouchWall
         /// </summary>
         public void ToggleCursor()
         {
-            CursorStatus ++;
-            if (CursorStatus == 4)
+            if (CursorStatus == 0)
+            {
+                CursorStatus = 2;
+            }
+            else
             {
                 CursorStatus = 0;
             }
-          
+       
         }
 
         /// <summary>
@@ -196,6 +199,7 @@ namespace TouchWall
         {
             _screen.CancelCalibration();
         }
+
 
         /// <summary>
         /// Kills the speech recognition when the window gets closed
@@ -272,7 +276,7 @@ namespace TouchWall
             // Speech utterance confidence below which we treat speech as if it hadn't been heard
             const double confidenceThreshold = 0.3;
 
-            if (e.Result.Confidence >= confidenceThreshold)
+            if (e.Result.Confidence >= confidenceThreshold && VoiceRecoginitionMode == 1)
             {
 
 
@@ -285,7 +289,7 @@ namespace TouchWall
                         break;
                     case "CALIBRATE_CANCEL":
                         _screen.CancelCalibration();
-                        CursorStatus = 1;
+                        CursorStatus = 2;
                         break;
                     case "CURSOR_DISABLE":
                         CursorStatus = 0;
@@ -293,28 +297,10 @@ namespace TouchWall
                     case "CURSOR_ENABLE":
                         if (CursorStatus == 0 && MultiTouchMode == 0)
                         {
-                            CursorStatus = 1;
-                        }
-                        break;
-                    case "CLICK_DISABLE":
-                    case "SCROLL_DISABLE":
-                        if (CursorStatus != 0 && MultiTouchMode == 0)
-                        {
-                            CursorStatus = 1;
-                        }
-                        break;
-                    case "CLICK_ENABLE":
-                        if (MultiTouchMode == 0)
-                        {
                             CursorStatus = 2;
                         }
                         break;
-                    case "SCROLL_ENABLE":
-                        if (MultiTouchMode == 0)
-                        {
-                            CursorStatus = 3;
-                        }
-                        break;
+                    
                     case "DEPTH_START":
                         if (MultiTouchMode != 2)
                         {
@@ -344,7 +330,13 @@ namespace TouchWall
                         }
                         break;
                     case "TOUCHDEVELOP":
-                        Process.Start("https://www.touchdevelop.com/app/");
+                        ParentMainWindow.LaunchTouchdevelop();
+                        break;
+                    case "TOUCHDEVELOPLOCAL":
+                        ParentMainWindow.LaunchTouchdevelopLocal();
+                        break;
+                    case "KEYBOARD":
+                        ParentMainWindow.LaunchKeyboard();
                         break;
                 }
             }
@@ -360,5 +352,7 @@ namespace TouchWall
         }
         
         #endregion
+
+        
     }
 }

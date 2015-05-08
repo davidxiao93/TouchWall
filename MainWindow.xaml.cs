@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Kinect;
+using System.IO;
 
 namespace TouchWall
 {
@@ -29,6 +30,11 @@ namespace TouchWall
         /// HelpWindow object. can contain a reference the singleton
         /// </summary>
         private HelpWindow _helpWindow;
+
+        /// <summary>
+        /// HelpWindow object. can contain a reference the singleton
+        /// </summary>
+        private SplashWindow _splashWindow;
 
         /// <summary>
         /// Current status text to display
@@ -60,6 +66,9 @@ namespace TouchWall
             TouchWallApp.KinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
 
             DataContext = this;
+
+            //OpenSplashWindow();
+
             UpdateAllLabels();
         }
 
@@ -84,6 +93,10 @@ namespace TouchWall
             {
                 CloseHelpWindow();
             }
+            if (_splashWindow != null)
+            {
+                CloseSplashWindow();
+            }
 
         }
 
@@ -96,27 +109,6 @@ namespace TouchWall
         }
 
         #region TextUpdates
-
-       
-
-        /// <summary>
-        /// Gets or sets the current status text to display
-        /// </summary>
-        public string StatusText
-        {
-            get { return _statusText; }
-            set
-            {
-                if (_statusText != value)
-                {
-                    _statusText = value;
-                    if (PropertyChanged != null) // Notify any bound elements that the text has changed
-                    {
-                        //PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Changes the status text when the sensor is available/unavailable (e.g. paused, closed, unplugged)
@@ -141,7 +133,10 @@ namespace TouchWall
             ToggleDepthTouchButton.Content = "";
             ToggleMultiTouchButton.Content = "";
             LaunchTouchdevelopButton.Content = "";
+            LaunchTouchdevelopLocalButton.Content = "";
+            LaunchKeyboardButton.Content = "";
             VoiceLabel.Content = "";
+            ToggleVoiceButton.Content = "";
             DepthViewer.Visibility = Visibility.Hidden;
         }
 
@@ -286,23 +281,27 @@ namespace TouchWall
                 ToggleDepthTouchButton.Content = "";
                 ToggleMultiTouchButton.Content = "";
                 LaunchTouchdevelopButton.Content = "";
+                LaunchKeyboardButton.Content = "";
+                LaunchTouchdevelopLocalButton.Content = "";
             }
             else
             {
                 LaunchTouchdevelopButton.Content = "TouchDevelop";
+                LaunchTouchdevelopLocalButton.Content = "TouchDevelop Local";
+                LaunchKeyboardButton.Content = "Keyboard";
                 switch (TouchWallApp.MultiTouchMode)
                 {
                     case 1:
                         ToggleDepthTouchButton.Content = "Depth Mode";
-                        ToggleDepthTouchButton.Content = "Close Multi Mode";
+                        ToggleMultiTouchButton.Content = "Close Multi Mode";
                         break;
                     case 2:
                         ToggleDepthTouchButton.Content = "Close Depth Mode";
-                            ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
+                            ToggleMultiTouchButton.Content = "Multi Mode";
                         break;
                     default:
                         ToggleDepthTouchButton.Content = "Depth Mode";
-                            ToggleMultiTouchButton.Content = "Multi Mode - Incomplete";
+                            ToggleMultiTouchButton.Content = "Multi Mode";
                         break;
                 }
             }
@@ -316,10 +315,12 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 StatusLabel.Content = "Kinect Avaliable";
+                
             }
             else
             {
                 StatusLabel.Content = "Kinect Not Avaliable!";
+                OpenSplashWindow();
                 CloseDepthTouchWindow();
                 CloseMultiTouchWindow();
                 ClearLabels();
@@ -331,19 +332,35 @@ namespace TouchWall
         /// </summary>
         private void UpdateStatusLabel2()
         {
+            if (_splashWindow != null)
+            {
+                CloseSplashWindow();
+            }
+            
             StatusLabel.Content = "Kinect In Use";
         }
 
         private void UpdateVoiceLabel()
         {
-            if (_touchWall.checkVoiceEngine())
+            if (_touchWall.VoiceRecoginitionMode == 1)
             {
-                VoiceLabel.Content = "Press F1 For Voice Commands";
+                ToggleVoiceButton.Content = "Voice Control ON";
+                if (_touchWall.checkVoiceEngine())
+                {
+                    VoiceLabel.Content = "Press F1 For Voice Commands";
+                }
+                else
+                {
+                    VoiceLabel.Content = "Voice Commands Unavailable";
+                }
             }
             else
             {
-                VoiceLabel.Content = "Voice Commands Unavailable";
+                ToggleVoiceButton.Content = "Voice Control OFF";
+                VoiceLabel.Content = "Voice Commands Disabled";
             }
+
+            
         }
 
         #endregion
@@ -358,6 +375,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.TopEdge += 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -369,6 +387,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.TopEdge -= 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -380,6 +399,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.LeftEdge -= 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -391,6 +411,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.LeftEdge += 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -402,6 +423,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.RightEdge -= 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -413,6 +435,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.RightEdge += 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -424,6 +447,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.BottomEdge += 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -435,6 +459,7 @@ namespace TouchWall
             if (TouchWallApp.KinectSensor.IsAvailable)
             {
                 Screen.BottomEdge -= 0.01f;
+                Screen.SaveSettings();
             }
         }
 
@@ -521,13 +546,60 @@ namespace TouchWall
         }
 
         /// <summary>
-        /// Launches Touchdevelop in the browser
+        /// Called when the Touchdevelop button is pressed
         /// </summary>
         private void Launch_Touchdevelop(object sender, RoutedEventArgs e)
+        {
+            LaunchTouchdevelop();
+        }
+
+        /// <summary>
+        /// Launches Touchdevelop in the browser
+        /// </summary>
+        public void LaunchTouchdevelop()
         {
             if (TouchWallApp.CalibrateStatus == 0)
             {
                 Process.Start("https://www.touchdevelop.com/app/");
+            }
+        }
+
+        /// <summary>
+        /// Called when the Touchdevelop local button is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Launch_TouchdevelopLocal(object sender, RoutedEventArgs e)
+        {
+            LaunchTouchdevelopLocal();
+        }
+
+        /// <summary>
+        /// Launches Touchdevelop local in the browser
+        /// </summary>
+        public void LaunchTouchdevelopLocal()
+        {
+            if (TouchWallApp.CalibrateStatus == 0)
+            {
+                Process.Start("cmd", "/C cd D:\\TouchDevelop && touchdevelop"); // Touchdevelop local
+            }
+        }
+
+
+        private void Launch_Keyboard(object sender, RoutedEventArgs e)
+        {
+            LaunchKeyboard();
+        }
+
+        public void LaunchKeyboard()
+        {
+            if (TouchWallApp.CalibrateStatus == 0)
+            {
+                //Process.Start("osk");
+                string progFiles = @"C:\Program Files\Common Files\Microsoft Shared\ink";
+                string keyboardPath = Path.Combine(progFiles, "TabTip.exe");
+
+                Process.Start(keyboardPath);
             }
         }
 
@@ -648,5 +720,35 @@ namespace TouchWall
             }
         }
 
+        /// <summary>
+        /// Opens new help window and brings it to focus
+        /// </summary>
+        public void OpenSplashWindow()
+        {
+            _splashWindow = SplashWindow.OpenSplashWindow();
+            _splashWindow.Show();
+            _splashWindow.Focus();
+            _splashWindow.Activate();
+            
+            _splashWindow.Topmost = true;
+        }
+
+        /// <summary>
+        /// Closes the SplashWindow if it exists
+        /// </summary>
+        public void CloseSplashWindow()
+        {
+            
+            if (_splashWindow.IsEnabled)
+            {
+                _splashWindow.Close();
+            }
+        }
+
+        private void Toggle_Voice(object sender, RoutedEventArgs e)
+        {
+            _touchWall.VoiceRecoginitionMode = (_touchWall.VoiceRecoginitionMode + 1)%2;
+            
+        }
     }
 }

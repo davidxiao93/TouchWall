@@ -22,5 +22,53 @@ namespace TouchWall.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public float TopScreen {
+            get {
+                return ((float)(this["TopScreen"]));
+            }
+            set {
+                this["TopScreen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public float BottomScreen {
+            get {
+                return ((float)(this["BottomScreen"]));
+            }
+            set {
+                this["BottomScreen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public float LeftScreen {
+            get {
+                return ((float)(this["LeftScreen"]));
+            }
+            set {
+                this["LeftScreen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public float RightScreen {
+            get {
+                return ((float)(this["RightScreen"]));
+            }
+            set {
+                this["RightScreen"] = value;
+            }
+        }
     }
 }

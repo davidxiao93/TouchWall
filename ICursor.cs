@@ -204,6 +204,7 @@ namespace TouchWall
                     }
                     else if (Z < Screen.MouseDownThreshold && TouchWallApp.CursorStatus == 3)
                     {
+                        // start scrolling
                         mouse_event(MouseeventfAbsolute | MouseeventfMove, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 5;
                         _clickX = X;
@@ -226,20 +227,23 @@ namespace TouchWall
                     double tempDistance = Math.Sqrt((X - _clickX) * (X - _clickX) + (Y - _clickY) * (Y - _clickY));
                     if (Z > Screen.MouseUpThreshold)
                     {
+                        // user has let go. represent this as a click
+                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftDown, x, y, 0, 0);
                         mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 1;
                     }
-                    const float movementThreshold = 0.01f;
+                    const float movementThreshold = 0.05f;
                     if (tempDistance > movementThreshold)
                     {
                         // If distance moved has moved beyond a certain threshold, then the user has intended to click and drag
-                        TouchWallApp.CurrentGestureType = 3;
+                       TouchWallApp.CurrentGestureType = 3;
                     }
                     break;
                 case 3:
                     // User has pressed down and dragged at the same time
                     if (Z > Screen.MouseUpThreshold)
                     {
+                        mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftDown, x, y, 0, 0);
                         // user has moved their hand far enough from the screen to cause a left click up
                         mouse_event(MouseeventfAbsolute | MouseeventfMove | MouseeventfLeftUp, x, y, 0, 0);
                         TouchWallApp.CurrentGestureType = 1;

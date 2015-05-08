@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Microsoft.Kinect;
 
 namespace TouchWall
@@ -52,28 +54,124 @@ namespace TouchWall
         /// </summary>
         public unsafe void SetupCanvasFrame()
         {
+            
             ushort* frameData = (ushort*) _depthFrameData;
 
-            for (int y = 0; y < TouchWallApp.KinectHeight; y++)
+            Parallel.For(0, TouchWallApp.KinectHeight, depthArrayRowIndex =>
             {
-                if (y == TouchWallApp.KinectHeight / 2)
+                for (int depthArrayColumnIndex = 0; depthArrayColumnIndex < TouchWallApp.KinectWidth; depthArrayColumnIndex++)
                 {
-                    for (int x = 0; x < TouchWallApp.KinectWidth; x++)
+
+                    
+                    int depthIndex = depthArrayColumnIndex + (depthArrayRowIndex * TouchWallApp.KinectWidth);
+                    ushort depth = frameData[depthIndex];
+                    if (depth < 500 || depth > 5000)
                     {
-                        DepthPixels[y * TouchWallApp.KinectWidth + x] = (255);
+                        // This stuff is very heavy in computation
+                        // renable if you have enough cpu horsepower
+                        /*
+                        int x = depthIndex % TouchWallApp.KinectWidth;
+                        int y = (depthIndex - x) / TouchWallApp.KinectWidth;
+
+                        ushort[,] filterCollection = new ushort[24, 2];
+
+                        int innerBandCount = 0;
+                        int outerBandCount = 0;
+
+                        for (int yi = -2; yi < 3; yi++)
+                        {
+                            for (int xi = -2; xi < 3; xi++)
+                            {
+                                if (xi != 0 || yi != 0)
+                                {
+
+                                    var xSearch = x + xi;
+                                    var ySearch = y + yi;
+
+                                    if (xSearch >= 0 && xSearch < TouchWallApp.KinectWidth &&
+                                        ySearch >= 0 && ySearch < TouchWallApp.KinectHeight)
+                                    {
+                                        int index = xSearch + (ySearch * TouchWallApp.KinectWidth);
+                                        if (frameData[index] < 5000 && frameData[index] > 500)
+                                        {
+                                            // We want to find count the frequency of each depth
+                                            for (int i = 0; i < 24; i++)
+                                            {
+                                                if (filterCollection[i, 0] == frameData[index])
+                                                {
+                                                    // When the depth is already in the filter collection
+                                                    // we will just increment the frequency.
+                                                    filterCollection[i, 1]++;
+                                                    break;
+                                                }
+                                                else if (filterCollection[i, 0] == 0)
+                                                {
+                                                    // When we encounter a 0 depth in the filter collection
+                                                    // this means we have reached the end of values already counted.
+                                                    // We will then add the new depth and start it's frequency at 1.
+                                                    filterCollection[i, 0] = frameData[index];
+                                                    filterCollection[i, 1]++;
+                                                    break;
+                                                }
+                                            }
+                                            if (yi != 2 && yi != -2 && xi != 2 && xi != -2)
+                                            {
+                                                innerBandCount++;
+                                            }
+                                            else
+                                            {
+                                                outerBandCount++;
+                                            }
+                                        }
+
+
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                        if (innerBandCount >= 2 || outerBandCount >= 7)
+                        {
+                            ushort frequency = 0;
+                            ushort newdepth = 0;
+                            // This loop will determine the statistical mode
+                            // of the surrounding pixels for assignment to
+                            // the candidate.
+                            for (int i = 0; i < 24; i++)
+                            {
+                                // This means we have reached the end of our
+                                // frequency distribution and can break out of the
+                                // loop to save time.
+                                if (filterCollection[i, 0] == 0)
+                                    break;
+                                if (filterCollection[i, 1] > frequency)
+                                {
+                                    newdepth = filterCollection[i, 0];
+                                    frequency = filterCollection[i, 1];
+                                }
+
+                            }
+                            
+                            DepthPixels[depthIndex] = (byte) ((newdepth*256)/5000);
+                        }*/
+                        // Comment out the next line if you want to use the above code.
+                        DepthPixels[depthIndex] = 0;
+                    }
+                    else
+                    {
+                        DepthPixels[depthIndex] = (byte) ((depth*256)/5000);
                     }
                 }
-                else
-                {
-                    for (int x = 0; x < TouchWallApp.KinectWidth; x++)
-                    {
-                        ushort depth = frameData[y * TouchWallApp.KinectWidth + x];
-                        DepthPixels[y * TouchWallApp.KinectWidth + x] =
-                            (byte)(depth >= 500 && depth <= 5000 ?
-                                ((depth) * 256 / 5000)
-                                : 0);
-                    }
-                }
+
+            });
+
+            for (int i = 0; i < TouchWallApp.KinectWidth; i++)
+            {
+                int depthIndex = i + ((TouchWallApp.KinectHeight * TouchWallApp.KinectWidth)/2);
+                DepthPixels[depthIndex] = (byte) 255;
             }
 
             CoordinateMapper m = TouchWallApp.KinectSensor.CoordinateMapper;

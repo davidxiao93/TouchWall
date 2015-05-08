@@ -68,13 +68,30 @@ namespace TouchWall
         {
             // Default values
             MouseMoveThreshold = 0.10f;
-            MouseDownThreshold = 0.001f;
+            MouseDownThreshold = 0.01f;
             MouseUpThreshold = 0.03f;
             DetectThreshold = 0.15f;
+
             LeftEdge = 0.5f;
             RightEdge = 1.0f;
             TopEdge = 0.15f;
             BottomEdge = -0.14f;
+
+            float savedTop = (float)Properties.Settings.Default["TopScreen"];
+            float savedBottom = (float)Properties.Settings.Default["BottomScreen"];
+            float savedRight = (float)Properties.Settings.Default["RightScreen"];
+            float savedLeft = (float)Properties.Settings.Default["LeftScreen"];
+
+            if (savedTop.Equals(-1) || savedBottom.Equals(-1) || savedRight.Equals(-1) || savedLeft.Equals(-1))
+            {
+                BeginCalibration();
+            }
+            else
+            {
+                SetScreen();
+            }
+
+            
             _screenMemento = new ScreenMemento(TopEdge, LeftEdge, RightEdge, BottomEdge);
             _calibratePoints = new CameraSpacePoint[TouchWallApp.KinectWidth * TouchWallApp.KinectHeight];
         }
@@ -104,6 +121,16 @@ namespace TouchWall
             TopEdge = _screenMemento.TopEdge;
             TouchWallApp.CurrentGestureType = 1;
             TouchWallApp.CalibrateStatus = 0;
+        }
+        /// <summary>
+        /// Sets the screen values to the saved values
+        /// </summary>
+        public void SetScreen()
+        {
+            TopEdge = (float)Properties.Settings.Default["TopScreen"];
+            BottomEdge = (float)Properties.Settings.Default["BottomScreen"];
+            RightEdge = (float)Properties.Settings.Default["RightScreen"];
+            LeftEdge = (float)Properties.Settings.Default["LeftScreen"];
         }
 
         /// <summary>
@@ -219,9 +246,22 @@ namespace TouchWall
                 else
                 {
                     TouchWallApp.CalibrateStatus = 0;
-                    TouchWallApp.CursorStatus = 1;
+                    TouchWallApp.CursorStatus = 2;
+                    SaveSettings();
                 }
             }
         }
+
+        public static void SaveSettings()
+        {
+            //save values to config
+            Properties.Settings.Default["TopScreen"] = TopEdge;
+            Properties.Settings.Default["BottomScreen"] = BottomEdge;
+            Properties.Settings.Default["RightScreen"] = RightEdge;
+            Properties.Settings.Default["LeftScreen"] = LeftEdge;
+            Properties.Settings.Default.Save(); 
+        }
+
+        
     }
 }

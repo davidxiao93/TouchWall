@@ -13,8 +13,8 @@
     <Canvas Name="Map" SnapsToDevicePixels="True">
         <Canvas.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" SpreadMethod="Pad" ColorInterpolationMode="SRgbLinearInterpolation">
-                <GradientStop Color="#FF055EFF" Offset="0"/>
-                <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                <GradientStop Color="#FFEEEEEE" Offset="0"/>
+                <GradientStop Color="#FFEEEEEE" Offset="1"/>
             </LinearGradientBrush>
         </Canvas.Background>
     </Canvas>
