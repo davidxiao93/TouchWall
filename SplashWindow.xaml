@@ -43,7 +43,7 @@
             Lead Developer:<LineBreak/>
             David Xiao<LineBreak/>
             Other Contributers:<LineBreak/>
-            Mark Menezes, Tycho Bickerstaff<LineBreak/>
+            Mark Menezes, Tycho Bickerstaff and Prateek Dahal<LineBreak/>
         </TextBlock>
         <TextBlock Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" FontSize="20" FontWeight="Medium">
             <TextBlock.Background>
