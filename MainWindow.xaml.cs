@@ -581,7 +581,7 @@ namespace TouchWall
         {
             if (TouchWallApp.CalibrateStatus == 0)
             {
-                Process.Start("cmd", "/C cd D:\\TouchDevelop && touchdevelop"); // Touchdevelop local
+                Process.Start("cmd", "/C \"C:\\Program Files\\nodejs\\nodevars.bat\" && touchdevelop"); // Touchdevelop local
             }
         }
 
