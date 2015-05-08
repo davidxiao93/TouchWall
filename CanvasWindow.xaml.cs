@@ -90,6 +90,11 @@ namespace TouchWall
 
         }
 
+        /// <summary>
+        /// Activated when a keydown is detected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CanvasWindow_Keydown(object sender, KeyEventArgs e)
         {
             if (e.Key.ToString().Equals("F1"))
