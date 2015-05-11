@@ -89,7 +89,7 @@ namespace TouchWall
             KinectSensor = KinectSensor.GetDefault();
             
             // Create the screen for calibration
-            _screen = new Screen();
+            _screen = new Screen(ParentMainWindow);
             
             // Create a manager for processing sensor data from the kinect
             FrameDataManager = new FrameDataManager();

@@ -102,7 +102,6 @@
     <Compile Include="FrameDataManager.cs" />
     <Compile Include="Gesture.cs" />
     <Compile Include="CursorFactory.cs" />
-    
     <Compile Include="KinectAudioStream.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -123,6 +122,7 @@
     </Compile>
     <Compile Include="Screen.cs" />
     <Compile Include="ScreenMemento.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SpacePoint.cs" />
     <Compile Include="SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>

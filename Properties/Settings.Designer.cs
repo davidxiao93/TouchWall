@@ -25,7 +25,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public float TopScreen {
             get {
                 return ((float)(this["TopScreen"]));
@@ -37,7 +37,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public float BottomScreen {
             get {
                 return ((float)(this["BottomScreen"]));
@@ -49,7 +49,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public float LeftScreen {
             get {
                 return ((float)(this["LeftScreen"]));
@@ -61,7 +61,7 @@ namespace TouchWall.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public float RightScreen {
             get {
                 return ((float)(this["RightScreen"]));

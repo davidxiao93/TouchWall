@@ -1,4 +1,6 @@
-﻿using Microsoft.Kinect;
+﻿using System;
+using System.Windows;
+using Microsoft.Kinect;
 
 namespace TouchWall
 {
@@ -62,9 +64,14 @@ namespace TouchWall
         private ScreenMemento _screenMemento;
 
         /// <summary>
+        /// Handle for the mainWindow. Sorry for implementing it in this way
+        /// </summary>
+        public readonly MainWindow ParentMainWindow;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public Screen()
+        public Screen(MainWindow parentMainWindow)
         {
             // Default values
             MouseMoveThreshold = 0.10f;
@@ -72,24 +79,29 @@ namespace TouchWall
             MouseUpThreshold = 0.03f;
             DetectThreshold = 0.15f;
 
-            LeftEdge = 0.5f;
-            RightEdge = 1.0f;
-            TopEdge = 0.15f;
-            BottomEdge = -0.14f;
+            BottomEdge = 0;
+            RightEdge = 0;
+            LeftEdge = 0;
+            TopEdge = 0;
 
-            float savedTop = (float)Properties.Settings.Default.TopScreen;
-            float savedBottom = (float)Properties.Settings.Default.BottomScreen;
-            float savedRight = (float)Properties.Settings.Default.RightScreen;
-            float savedLeft = (float)Properties.Settings.Default.LeftScreen;
+            ParentMainWindow = parentMainWindow;
 
-            if (savedTop < 0 || savedBottom < 0 || savedRight < 0 || savedLeft < 0)
+            SetScreen();
+            if (LeftEdge <= 0 || RightEdge <= 0)
             {
-                BeginCalibration();
+                // Calibration may be required. notify the user
+                MessageBoxResult result = MessageBox.Show("Detected screen dimensions may be incorrect. Please check the values!", "WARNING - Calibration May Be Required",MessageBoxButton.OK,MessageBoxImage.Warning);
+                switch (result)
+                {
+                    case MessageBoxResult.OK:
+                        // run code to force calibration?
+                        //ParentMainWindow.CalibrateClick(); // doesnt seem to work - to be fixed
+                        break; 
+                }
+                ParentMainWindow.CalibrateClick();
+                
             }
-            else
-            {
-                SetScreen();
-            }
+            
 
             
             _screenMemento = new ScreenMemento(TopEdge, LeftEdge, RightEdge, BottomEdge);
@@ -127,10 +139,10 @@ namespace TouchWall
         /// </summary>
         public void SetScreen()
         {
-            TopEdge = (float)Properties.Settings.Default["TopScreen"];
-            BottomEdge = (float)Properties.Settings.Default["BottomScreen"];
-            RightEdge = (float)Properties.Settings.Default["RightScreen"];
-            LeftEdge = (float)Properties.Settings.Default["LeftScreen"];
+            TopEdge = (float)Properties.Settings.Default.TopScreen;
+            BottomEdge = (float)Properties.Settings.Default.BottomScreen;
+            RightEdge = (float)Properties.Settings.Default.RightScreen;
+            LeftEdge = (float)Properties.Settings.Default.LeftScreen;
         }
 
         /// <summary>
@@ -210,22 +222,40 @@ namespace TouchWall
             }
             else
             {
+                int edgeUpdated = 0;
                 switch (TouchWallApp.CalibrateStatus)
                 {
                     case 2:
+                        
                         RightEdge = _pointFound.Z;
+                        edgeUpdated = 1;
                         break;
                     case 3:
-                        LeftEdge = _pointFound.Z;
+                        if (_pointFound.Z < RightEdge)
+                        {
+                            LeftEdge = _pointFound.Z;
+                            edgeUpdated = 1;
+                        }
                         break;
                     case 4:
-                        TopEdge = _pointFound.X;
+                        if (_pointFound.X > 0)
+                        {
+                            TopEdge = _pointFound.X;
+                            edgeUpdated = 1;
+                        }
                         break;
                     case 5:
-                        BottomEdge = _pointFound.X;
+                        if (_pointFound.X < TopEdge)
+                        {
+                            BottomEdge = _pointFound.X;
+                            edgeUpdated = 1;
+                        }
                         break;
                 }
-                WaitForUserClick(_pointFound);
+                if (edgeUpdated == 1)
+                {
+                    WaitForUserClick(_pointFound);
+                }
             }
         }
 
@@ -255,10 +285,10 @@ namespace TouchWall
         public static void SaveSettings()
         {
             //save values to config
-            Properties.Settings.Default["TopScreen"] = TopEdge;
-            Properties.Settings.Default["BottomScreen"] = BottomEdge;
-            Properties.Settings.Default["RightScreen"] = RightEdge;
-            Properties.Settings.Default["LeftScreen"] = LeftEdge;
+            Properties.Settings.Default.TopScreen = TopEdge;
+            Properties.Settings.Default.BottomScreen = BottomEdge;
+            Properties.Settings.Default.RightScreen = RightEdge;
+            Properties.Settings.Default.LeftScreen = LeftEdge;
             Properties.Settings.Default.Save(); 
         }
 

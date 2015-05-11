@@ -377,7 +377,7 @@ namespace TouchWall
         /// </summary>
         private void WallTop_ClickDown(object sender, RoutedEventArgs e)
         {
-            if (TouchWallApp.KinectSensor.IsAvailable)
+            if (TouchWallApp.KinectSensor.IsAvailable && Screen.TopEdge - 0.01f > Screen.BottomEdge)
             {
                 Screen.TopEdge -= 0.01f;
                 Screen.SaveSettings();
@@ -401,7 +401,7 @@ namespace TouchWall
         /// </summary>
         private void WallLeft_ClickRight(object sender, RoutedEventArgs e)
         {
-            if (TouchWallApp.KinectSensor.IsAvailable)
+            if (TouchWallApp.KinectSensor.IsAvailable && Screen.LeftEdge + 0.01f < Screen.RightEdge)
             {
                 Screen.LeftEdge += 0.01f;
                 Screen.SaveSettings();
@@ -413,7 +413,7 @@ namespace TouchWall
         /// </summary>
         private void WallRight_ClickLeft(object sender, RoutedEventArgs e)
         {
-            if (TouchWallApp.KinectSensor.IsAvailable)
+            if (TouchWallApp.KinectSensor.IsAvailable && Screen.RightEdge - 0.01f > Screen.LeftEdge)
             {
                 Screen.RightEdge -= 0.01f;
                 Screen.SaveSettings();
@@ -437,7 +437,7 @@ namespace TouchWall
         /// </summary>
         private void WallBottom_ClickUp(object sender, RoutedEventArgs e)
         {
-            if (TouchWallApp.KinectSensor.IsAvailable)
+            if (TouchWallApp.KinectSensor.IsAvailable && Screen.BottomEdge +0.01f < Screen.TopEdge)
             {
                 Screen.BottomEdge += 0.01f;
                 Screen.SaveSettings();
